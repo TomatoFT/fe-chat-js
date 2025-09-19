@@ -1,0 +1,704 @@
+import React, { useState, useRef, useEffect, useCallback } from 'react';
+import { useChatSessions, useChatSession, useSendMessage, useCreateChatSession, useRenameChatSession, useDocumentsForRAG } from '../../hooks/useChat';
+import { Send, Plus, MessageCircle, Bot, User, Edit2, Check, X, Sparkles, BarChart3, FileText, CheckCircle } from 'lucide-react';
+
+export const ChatInterface: React.FC = () => {
+  const [selectedSessionId, setSelectedSessionId] = useState<string | null>(null);
+  const [message, setMessage] = useState('');
+  const [isCreatingSession, setIsCreatingSession] = useState(false);
+  const [isTyping, setIsTyping] = useState(false);
+  const [editingSessionId, setEditingSessionId] = useState<string | null>(null);
+  const [editingName, setEditingName] = useState('');
+  const [showMentions, setShowMentions] = useState(false);
+  const [mentionQuery, setMentionQuery] = useState('');
+  const [mentionPosition, setMentionPosition] = useState(0);
+  const [isGenerating, setIsGenerating] = useState(false);
+  const [selectedDocuments, setSelectedDocuments] = useState<string[]>([]);
+  const [showDocumentSelection, setShowDocumentSelection] = useState(false);
+  const messagesEndRef = useRef<HTMLDivElement>(null);
+  const inputRef = useRef<HTMLInputElement>(null);
+  const editInputRef = useRef<HTMLInputElement>(null);
+  const mentionDropdownRef = useRef<HTMLDivElement>(null);
+  const documentSelectionRef = useRef<HTMLDivElement>(null);
+
+  const { data: sessions, isLoading: sessionsLoading } = useChatSessions();
+  const { data: currentSession, isLoading: sessionLoading } = useChatSession(selectedSessionId || '');
+  const { data: documents, isLoading: documentsLoading } = useDocumentsForRAG();
+  const sendMessage = useSendMessage();
+  const createSession = useCreateChatSession();
+  const renameSession = useRenameChatSession();
+
+  // Mention options
+  const mentionOptions = [
+    {
+      id: 'vtk-rag',
+      name: 'VTK RAG',
+      description: 'Document retrieval and analysis',
+      icon: Sparkles,
+      color: 'from-purple-500 to-pink-500',
+      hasDocumentSelection: true
+    },
+    {
+      id: 'stats',
+      name: 'Statistics',
+      description: 'Data analysis and insights',
+      icon: BarChart3,
+      color: 'from-blue-500 to-cyan-500',
+      hasDocumentSelection: false
+    }
+  ];
+
+  const filteredMentions = mentionOptions.filter(option =>
+    option.name.toLowerCase().includes(mentionQuery.toLowerCase()) ||
+    option.id.toLowerCase().includes(mentionQuery.toLowerCase())
+  );
+
+  const scrollToBottom = () => {
+    messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
+  };
+
+  // Handle mention input
+  const handleMessageChange = useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
+    const value = e.target.value;
+    const cursorPosition = e.target.selectionStart || 0;
+    
+    setMessage(value);
+    
+    // Check for @ mention
+    const textBeforeCursor = value.substring(0, cursorPosition);
+    const lastAtIndex = textBeforeCursor.lastIndexOf('@');
+    
+    if (lastAtIndex !== -1) {
+      const textAfterAt = textBeforeCursor.substring(lastAtIndex + 1);
+      const hasSpaceAfterAt = textAfterAt.includes(' ');
+      
+      if (!hasSpaceAfterAt) {
+        setMentionQuery(textAfterAt);
+        setMentionPosition(lastAtIndex);
+        setShowMentions(true);
+      } else {
+        setShowMentions(false);
+      }
+    } else {
+      setShowMentions(false);
+    }
+  }, []);
+
+  // Handle mention selection
+  const handleMentionSelect = useCallback((mention: typeof mentionOptions[0]) => {
+    const textBeforeMention = message.substring(0, mentionPosition);
+    const textAfterMention = message.substring(mentionPosition + mentionQuery.length + 1);
+    const newMessage = `${textBeforeMention}@${mention.id} ${textAfterMention}`;
+    
+    setMessage(newMessage);
+    setShowMentions(false);
+    setMentionQuery('');
+    
+    // If it's vtk-rag, show document selection
+    if (mention.id === 'vtk-rag') {
+      setShowDocumentSelection(true);
+      setSelectedDocuments([]);
+    }
+    
+    // Focus back to input
+    setTimeout(() => {
+      if (inputRef.current) {
+        const newCursorPosition = textBeforeMention.length + mention.id.length + 2;
+        inputRef.current.focus();
+        inputRef.current.setSelectionRange(newCursorPosition, newCursorPosition);
+      }
+    }, 0);
+  }, [message, mentionPosition, mentionQuery]);
+
+  // Handle document selection (single selection only)
+  const handleDocumentSelect = useCallback((documentId: string) => {
+    setSelectedDocuments([documentId]);
+    // Auto-close modal after selection
+    setTimeout(() => {
+      setShowDocumentSelection(false);
+      // Focus back to input
+      if (inputRef.current) {
+        inputRef.current.focus();
+      }
+    }, 300); // Small delay for visual feedback
+  }, []);
+
+  const handleDocumentSelectionCancel = useCallback(() => {
+    setShowDocumentSelection(false);
+    setSelectedDocuments([]);
+    // Focus back to input
+    setTimeout(() => {
+      if (inputRef.current) {
+        inputRef.current.focus();
+      }
+    }, 0);
+  }, []);
+
+  // Close mentions and document selection on outside click
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (mentionDropdownRef.current && !mentionDropdownRef.current.contains(event.target as Node)) {
+        setShowMentions(false);
+      }
+      if (documentSelectionRef.current && !documentSelectionRef.current.contains(event.target as Node)) {
+        setShowDocumentSelection(false);
+      }
+    };
+
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => document.removeEventListener('mousedown', handleClickOutside);
+  }, []);
+
+  useEffect(() => {
+    scrollToBottom();
+  }, [currentSession?.messages]);
+
+  useEffect(() => {
+    if (selectedSessionId && inputRef.current) {
+      inputRef.current.focus();
+    }
+  }, [selectedSessionId]);
+
+  useEffect(() => {
+    if (editingSessionId && editInputRef.current) {
+      editInputRef.current.focus();
+      editInputRef.current.select();
+    }
+  }, [editingSessionId]);
+
+  const handleSendMessage = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!message.trim()) return;
+
+    const messageText = message.trim();
+    setMessage('');
+    setShowMentions(false);
+    setShowDocumentSelection(false);
+    setIsGenerating(true);
+
+    try {
+      const messageData = {
+        message: messageText,
+        session_id: selectedSessionId || undefined,
+        document_ids: selectedDocuments.length > 0 ? selectedDocuments : undefined,
+      };
+
+      // Show typing indicator
+      setIsTyping(true);
+      
+      await sendMessage.mutateAsync(messageData);
+      
+      // Clear selected documents after sending
+      setSelectedDocuments([]);
+    } catch (error) {
+      console.error('Error sending message:', error);
+    } finally {
+      setIsTyping(false);
+      setIsGenerating(false);
+    }
+  };
+
+  const handleMessageKeyPress = (e: React.KeyboardEvent) => {
+    if (e.key === 'Enter' && !e.shiftKey) {
+      e.preventDefault();
+      handleSendMessage(e);
+    }
+  };
+
+  const handleCreateSession = async () => {
+    setIsCreatingSession(true);
+    try {
+      const sessionName = `Chat ${new Date().toLocaleString()}`;
+      const newSession = await createSession.mutateAsync({ title: sessionName });
+      setSelectedSessionId(newSession.id);
+    } catch (error) {
+      console.error('Error creating session:', error);
+    } finally {
+      setIsCreatingSession(false);
+    }
+  };
+
+  const handleStartEdit = (sessionId: string, currentName: string) => {
+    setEditingSessionId(sessionId);
+    setEditingName(currentName);
+  };
+
+  const handleCancelEdit = () => {
+    setEditingSessionId(null);
+    setEditingName('');
+  };
+
+  const handleSaveEdit = async () => {
+    if (!editingSessionId || !editingName.trim()) return;
+
+    try {
+      await renameSession.mutateAsync({
+        id: editingSessionId,
+        name: editingName.trim(),
+      });
+      setEditingSessionId(null);
+      setEditingName('');
+    } catch (error) {
+      console.error('Error renaming session:', error);
+    }
+  };
+
+  const handleKeyPress = (e: React.KeyboardEvent) => {
+    if (e.key === 'Enter') {
+      e.preventDefault();
+      handleSaveEdit();
+    } else if (e.key === 'Escape') {
+      e.preventDefault();
+      handleCancelEdit();
+    }
+  };
+
+  const formatTime = (timestamp: string) => {
+    const date = new Date(timestamp);
+    const now = new Date();
+    const diffInHours = (now.getTime() - date.getTime()) / (1000 * 60 * 60);
+    
+    if (diffInHours < 24) {
+      return date.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+    } else {
+      return date.toLocaleDateString([], { month: 'short', day: 'numeric' });
+    }
+  };
+
+  return (
+    <div className="flex h-screen bg-gradient-to-br from-blue-50 to-indigo-100">
+      {/* Sidebar */}
+      <div className="w-80 bg-white shadow-xl border-r border-gray-200 flex flex-col">
+        {/* Header */}
+        <div className="p-6 border-b border-gray-100 bg-gradient-to-r from-blue-600 to-indigo-600">
+          <div className="flex items-center justify-between">
+            <div className="flex items-center space-x-3">
+              <div className="w-10 h-10 bg-white/20 rounded-full flex items-center justify-center">
+                <MessageCircle className="w-6 h-6 text-white" />
+              </div>
+              <div>
+                <h2 className="text-xl font-bold text-white">EduChat</h2>
+                <p className="text-blue-100 text-sm">AI Assistant</p>
+              </div>
+            </div>
+            <button
+              onClick={handleCreateSession}
+              disabled={isCreatingSession}
+              className="w-10 h-10 bg-white/20 hover:bg-white/30 rounded-full flex items-center justify-center transition-all duration-200 disabled:opacity-50"
+            >
+              <Plus className="w-5 h-5 text-white" />
+            </button>
+          </div>
+        </div>
+        
+        {/* Sessions List */}
+        <div className="flex-1 overflow-y-auto">
+          {sessionsLoading ? (
+            <div className="p-6 text-center">
+              <div className="animate-spin w-8 h-8 border-2 border-blue-600 border-t-transparent rounded-full mx-auto mb-2"></div>
+              <p className="text-gray-500">Loading chats...</p>
+            </div>
+          ) : sessions?.length === 0 ? (
+            <div className="p-6 text-center">
+              <MessageCircle className="w-12 h-12 text-gray-300 mx-auto mb-3" />
+              <p className="text-gray-500 mb-4">No conversations yet</p>
+              <button
+                onClick={handleCreateSession}
+                disabled={isCreatingSession}
+                className="bg-blue-600 text-white px-4 py-2 rounded-full hover:bg-blue-700 disabled:opacity-50 transition-colors duration-200"
+              >
+                {isCreatingSession ? 'Creating...' : 'Start Chat'}
+              </button>
+            </div>
+          ) : (
+            <div className="p-2">
+              {sessions?.map((session: any) => (
+                <div
+                  key={session.id}
+                  className={`p-4 rounded-xl mb-2 transition-all duration-200 transform hover:scale-[1.02] ${
+                    selectedSessionId === session.id
+                      ? 'bg-gradient-to-r from-blue-500 to-indigo-500 text-white shadow-lg'
+                      : 'hover:bg-gray-50 text-gray-700'
+                  }`}
+                >
+                  <div className="flex items-center space-x-3">
+                    <div 
+                      className={`w-10 h-10 rounded-full flex items-center justify-center ${
+                        selectedSessionId === session.id ? 'bg-white/20' : 'bg-blue-100'
+                      }`}
+                      onClick={() => setSelectedSessionId(session.id)}
+                    >
+                      <MessageCircle className={`w-5 h-5 ${
+                        selectedSessionId === session.id ? 'text-white' : 'text-blue-600'
+                      }`} />
+                    </div>
+                    <div className="flex-1 min-w-0">
+                      {editingSessionId === session.id ? (
+                        <div className="flex items-center space-x-2">
+                          <input
+                            ref={editInputRef}
+                            type="text"
+                            value={editingName}
+                            onChange={(e) => setEditingName(e.target.value)}
+                            onKeyDown={handleKeyPress}
+                            className="flex-1 px-2 py-1 text-sm bg-white/90 border border-white/50 rounded focus:outline-none focus:ring-2 focus:ring-white/50"
+                            disabled={renameSession.isPending}
+                          />
+                          <button
+                            onClick={handleSaveEdit}
+                            disabled={renameSession.isPending || !editingName.trim()}
+                            className="p-1 hover:bg-white/20 rounded disabled:opacity-50"
+                          >
+                            <Check className="w-4 h-4" />
+                          </button>
+                          <button
+                            onClick={handleCancelEdit}
+                            disabled={renameSession.isPending}
+                            className="p-1 hover:bg-white/20 rounded disabled:opacity-50"
+                          >
+                            <X className="w-4 h-4" />
+                          </button>
+                        </div>
+                      ) : (
+                        <div className="flex items-center justify-between group">
+                          <div 
+                            className="flex-1 min-w-0 cursor-pointer"
+                            onClick={() => setSelectedSessionId(session.id)}
+                          >
+                            <div className="font-medium truncate">{session.name}</div>
+                            <div className={`text-sm ${
+                              selectedSessionId === session.id ? 'text-blue-100' : 'text-gray-500'
+                            }`}>
+                              {formatTime(session.created_at)}
+                            </div>
+                          </div>
+                          <button
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              handleStartEdit(session.id, session.name);
+                            }}
+                            className={`opacity-0 group-hover:opacity-100 p-1 rounded hover:bg-white/20 transition-all duration-200 ${
+                              selectedSessionId === session.id ? 'text-white' : 'text-gray-400'
+                            }`}
+                          >
+                            <Edit2 className="w-4 h-4" />
+                          </button>
+                        </div>
+                      )}
+                    </div>
+                  </div>
+                </div>
+              ))}
+            </div>
+          )}
+        </div>
+      </div>
+
+      {/* Chat Area */}
+      <div className="flex-1 flex flex-col">
+        {selectedSessionId ? (
+          <>
+            {/* Chat Header */}
+            <div className="bg-white shadow-sm border-b border-gray-200 p-4">
+              <div className="flex items-center space-x-3">
+                <div className="w-10 h-10 bg-gradient-to-r from-blue-500 to-indigo-500 rounded-full flex items-center justify-center">
+                  <Bot className="w-6 h-6 text-white" />
+                </div>
+                <div>
+                  <h3 className="font-semibold text-gray-900">AI Assistant</h3>
+                  <p className="text-sm text-gray-500">Always here to help</p>
+                </div>
+              </div>
+            </div>
+
+            {/* Messages */}
+            <div className="flex-1 overflow-y-auto p-6 space-y-4 bg-gradient-to-b from-gray-50 to-white chat-messages">
+              {sessionLoading ? (
+                <div className="flex justify-center">
+                  <div className="animate-spin w-8 h-8 border-2 border-blue-600 border-t-transparent rounded-full"></div>
+                </div>
+              ) : currentSession?.messages?.length === 0 ? (
+                <div className="text-center py-12">
+                  <div className="w-20 h-20 bg-gradient-to-r from-blue-100 to-indigo-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                    <MessageCircle className="w-10 h-10 text-blue-600" />
+                  </div>
+                  <h3 className="text-lg font-semibold text-gray-900 mb-2">Start a conversation</h3>
+                  <p className="text-gray-500">Ask me anything about your documents!</p>
+                </div>
+              ) : (
+                currentSession?.messages?.map((msg: any, index: number) => (
+                  <div
+                    key={index}
+                    className={`flex ${msg.sender === 'user' ? 'justify-end' : 'justify-start'} animate-fade-in`}
+                    style={{ animationDelay: `${index * 0.1}s` }}
+                  >
+                    <div className={`flex items-end space-x-2 max-w-xs lg:max-w-md ${
+                      msg.sender === 'user' ? 'flex-row-reverse space-x-reverse' : ''
+                    }`}>
+                      {/* Avatar */}
+                      <div className={`w-8 h-8 rounded-full flex items-center justify-center flex-shrink-0 ${
+                        msg.sender === 'user' 
+                          ? 'bg-gradient-to-r from-blue-500 to-indigo-500' 
+                          : 'bg-gradient-to-r from-gray-400 to-gray-500'
+                      }`}>
+                        {msg.sender === 'user' ? (
+                          <User className="w-4 h-4 text-white" />
+                        ) : (
+                          <Bot className="w-4 h-4 text-white" />
+                        )}
+                      </div>
+                      
+                      {/* Message Bubble */}
+                      <div className={`px-4 py-3 rounded-2xl shadow-sm message-bubble ${
+                        msg.sender === 'user'
+                          ? 'bg-gradient-to-r from-blue-500 to-indigo-500 text-white rounded-br-md'
+                          : 'bg-white text-gray-900 border border-gray-200 rounded-bl-md'
+                      }`}>
+                        <div className="text-sm leading-relaxed">{msg.content}</div>
+                        <div className={`flex items-center justify-between mt-1 ${
+                          msg.sender === 'user' ? 'text-blue-100' : 'text-gray-500'
+                        }`}>
+                          <span className="text-xs">{formatTime(msg.timestamp)}</span>
+                          {msg.sender === 'user' && (
+                            <div className="flex items-center space-x-1">
+                              <div className="w-1 h-1 bg-blue-200 rounded-full"></div>
+                              <div className="w-1 h-1 bg-blue-200 rounded-full"></div>
+                              <div className="w-1 h-1 bg-blue-200 rounded-full"></div>
+                            </div>
+                          )}
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                ))
+              )}
+              
+              {/* Enhanced Typing Indicator */}
+              {isTyping && (
+                <div className="flex justify-start animate-fade-in">
+                  <div className="flex items-end space-x-2">
+                    <div className="w-8 h-8 bg-gradient-to-r from-purple-500 to-pink-500 rounded-full flex items-center justify-center animate-pulse">
+                      <Bot className="w-4 h-4 text-white" />
+                    </div>
+                    <div className="bg-gradient-to-r from-purple-50 to-pink-50 border border-purple-200 rounded-2xl rounded-bl-md px-4 py-3 shadow-lg">
+                      <div className="flex items-center space-x-2">
+                        <div className="flex space-x-1">
+                          <div className="w-2 h-2 bg-purple-400 rounded-full typing-dot-enhanced"></div>
+                          <div className="w-2 h-2 bg-pink-400 rounded-full typing-dot-enhanced"></div>
+                          <div className="w-2 h-2 bg-purple-400 rounded-full typing-dot-enhanced"></div>
+                        </div>
+                        <span className="text-xs text-purple-600 font-medium animate-pulse">AI is thinking...</span>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              )}
+
+              {/* Enhanced Generating Indicator */}
+              {isGenerating && (
+                <div className="flex justify-start animate-fade-in">
+                  <div className="flex items-end space-x-2">
+                    <div className="w-8 h-8 bg-gradient-to-r from-blue-500 to-cyan-500 rounded-full flex items-center justify-center animate-bounce">
+                      <Sparkles className="w-4 h-4 text-white" />
+                    </div>
+                    <div className="bg-gradient-to-r from-blue-50 to-cyan-50 border border-blue-200 rounded-2xl rounded-bl-md px-4 py-3 shadow-lg">
+                      <div className="flex items-center space-x-2">
+                        <div className="flex space-x-1">
+                          <div className="w-2 h-2 bg-blue-400 rounded-full animate-pulse"></div>
+                          <div className="w-2 h-2 bg-cyan-400 rounded-full animate-pulse" style={{ animationDelay: '0.2s' }}></div>
+                          <div className="w-2 h-2 bg-blue-400 rounded-full animate-pulse" style={{ animationDelay: '0.4s' }}></div>
+                        </div>
+                        <span className="text-xs text-blue-600 font-medium">Generating response...</span>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              )}
+              
+              <div ref={messagesEndRef} />
+            </div>
+
+            {/* Message Input */}
+            <div className="bg-white border-t border-gray-200 p-4 relative">
+              <form onSubmit={handleSendMessage} className="flex items-center space-x-3">
+                <div className="flex-1 relative">
+                  <input
+                    ref={inputRef}
+                    type="text"
+                    value={message}
+                    onChange={handleMessageChange}
+                    onKeyPress={handleMessageKeyPress}
+                    placeholder="Type your message... Use @ for mentions"
+                    className="w-full px-4 py-3 border border-gray-300 rounded-full focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200"
+                    disabled={sendMessage.isPending}
+                  />
+                  
+                  {/* Selected Document Indicator */}
+                  {selectedDocuments.length > 0 && (
+                    <div className="absolute -top-2 left-4 right-4 bg-gradient-to-r from-purple-50 to-pink-50 border border-purple-200 rounded-lg p-2 shadow-sm">
+                      <div className="flex items-center space-x-2">
+                        <Sparkles className="w-4 h-4 text-purple-600" />
+                        <span className="text-sm font-medium text-purple-800">
+                          Document selected for RAG
+                        </span>
+                        <button
+                          type="button"
+                          onClick={() => setSelectedDocuments([])}
+                          className="ml-auto text-purple-600 hover:text-purple-800 transition-colors"
+                        >
+                          <X className="w-4 h-4" />
+                        </button>
+                      </div>
+                    </div>
+                  )}
+                  
+                  {/* Mention Dropdown */}
+                  {showMentions && (
+                    <div
+                      ref={mentionDropdownRef}
+                      className="absolute bottom-full left-0 right-0 mb-2 bg-white border border-gray-200 rounded-xl shadow-xl z-50 max-h-48 overflow-y-auto mention-dropdown"
+                    >
+                      <div className="p-2">
+                        <div className="text-xs text-gray-500 mb-2 px-2">Available prompts:</div>
+                        {filteredMentions.map((mention) => {
+                          const IconComponent = mention.icon;
+                          return (
+                            <button
+                              key={mention.id}
+                              type="button"
+                              onClick={() => handleMentionSelect(mention)}
+                              className="w-full flex items-center space-x-3 p-3 rounded-lg hover:bg-gray-50 transition-colors duration-150 text-left"
+                            >
+                              <div className={`w-8 h-8 rounded-lg bg-gradient-to-r ${mention.color} flex items-center justify-center flex-shrink-0`}>
+                                <IconComponent className="w-4 h-4 text-white" />
+                              </div>
+                              <div className="flex-1 min-w-0">
+                                <div className="font-medium text-gray-900">@{mention.id}</div>
+                                <div className="text-sm text-gray-500 truncate">{mention.description}</div>
+                              </div>
+                            </button>
+                          );
+                        })}
+                      </div>
+                    </div>
+                  )}
+
+                  {/* Document Selection Modal */}
+                  {showDocumentSelection && (
+                    <div
+                      ref={documentSelectionRef}
+                      className="absolute bottom-full left-0 right-0 mb-2 bg-white border border-gray-200 rounded-xl shadow-xl z-50 max-h-80 overflow-y-auto mention-dropdown"
+                    >
+                      <div className="p-4">
+                        <div className="flex items-center justify-between mb-4">
+                          <div>
+                            <h3 className="text-lg font-semibold text-gray-900">Select Document for RAG</h3>
+                            <p className="text-sm text-gray-500">Choose one document to query with @vtk-rag</p>
+                          </div>
+                          <button
+                            type="button"
+                            onClick={handleDocumentSelectionCancel}
+                            className="text-gray-400 hover:text-gray-600 transition-colors"
+                          >
+                            <X className="w-5 h-5" />
+                          </button>
+                        </div>
+                        
+                        {documentsLoading ? (
+                          <div className="flex items-center justify-center py-8">
+                            <div className="w-6 h-6 border-2 border-purple-500 border-t-transparent rounded-full animate-spin"></div>
+                            <span className="ml-2 text-gray-600">Loading documents...</span>
+                          </div>
+                        ) : documents && documents.length > 0 ? (
+                          <div className="space-y-2 max-h-48 overflow-y-auto">
+                            {documents.map((doc: any) => (
+                              <label
+                                key={doc.id}
+                                className="flex items-center space-x-3 p-3 rounded-lg hover:bg-gray-50 cursor-pointer transition-colors duration-150"
+                              >
+                                <div className="flex-shrink-0">
+                                  <input
+                                    type="radio"
+                                    name="document-selection"
+                                    checked={selectedDocuments.includes(doc.id)}
+                                    onChange={() => handleDocumentSelect(doc.id)}
+                                    className="w-4 h-4 text-purple-600 border-gray-300 focus:ring-purple-500"
+                                  />
+                                </div>
+                                <div className="flex-1 min-w-0">
+                                  <div className="flex items-center space-x-2">
+                                    <FileText className="w-4 h-4 text-gray-400 flex-shrink-0" />
+                                    <span className="font-medium text-gray-900 truncate">{doc.name || doc.title || 'Untitled Document'}</span>
+                                    {selectedDocuments.includes(doc.id) && (
+                                      <CheckCircle className="w-4 h-4 text-purple-600 flex-shrink-0" />
+                                    )}
+                                  </div>
+                                  <div className="text-sm text-gray-500 truncate">
+                                    {doc.type || 'Document'} • {doc.size ? `${(doc.size / 1024).toFixed(1)} KB` : 'Unknown size'}
+                                  </div>
+                                </div>
+                              </label>
+                            ))}
+                          </div>
+                        ) : (
+                          <div className="text-center py-8">
+                            <FileText className="w-12 h-12 text-gray-300 mx-auto mb-3" />
+                            <p className="text-gray-500">No documents available</p>
+                          </div>
+                        )}
+                        
+                        <div className="mt-4 pt-4 border-t border-gray-200">
+                          <div className="text-sm text-gray-500 text-center">
+                            Click on a document to select it
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  )}
+                </div>
+                <button
+                  type="submit"
+                  disabled={!message.trim() || sendMessage.isPending}
+                  className="w-12 h-12 bg-gradient-to-r from-blue-500 to-indigo-500 text-white rounded-full flex items-center justify-center hover:from-blue-600 hover:to-indigo-600 disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-200 transform hover:scale-105 disabled:hover:scale-100 shadow-lg"
+                >
+                  {sendMessage.isPending ? (
+                    <div className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
+                  ) : (
+                    <Send className="w-5 h-5" />
+                  )}
+                </button>
+              </form>
+            </div>
+          </>
+        ) : (
+          <div className="flex-1 flex items-center justify-center bg-gradient-to-br from-blue-50 to-indigo-100">
+            <div className="text-center max-w-md">
+              <div className="w-24 h-24 bg-gradient-to-r from-blue-500 to-indigo-500 rounded-full flex items-center justify-center mx-auto mb-6 animate-pulse">
+                <MessageCircle className="w-12 h-12 text-white" />
+              </div>
+              <h3 className="text-2xl font-bold text-gray-900 mb-3">Welcome to EduChat</h3>
+              <p className="text-gray-600 mb-8 leading-relaxed">
+                Your AI-powered assistant for educational document analysis. 
+                Start a conversation to get insights from your uploaded documents.
+              </p>
+              <button
+                onClick={handleCreateSession}
+                disabled={isCreatingSession}
+                className="bg-gradient-to-r from-blue-500 to-indigo-500 text-white px-8 py-4 rounded-full hover:from-blue-600 hover:to-indigo-600 disabled:opacity-50 transition-all duration-200 transform hover:scale-105 font-semibold shadow-lg"
+              >
+                {isCreatingSession ? (
+                  <div className="flex items-center space-x-2">
+                    <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
+                    <span>Creating...</span>
+                  </div>
+                ) : (
+                  'Start New Chat'
+                )}
+              </button>
+            </div>
+          </div>
+        )}
+      </div>
+    </div>
+  );
+};
