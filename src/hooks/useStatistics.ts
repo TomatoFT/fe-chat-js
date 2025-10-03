@@ -115,6 +115,10 @@ const getFallbackStats = async () => {
       documentsThisWeek: Array.isArray(documents) 
         ? documents.filter((doc: any) => {
             const docDate = new Date(doc.created_at || doc.uploaded_at);
+            // Check if date is valid
+            if (isNaN(docDate.getTime())) {
+              return false;
+            }
             const weekAgo = new Date();
             weekAgo.setDate(weekAgo.getDate() - 7);
             return docDate > weekAgo;

@@ -26,7 +26,17 @@ const ProvincesList: React.FC = () => {
   );
 
   const formatDate = (dateString: string) => {
-    return new Date(dateString).toLocaleDateString('en-US', {
+    if (!dateString) return 'Unknown date';
+    
+    const date = new Date(dateString);
+    
+    // Check if date is valid
+    if (isNaN(date.getTime())) {
+      console.warn('Invalid date string:', dateString);
+      return 'Invalid date';
+    }
+    
+    return date.toLocaleDateString('en-US', {
       year: 'numeric',
       month: 'short',
       day: 'numeric',
@@ -34,8 +44,17 @@ const ProvincesList: React.FC = () => {
   };
 
   const getActivityStatus = (lastActive: string) => {
+    if (!lastActive) return { status: 'unknown', color: 'gray' };
+    
     const now = new Date();
     const lastActiveDate = new Date(lastActive);
+    
+    // Check if date is valid
+    if (isNaN(lastActiveDate.getTime())) {
+      console.warn('Invalid lastActive date:', lastActive);
+      return { status: 'unknown', color: 'gray' };
+    }
+    
     const diffInHours = (now.getTime() - lastActiveDate.getTime()) / (1000 * 60 * 60);
     
     if (diffInHours < 24) return { status: 'active', color: 'green' };

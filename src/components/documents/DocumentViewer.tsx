@@ -218,13 +218,21 @@ export const DocumentViewer: React.FC<DocumentViewerProps> = ({
                     Created Date
                   </label>
                   <p className="text-sm text-gray-900">
-                    {new Date(document.created_at).toLocaleDateString('en-US', {
-                      year: 'numeric',
-                      month: 'long',
-                      day: 'numeric',
-                      hour: '2-digit',
-                      minute: '2-digit'
-                    })}
+                    {(() => {
+                      if (!document.created_at) return 'Unknown date';
+                      const date = new Date(document.created_at);
+                      if (isNaN(date.getTime())) {
+                        console.warn('Invalid created_at date:', document.created_at);
+                        return 'Invalid date';
+                      }
+                      return date.toLocaleDateString('en-US', {
+                        year: 'numeric',
+                        month: 'long',
+                        day: 'numeric',
+                        hour: '2-digit',
+                        minute: '2-digit'
+                      });
+                    })()}
                   </p>
                 </div>
 
@@ -234,13 +242,21 @@ export const DocumentViewer: React.FC<DocumentViewerProps> = ({
                       Last Modified
                     </label>
                     <p className="text-sm text-gray-900">
-                      {new Date(document.updated_at).toLocaleDateString('en-US', {
-                        year: 'numeric',
-                        month: 'long',
-                        day: 'numeric',
-                        hour: '2-digit',
-                        minute: '2-digit'
-                      })}
+                      {(() => {
+                        if (!document.updated_at) return 'Unknown date';
+                        const date = new Date(document.updated_at);
+                        if (isNaN(date.getTime())) {
+                          console.warn('Invalid updated_at date:', document.updated_at);
+                          return 'Invalid date';
+                        }
+                        return date.toLocaleDateString('en-US', {
+                          year: 'numeric',
+                          month: 'long',
+                          day: 'numeric',
+                          hour: '2-digit',
+                          minute: '2-digit'
+                        });
+                      })()}
                     </p>
                   </div>
                 )}

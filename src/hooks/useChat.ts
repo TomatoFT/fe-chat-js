@@ -1,4 +1,5 @@
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
+import { handleAuthError } from '../lib/errorHandler';
 
 const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || 'http://157.10.52.80:8000';
 
@@ -24,6 +25,9 @@ export const useChatSessions = () => {
       });
 
       if (!response.ok) {
+        if (handleAuthError(response)) {
+          return; // Logout was triggered
+        }
         throw new Error('Failed to fetch chat sessions');
       }
 
@@ -45,6 +49,9 @@ export const useChatSession = (id: string) => {
       });
 
       if (!response.ok) {
+        if (handleAuthError(response)) {
+          return; // Logout was triggered
+        }
         throw new Error('Failed to fetch chat session');
       }
 
@@ -67,6 +74,9 @@ export const useChatMessages = (sessionId: string) => {
       });
 
       if (!response.ok) {
+        if (handleAuthError(response)) {
+          return; // Logout was triggered
+        }
         throw new Error('Failed to fetch messages');
       }
 
@@ -93,6 +103,9 @@ export const useCreateChatSession = () => {
       });
 
       if (!response.ok) {
+        if (handleAuthError(response)) {
+          return; // Logout was triggered
+        }
         const errorData = await response.json();
         throw new Error(errorData.detail || 'Failed to create chat session');
       }
@@ -130,6 +143,9 @@ export const useSendMessage = () => {
       });
 
       if (!response.ok) {
+        if (handleAuthError(response)) {
+          return; // Logout was triggered
+        }
         const errorData = await response.json();
         throw new Error(errorData.detail || 'Failed to send message');
       }
@@ -162,6 +178,9 @@ export const useRenameChatSession = () => {
       });
 
       if (!response.ok) {
+        if (handleAuthError(response)) {
+          return; // Logout was triggered
+        }
         const errorData = await response.json();
         throw new Error(errorData.detail || 'Failed to rename chat session');
       }
@@ -190,6 +209,9 @@ export const useDeleteChatSession = () => {
       });
 
       if (!response.ok) {
+        if (handleAuthError(response)) {
+          return; // Logout was triggered
+        }
         throw new Error('Failed to delete chat session');
       }
     },
@@ -212,6 +234,9 @@ export const useDocumentsForRAG = () => {
       });
 
       if (!response.ok) {
+        if (handleAuthError(response)) {
+          return; // Logout was triggered
+        }
         throw new Error('Failed to fetch documents');
       }
 

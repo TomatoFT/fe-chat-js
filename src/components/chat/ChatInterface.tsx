@@ -1,6 +1,7 @@
 import React, { useState, useRef, useEffect, useCallback } from 'react';
 import { useChatSessions, useChatSession, useSendMessage, useCreateChatSession, useRenameChatSession, useDocumentsForRAG } from '../../hooks/useChat';
 import { Send, Plus, MessageCircle, Bot, User, Edit2, Check, X, Sparkles, BarChart3, FileText, CheckCircle } from 'lucide-react';
+import { formatTime, sortByDate } from '../../utils/dateUtils';
 
 export const ChatInterface: React.FC = () => {
   const [selectedSessionId, setSelectedSessionId] = useState<string | null>(null);
@@ -253,17 +254,6 @@ export const ChatInterface: React.FC = () => {
     }
   };
 
-  const formatTime = (timestamp: string) => {
-    const date = new Date(timestamp);
-    const now = new Date();
-    const diffInHours = (now.getTime() - date.getTime()) / (1000 * 60 * 60);
-    
-    if (diffInHours < 24) {
-      return date.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
-    } else {
-      return date.toLocaleDateString([], { month: 'short', day: 'numeric' });
-    }
-  };
 
   return (
     <div className="flex h-screen bg-gradient-to-br from-blue-50 to-indigo-100">
@@ -423,10 +413,16 @@ export const ChatInterface: React.FC = () => {
                     <MessageCircle className="w-10 h-10 text-blue-600" />
                   </div>
                   <h3 className="text-lg font-semibold text-gray-900 mb-2">Start a conversation</h3>
-                  <p className="text-gray-500">Ask me anything about your documents!</p>
+                  <p className="text-gray-500 mb-6">Ask me anything about your documents!</p>
+                  <div className="bg-blue-50 border border-blue-200 rounded-lg p-4 max-w-md mx-auto">
+                    <p className="text-sm text-blue-800 text-center">
+                      Công nghệ trí tuệ nhân tạo được đội ngũ Viettechkey nghiên cứu và huấn luyện. AI có thể xảy ra sai sót, vui lòng kiểm tra lại thông tin. Xin chân thành cảm ơn.
+                    </p>
+                  </div>
                 </div>
               ) : (
-                currentSession?.messages?.map((msg: any, index: number) => (
+                sortByDate(currentSession?.messages || [], 'timestamp', true)
+                  ?.map((msg: any, index: number) => (
                   <div
                     key={index}
                     className={`flex ${msg.sender === 'user' ? 'justify-end' : 'justify-start'} animate-fade-in`}
@@ -668,6 +664,13 @@ export const ChatInterface: React.FC = () => {
                   )}
                 </button>
               </form>
+              
+              {/* AI Disclaimer */}
+              <div className="px-4 py-1">
+                <p className="text-[10px] text-gray-500 italic text-center leading-tight">
+                  Công nghệ trí tuệ nhân tạo được đội ngũ Viettechkey nghiên cứu và huấn luyện. AI có thể xảy ra sai sót, vui lòng kiểm tra lại thông tin. Xin chân thành cảm ơn.
+                </p>
+              </div>
             </div>
           </>
         ) : (
@@ -681,6 +684,11 @@ export const ChatInterface: React.FC = () => {
                 Your AI-powered assistant for educational document analysis. 
                 Start a conversation to get insights from your uploaded documents.
               </p>
+              <div className="bg-blue-50 border border-blue-200 rounded-lg p-4 mb-6">
+                <p className="text-sm text-blue-800 text-center">
+                  Công nghệ trí tuệ nhân tạo được đội ngũ Viettechkey nghiên cứu và huấn luyện. AI có thể xảy ra sai sót, vui lòng kiểm tra lại thông tin. Xin chân thành cảm ơn.
+                </p>
+              </div>
               <button
                 onClick={handleCreateSession}
                 disabled={isCreatingSession}
