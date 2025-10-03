@@ -1,4 +1,5 @@
 import React, { useState, useRef, useEffect, useCallback } from 'react';
+import { useQueryClient } from '@tanstack/react-query';
 import { useChatSessions, useChatSession, useSendMessage, useCreateChatSession, useRenameChatSession, useDocumentsForRAG } from '../../hooks/useChat';
 import { Send, Plus, MessageCircle, Bot, User, Edit2, Check, X, Sparkles, BarChart3, FileText, CheckCircle } from 'lucide-react';
 import { formatTime, sortByDate } from '../../utils/dateUtils';
@@ -22,6 +23,7 @@ export const ChatInterface: React.FC = () => {
   const mentionDropdownRef = useRef<HTMLDivElement>(null);
   const documentSelectionRef = useRef<HTMLDivElement>(null);
 
+  const queryClient = useQueryClient();
   const { data: sessions, isLoading: sessionsLoading } = useChatSessions();
   const { data: currentSession, isLoading: sessionLoading } = useChatSession(selectedSessionId || '');
   const { data: documents, isLoading: documentsLoading } = useDocumentsForRAG();
@@ -175,6 +177,9 @@ export const ChatInterface: React.FC = () => {
     setMessage('');
     setShowMentions(false);
     setShowDocumentSelection(false);
+    
+    // Show typing indicator immediately after user sends message
+    setIsTyping(true);
     setIsGenerating(true);
 
     try {
@@ -183,21 +188,74 @@ export const ChatInterface: React.FC = () => {
         session_id: selectedSessionId || undefined,
         document_ids: selectedDocuments.length > 0 ? selectedDocuments : undefined,
       };
-
-      // Show typing indicator
-      setIsTyping(true);
       
       await sendMessage.mutateAsync(messageData);
       
       // Clear selected documents after sending
       setSelectedDocuments([]);
+      
+      // Start polling for AI response
+      pollForAIResponse();
+      
     } catch (error) {
       console.error('Error sending message:', error);
-    } finally {
+      // Hide indicators on error
       setIsTyping(false);
       setIsGenerating(false);
     }
   };
+
+  // Poll for AI response completion
+  const pollForAIResponse = useCallback(() => {
+    const pollInterval = setInterval(async () => {
+      try {
+        if (!selectedSessionId) {
+          clearInterval(pollInterval);
+          setIsTyping(false);
+          setIsGenerating(false);
+          return;
+        }
+
+        // Fetch latest session data to check for new AI response
+        const token = localStorage.getItem('token');
+        const response = await fetch(`${import.meta.env.VITE_API_BASE_URL || 'http://157.10.52.80:8000'}/chat/sessions/${selectedSessionId}`, {
+          headers: {
+            'Authorization': `Bearer ${token}`,
+          },
+        });
+
+        if (response.ok) {
+          const sessionData = await response.json();
+          const messages = sessionData.messages || [];
+          
+          // Check if there's a new AI message (last message from assistant)
+          const lastMessage = messages[messages.length - 1];
+          if (lastMessage && lastMessage.sender === 'assistant') {
+            // AI response received, hide indicators
+            clearInterval(pollInterval);
+            setIsTyping(false);
+            setIsGenerating(false);
+            
+            // Invalidate queries to refresh the UI
+            queryClient.invalidateQueries({ queryKey: ['chat', 'sessions', selectedSessionId] });
+          }
+        }
+      } catch (error) {
+        console.error('Error polling for AI response:', error);
+        // On error, stop polling and hide indicators
+        clearInterval(pollInterval);
+        setIsTyping(false);
+        setIsGenerating(false);
+      }
+    }, 2000); // Poll every 2 seconds
+
+    // Set a maximum timeout of 5 minutes to prevent infinite polling
+    setTimeout(() => {
+      clearInterval(pollInterval);
+      setIsTyping(false);
+      setIsGenerating(false);
+    }, 300000); // 5 minutes timeout
+  }, [selectedSessionId, queryClient]);
 
   const handleMessageKeyPress = (e: React.KeyboardEvent) => {
     if (e.key === 'Enter' && !e.shiftKey) {
@@ -483,7 +541,7 @@ export const ChatInterface: React.FC = () => {
                           <div className="w-2 h-2 bg-pink-400 rounded-full typing-dot-enhanced"></div>
                           <div className="w-2 h-2 bg-purple-400 rounded-full typing-dot-enhanced"></div>
                         </div>
-                        <span className="text-xs text-purple-600 font-medium animate-pulse">AI is thinking...</span>
+                        <span className="text-xs text-purple-600 font-medium animate-pulse">AI đang suy nghĩ... (có thể mất vài phút)</span>
                       </div>
                     </div>
                   </div>
@@ -504,7 +562,7 @@ export const ChatInterface: React.FC = () => {
                           <div className="w-2 h-2 bg-cyan-400 rounded-full animate-pulse" style={{ animationDelay: '0.2s' }}></div>
                           <div className="w-2 h-2 bg-blue-400 rounded-full animate-pulse" style={{ animationDelay: '0.4s' }}></div>
                         </div>
-                        <span className="text-xs text-blue-600 font-medium">Generating response...</span>
+                        <span className="text-xs text-blue-600 font-medium">Đang tạo phản hồi... (có thể mất vài phút)</span>
                       </div>
                     </div>
                   </div>
