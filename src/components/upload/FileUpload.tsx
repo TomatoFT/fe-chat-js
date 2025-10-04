@@ -113,13 +113,13 @@ const DocumentsManager: React.FC = () => {
   const getProcessingStageInfo = (stage: string) => {
     switch (stage) {
       case 'extracting':
-        return { icon: FileText, text: 'Extracting text...', color: 'blue' };
+        return { icon: FileText, text: 'Đang trích xuất văn bản...', color: 'blue' };
       case 'indexing':
-        return { icon: Search, text: 'Creating search index...', color: 'purple' };
+        return { icon: Search, text: 'Đang tạo chỉ mục tìm kiếm...', color: 'purple' };
       case 'optimizing':
-        return { icon: Brain, text: 'Optimizing for AI...', color: 'green' };
+        return { icon: Brain, text: 'Đang tối ưu hóa cho AI...', color: 'green' };
       default:
-        return { icon: Loader2, text: 'Processing...', color: 'blue' };
+        return { icon: Loader2, text: 'Đang xử lý...', color: 'blue' };
     }
   };
 

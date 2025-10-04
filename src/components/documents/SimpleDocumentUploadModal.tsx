@@ -55,32 +55,32 @@ export const SimpleDocumentUploadModal: React.FC<SimpleDocumentUploadModalProps>
     switch (uploadType) {
       case 'staff':
         return {
-          title: 'Upload Staff Document',
-          description: 'Upload documents related to staff management.',
+          title: 'Tải lên tài liệu nhân viên',
+          description: 'Tải lên tài liệu liên quan đến quản lý nhân viên.',
           icon: <Users className="w-8 h-8 text-green-500" />,
           color: 'green',
           hook: uploadStaffDocument,
         };
       case 'students':
         return {
-          title: 'Upload Students Document',
-          description: 'Upload documents related to student records.',
+          title: 'Tải lên tài liệu học sinh',
+          description: 'Tải lên tài liệu liên quan đến hồ sơ học sinh.',
           icon: <GraduationCap className="w-8 h-8 text-purple-500" />,
           color: 'purple',
           hook: uploadStudentsDocument,
         };
       case 'examinations':
         return {
-          title: 'Upload Examinations Document',
-          description: 'Upload documents related to examinations.',
+          title: 'Tải lên tài liệu thi cử',
+          description: 'Tải lên tài liệu liên quan đến thi cử.',
           icon: <BookOpen className="w-8 h-8 text-orange-500" />,
           color: 'orange',
           hook: uploadExaminationsDocument,
         };
       default:
         return {
-          title: 'Upload Document',
-          description: 'Upload general documents.',
+          title: 'Tải lên tài liệu',
+          description: 'Tải lên tài liệu chung.',
           icon: <FileText className="w-8 h-8 text-blue-500" />,
           color: 'blue',
           hook: uploadDocument,
@@ -362,7 +362,7 @@ export const SimpleDocumentUploadModal: React.FC<SimpleDocumentUploadModalProps>
                 ) : (
                   <>
                     <Upload className="w-4 h-4" />
-                    Upload Document
+                    Tải lên tài liệu
                   </>
                 )}
               </button>

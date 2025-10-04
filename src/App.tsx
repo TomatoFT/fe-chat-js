@@ -9,7 +9,6 @@ import Login from './components/auth/Login';
 import Register from './components/auth/Register';
 import { Dashboard } from './components/dashboard/Dashboard';
 import { DocumentManagement } from './components/documents/DocumentManagement';
-import { DocumentSearch } from './components/documents/DocumentSearch';
 import { DocumentIndexing } from './components/documents/DocumentIndexing';
 import { ChatInterface } from './components/chat/ChatInterface';
 import AddSchool from './components/management/AddSchool';
@@ -76,14 +75,6 @@ function App() {
                     element={
                       <ProtectedRoute allowedRoles={['school_manager', 'province_manager', 'department_manager', 'admin']}>
                         <DocumentManagement />
-                      </ProtectedRoute>
-                    } 
-                  />
-                  <Route 
-                    path="documents/search" 
-                    element={
-                      <ProtectedRoute allowedRoles={['school_manager', 'province_manager', 'department_manager', 'admin']}>
-                        <DocumentSearch />
                       </ProtectedRoute>
                     } 
                   />

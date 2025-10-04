@@ -66,8 +66,8 @@ const Register: React.FC = () => {
             <div className="inline-flex items-center justify-center w-16 h-16 bg-blue-100 rounded-full mb-4">
               <BookOpen className="w-8 h-8 text-blue-600" />
             </div>
-            <h1 className="text-3xl font-bold text-gray-900">EduChat</h1>
-            <p className="text-gray-600 mt-2">Register your school</p>
+            <h1 className="text-3xl font-bold text-gray-900">Thống kê giáo dục</h1>
+            <p className="text-gray-600 mt-2">Đăng ký trường học của bạn</p>
           </div>
 
           {error && (
@@ -177,7 +177,7 @@ const Register: React.FC = () => {
               ) : (
                 <UserPlus className="w-5 h-5" />
               )}
-              {loading ? 'Creating Account...' : 'Create Account'}
+              {loading ? 'Đang tạo tài khoản...' : 'Tạo tài khoản'}
             </button>
           </form>
 

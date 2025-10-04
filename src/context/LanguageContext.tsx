@@ -464,11 +464,21 @@ const translations = {
     // Language
     'language.english': 'English',
     'language.vietnamese': 'Tiếng Việt',
+    
+    // Additional translations
+    'nav.chat': 'Trò chuyện',
+    'auth.registerSchool': 'Đăng ký trường học của bạn',
+    'auth.newSchool': 'Trường học mới?',
+    'auth.registerHere': 'Đăng ký tại đây',
+    'auth.alreadyHaveAccount': 'Đã có tài khoản?',
+    'auth.signInHere': 'Đăng nhập tại đây',
+    'auth.demoAccounts': 'Tài khoản demo:',
+    'auth.passwordAny': 'Mật khẩu: bất kỳ',
   },
 };
 
 export const LanguageProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
-  const [language, setLanguage] = useState<'en' | 'vi'>('en');
+  const [language, setLanguage] = useState<'en' | 'vi'>('vi');
 
   useEffect(() => {
     const savedLanguage = localStorage.getItem('language') as 'en' | 'vi';

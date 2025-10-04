@@ -159,7 +159,7 @@ const AddSchool: React.FC = () => {
                 ) : (
                   <Plus className="w-4 h-4" />
                 )}
-                {createSchool.isPending ? 'Creating School...' : 'Create School'}
+                {createSchool.isPending ? 'Đang tạo trường học...' : 'Tạo trường học'}
               </button>
             </div>
           </form>

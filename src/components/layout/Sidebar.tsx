@@ -29,8 +29,8 @@ const Sidebar: React.FC = () => {
           { icon: Users, label: t('nav.userManagement'), path: '/admin/users' },
           { icon: Building2, label: t('nav.systemTree'), path: '/admin/tree' },
           { icon: FileText, label: t('nav.documentStore'), path: '/admin/documents' },
-          { icon: FileText, label: 'Document Management', path: '/documents' },
-          { icon: Database, label: 'Document Indexing', path: '/documents/indexing' },
+          { icon: FileText, label: 'Quản lý tài liệu', path: '/documents' },
+          { icon: Database, label: 'Lập chỉ mục tài liệu', path: '/documents/indexing' },
         ];
       case 'department_manager':
         return [
@@ -46,7 +46,7 @@ const Sidebar: React.FC = () => {
         ];
       case 'school_manager':
         return [
-          { icon: MessageSquare, label: t('nav.chat'), path: '/dashboard' },
+          { icon: MessageSquare, label: t('nav.chat'), path: '/chat' },
           { icon: FileText, label: t('nav.documents'), path: '/documents' },
         ];
       default:
@@ -64,8 +64,8 @@ const Sidebar: React.FC = () => {
             <BookOpen className="w-6 h-6 text-blue-600" />
           </div>
           <div>
-            <h1 className="text-xl font-bold text-gray-900">EduChat</h1>
-            <p className="text-sm text-gray-600 capitalize">{user?.role}</p>
+            <h1 className="text-xl font-semibold text-gray-900">TKGD</h1>
+            <p className="text-sm text-gray-600 capitalize">VietTechKey</p>
           </div>
         </div>
       </div>

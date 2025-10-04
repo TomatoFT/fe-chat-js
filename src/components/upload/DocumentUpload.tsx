@@ -84,13 +84,13 @@ export const DocumentUpload: React.FC<DocumentUploadProps> = ({
   const getUploadTitle = () => {
     switch (uploadType) {
       case 'staff':
-        return 'Upload Staff Document';
+        return 'Tải lên tài liệu nhân viên';
       case 'students':
-        return 'Upload Students Document';
+        return 'Tải lên tài liệu học sinh';
       case 'examinations':
-        return 'Upload Examinations Document';
+        return 'Tải lên tài liệu thi cử';
       default:
-        return 'Upload Document';
+        return 'Tải lên tài liệu';
     }
   };
 
@@ -218,7 +218,7 @@ export const DocumentUpload: React.FC<DocumentUploadProps> = ({
               disabled={!selectedFile || isUploading}
               className="bg-indigo-600 text-white px-6 py-2 rounded-md hover:bg-indigo-700 disabled:opacity-50 disabled:cursor-not-allowed"
             >
-              {isUploading ? 'Uploading...' : 'Upload Document'}
+              {isUploading ? 'Đang tải lên...' : 'Tải lên tài liệu'}
             </button>
           </div>
         </form>

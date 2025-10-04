@@ -1,4 +1,5 @@
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
+import { handleAuthError } from '../lib/errorHandler';
 
 const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || 'http://157.10.52.80:8000';
 
@@ -24,6 +25,9 @@ export const useDocuments = () => {
       });
 
       if (!response.ok) {
+        if (handleAuthError(response, true)) {
+          throw new Error('Authentication failed. Please log in again.');
+        }
         throw new Error('Failed to fetch documents');
       }
 
@@ -45,6 +49,9 @@ export const useDocument = (id: string) => {
       });
 
       if (!response.ok) {
+        if (handleAuthError(response, true)) {
+          throw new Error('Authentication failed. Please log in again.');
+        }
         throw new Error('Failed to fetch document');
       }
 
@@ -70,6 +77,9 @@ export const useUploadDocument = () => {
       });
 
       if (!response.ok) {
+        if (handleAuthError(response, true)) {
+          throw new Error('Authentication failed. Please log in again.');
+        }
         const errorData = await response.json();
         throw new Error(errorData.detail || 'Failed to upload document');
       }
@@ -97,6 +107,9 @@ export const useDeleteDocument = () => {
       });
 
       if (!response.ok) {
+        if (handleAuthError(response, true)) {
+          throw new Error('Authentication failed. Please log in again.');
+        }
         throw new Error('Failed to delete document');
       }
     },
@@ -122,6 +135,9 @@ export const useUploadStaffDocument = () => {
       });
 
       if (!response.ok) {
+        if (handleAuthError(response, true)) {
+          throw new Error('Authentication failed. Please log in again.');
+        }
         const errorData = await response.json();
         throw new Error(errorData.detail || 'Failed to upload staff document');
       }
@@ -150,6 +166,9 @@ export const useUploadStudentsDocument = () => {
       });
 
       if (!response.ok) {
+        if (handleAuthError(response, true)) {
+          throw new Error('Authentication failed. Please log in again.');
+        }
         const errorData = await response.json();
         throw new Error(errorData.detail || 'Failed to upload students document');
       }
@@ -178,6 +197,9 @@ export const useUploadExaminationsDocument = () => {
       });
 
       if (!response.ok) {
+        if (handleAuthError(response, true)) {
+          throw new Error('Authentication failed. Please log in again.');
+        }
         const errorData = await response.json();
         throw new Error(errorData.detail || 'Failed to upload examinations document');
       }
@@ -202,6 +224,9 @@ export const useDownloadDocument = () => {
       });
 
       if (!response.ok) {
+        if (handleAuthError(response, true)) {
+          throw new Error('Authentication failed. Please log in again.');
+        }
         throw new Error('Failed to download document');
       }
 
@@ -222,6 +247,9 @@ export const useDownloadExampleStaffDocument = () => {
       });
 
       if (!response.ok) {
+        if (handleAuthError(response, true)) {
+          throw new Error('Authentication failed. Please log in again.');
+        }
         throw new Error('Failed to download example staff document');
       }
 
@@ -242,6 +270,9 @@ export const useDownloadExampleStudentsDocument = () => {
       });
 
       if (!response.ok) {
+        if (handleAuthError(response, true)) {
+          throw new Error('Authentication failed. Please log in again.');
+        }
         throw new Error('Failed to download example students document');
       }
 
@@ -262,6 +293,9 @@ export const useDownloadExampleExaminationsDocument = () => {
       });
 
       if (!response.ok) {
+        if (handleAuthError(response, true)) {
+          throw new Error('Authentication failed. Please log in again.');
+        }
         throw new Error('Failed to download example examinations document');
       }
 
@@ -290,6 +324,9 @@ export const useSearchDocuments = (query: string, documentIds?: number[], limit:
       });
 
       if (!response.ok) {
+        if (handleAuthError(response, true)) {
+          throw new Error('Authentication failed. Please log in again.');
+        }
         throw new Error('Failed to search documents');
       }
 

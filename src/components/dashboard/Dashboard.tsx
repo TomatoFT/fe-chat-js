@@ -277,7 +277,7 @@ export const Dashboard: React.FC = () => {
 
       {/* Quick Actions */}
       <div className="bg-white rounded-lg shadow p-6">
-        <h2 className="text-lg font-medium text-gray-900 mb-4">Quick Actions</h2>
+        <h2 className="text-lg font-medium text-gray-900 mb-4">Thao tác nhanh</h2>
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
           <a
             href="/chat"
@@ -285,8 +285,8 @@ export const Dashboard: React.FC = () => {
           >
             <div className="text-2xl mr-3">💬</div>
             <div>
-              <p className="font-medium text-gray-900">Start Chat</p>
-              <p className="text-sm text-gray-500">Begin a new conversation</p>
+              <p className="font-medium text-gray-900">Bắt đầu trò chuyện</p>
+              <p className="text-sm text-gray-500">Bắt đầu cuộc trò chuyện mới</p>
             </div>
           </a>
           <a
@@ -295,18 +295,8 @@ export const Dashboard: React.FC = () => {
           >
             <div className="text-2xl mr-3">📄</div>
             <div>
-              <p className="font-medium text-gray-900">Upload Document</p>
-              <p className="text-sm text-gray-500">Add new documents</p>
-            </div>
-          </a>
-          <a
-            href="/search"
-            className="flex items-center p-4 border border-gray-200 rounded-lg hover:bg-gray-50 transition-colors"
-          >
-            <div className="text-2xl mr-3">🔍</div>
-            <div>
-              <p className="font-medium text-gray-900">Search Documents</p>
-              <p className="text-sm text-gray-500">Find information quickly</p>
+              <p className="font-medium text-gray-900">Tải lên tài liệu</p>
+              <p className="text-sm text-gray-500">Thêm tài liệu mới</p>
             </div>
           </a>
         </div>

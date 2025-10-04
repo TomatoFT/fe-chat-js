@@ -230,7 +230,7 @@ export const ChatInterface: React.FC = () => {
           
           // Check if there's a new AI message (last message from assistant)
           const lastMessage = messages[messages.length - 1];
-          if (lastMessage && lastMessage.sender === 'assistant') {
+          if (lastMessage && (lastMessage.sender === 'assistant' || lastMessage.sender === 'AI')) {
             // AI response received, hide indicators
             clearInterval(pollInterval);
             setIsTyping(false);
@@ -299,6 +299,11 @@ export const ChatInterface: React.FC = () => {
       setEditingName('');
     } catch (error) {
       console.error('Error renaming session:', error);
+      // Show user-friendly error message
+      alert('Không thể đổi tên cuộc trò chuyện. Vui lòng thử lại.');
+      // Cancel edit mode on error
+      setEditingSessionId(null);
+      setEditingName('');
     }
   };
 
@@ -325,8 +330,8 @@ export const ChatInterface: React.FC = () => {
                 <MessageCircle className="w-6 h-6 text-white" />
               </div>
               <div>
-                <h2 className="text-xl font-bold text-white">EduChat</h2>
-                <p className="text-blue-100 text-sm">AI Assistant</p>
+                <h2 className="text-xl font-bold text-white">Thống kê giáo dục</h2>
+                <p className="text-blue-100 text-sm">Trợ lý AI</p>
               </div>
             </div>
             <button
@@ -355,7 +360,7 @@ export const ChatInterface: React.FC = () => {
                 disabled={isCreatingSession}
                 className="bg-blue-600 text-white px-4 py-2 rounded-full hover:bg-blue-700 disabled:opacity-50 transition-colors duration-200"
               >
-                {isCreatingSession ? 'Creating...' : 'Start Chat'}
+                {isCreatingSession ? 'Đang tạo...' : 'Bắt đầu trò chuyện'}
               </button>
             </div>
           ) : (
@@ -470,8 +475,8 @@ export const ChatInterface: React.FC = () => {
                   <div className="w-20 h-20 bg-gradient-to-r from-blue-100 to-indigo-100 rounded-full flex items-center justify-center mx-auto mb-4">
                     <MessageCircle className="w-10 h-10 text-blue-600" />
                   </div>
-                  <h3 className="text-lg font-semibold text-gray-900 mb-2">Start a conversation</h3>
-                  <p className="text-gray-500 mb-6">Ask me anything about your documents!</p>
+                  <h3 className="text-lg font-semibold text-gray-900 mb-2">Bắt đầu cuộc trò chuyện</h3>
+                  <p className="text-gray-500 mb-6">Hỏi tôi bất cứ điều gì về tài liệu của bạn!</p>
                   <div className="bg-blue-50 border border-blue-200 rounded-lg p-4 max-w-md mx-auto">
                     <p className="text-sm text-blue-800 text-center">
                       Công nghệ trí tuệ nhân tạo được đội ngũ Viettechkey nghiên cứu và huấn luyện. AI có thể xảy ra sai sót, vui lòng kiểm tra lại thông tin. Xin chân thành cảm ơn.
@@ -479,10 +484,10 @@ export const ChatInterface: React.FC = () => {
                   </div>
                 </div>
               ) : (
-                sortByDate(currentSession?.messages || [], 'timestamp', true)
+                sortByDate(currentSession?.messages || [], 'created_at', true)
                   ?.map((msg: any, index: number) => (
                   <div
-                    key={index}
+                    key={msg.id || `${msg.sender}-${msg.created_at}-${index}`}
                     className={`flex ${msg.sender === 'user' ? 'justify-end' : 'justify-start'} animate-fade-in`}
                     style={{ animationDelay: `${index * 0.1}s` }}
                   >
@@ -512,7 +517,7 @@ export const ChatInterface: React.FC = () => {
                         <div className={`flex items-center justify-between mt-1 ${
                           msg.sender === 'user' ? 'text-blue-100' : 'text-gray-500'
                         }`}>
-                          <span className="text-xs">{formatTime(msg.timestamp)}</span>
+                          <span className="text-xs">{formatTime(msg.created_at)}</span>
                           {msg.sender === 'user' && (
                             <div className="flex items-center space-x-1">
                               <div className="w-1 h-1 bg-blue-200 rounded-full"></div>
@@ -582,7 +587,7 @@ export const ChatInterface: React.FC = () => {
                     value={message}
                     onChange={handleMessageChange}
                     onKeyPress={handleMessageKeyPress}
-                    placeholder="Type your message... Use @ for mentions"
+                    placeholder="Nhập tin nhắn của bạn... Sử dụng @ để đề cập"
                     className="w-full px-4 py-3 border border-gray-300 rounded-full focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200"
                     disabled={sendMessage.isPending}
                   />
@@ -737,10 +742,10 @@ export const ChatInterface: React.FC = () => {
               <div className="w-24 h-24 bg-gradient-to-r from-blue-500 to-indigo-500 rounded-full flex items-center justify-center mx-auto mb-6 animate-pulse">
                 <MessageCircle className="w-12 h-12 text-white" />
               </div>
-              <h3 className="text-2xl font-bold text-gray-900 mb-3">Welcome to EduChat</h3>
+              <h3 className="text-2xl font-bold text-gray-900 mb-3">Chào mừng đến với Thống kê giáo dục</h3>
               <p className="text-gray-600 mb-8 leading-relaxed">
-                Your AI-powered assistant for educational document analysis. 
-                Start a conversation to get insights from your uploaded documents.
+                Trợ lý AI của bạn để phân tích tài liệu giáo dục. 
+                Bắt đầu cuộc trò chuyện để có được thông tin chi tiết từ các tài liệu đã tải lên.
               </p>
               <div className="bg-blue-50 border border-blue-200 rounded-lg p-4 mb-6">
                 <p className="text-sm text-blue-800 text-center">
@@ -755,10 +760,10 @@ export const ChatInterface: React.FC = () => {
                 {isCreatingSession ? (
                   <div className="flex items-center space-x-2">
                     <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
-                    <span>Creating...</span>
+                    <span>Đang tạo...</span>
                   </div>
                 ) : (
-                  'Start New Chat'
+                  'Bắt đầu trò chuyện mới'
                 )}
               </button>
             </div>

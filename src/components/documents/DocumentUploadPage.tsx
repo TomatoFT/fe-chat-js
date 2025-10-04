@@ -150,13 +150,6 @@ export const DocumentUploadPage: React.FC<DocumentUploadPageProps> = ({
             <FileText className="w-4 h-4" />
             View All Documents
           </Link>
-          <Link
-            to="/documents/search"
-            className="flex items-center gap-2 px-4 py-2 text-gray-600 hover:text-gray-900 transition-colors"
-          >
-            <FileText className="w-4 h-4" />
-            Search Documents
-          </Link>
         </div>
       </div>
 
@@ -200,7 +193,7 @@ export const DocumentUploadPage: React.FC<DocumentUploadPageProps> = ({
             {type.available ? (
               <div className="space-y-2">
                 <button className="w-full px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition-colors">
-                  Upload Documents
+                  Tải lên tài liệu
                 </button>
                 <button
                   onClick={(e) => {

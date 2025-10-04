@@ -292,8 +292,8 @@ export const EnhancedDocumentUpload: React.FC<EnhancedDocumentUploadProps> = ({
     <div className={`space-y-6 ${className}`}>
       {/* Header */}
       <div className="text-center">
-        <h2 className="text-2xl font-bold text-gray-900 mb-2">Upload Documents</h2>
-        <p className="text-gray-600">Drag and drop files or click to browse</p>
+        <h2 className="text-2xl font-bold text-gray-900 mb-2">Tải lên tài liệu</h2>
+        <p className="text-gray-600">Kéo thả tệp hoặc nhấp để duyệt</p>
       </div>
 
       {/* Upload Area */}

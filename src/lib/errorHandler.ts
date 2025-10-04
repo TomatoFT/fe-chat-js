@@ -7,7 +7,7 @@ export const setGlobalLogout = (logoutFn: () => void) => {
   globalLogout = logoutFn;
 };
 
-export const handleAuthError = (response: Response) => {
+export const handleAuthError = (response: Response, preventRedirect: boolean = false) => {
   if (response.status === 401) {
     // Clear the token from OpenAPI client
     clearAuthToken();
@@ -21,8 +21,11 @@ export const handleAuthError = (response: Response) => {
       globalLogout();
     }
     
-    // Redirect to login page
-    window.location.href = '/login';
+    // Only redirect if not prevented (for graceful error handling)
+    if (!preventRedirect) {
+      // Redirect to login page
+      window.location.href = '/login';
+    }
     
     return true; // Indicates that logout was triggered
   }

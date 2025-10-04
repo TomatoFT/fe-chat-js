@@ -130,7 +130,7 @@ const AddProvince: React.FC = () => {
                 ) : (
                   <Plus className="w-4 h-4" />
                 )}
-                {createProvince.isPending ? 'Creating Province...' : 'Create Province'}
+                {createProvince.isPending ? 'Đang tạo tỉnh...' : 'Tạo tỉnh'}
               </button>
             </div>
           </form>

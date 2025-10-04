@@ -2,7 +2,6 @@ import React, { useState } from 'react';
 import { motion } from 'framer-motion';
 import { 
   FileText, 
-  Search, 
   Download, 
   Trash2, 
   Eye, 
@@ -13,7 +12,8 @@ import {
   File,
   AlertCircle,
   CheckCircle,
-  Clock
+  Clock,
+  Search
 } from 'lucide-react';
 import { useAuth } from '../../context/AuthContext';
 import { 
@@ -201,16 +201,9 @@ export const DocumentManagement: React.FC<DocumentManagementProps> = ({ classNam
       <div className="mb-8">
         <div className="flex items-center justify-between">
           <div>
-            <h1 className="text-3xl font-bold text-gray-900 mb-2">Document Management</h1>
-            <p className="text-gray-600">Upload, manage, and organize your documents</p>
+            <h1 className="text-3xl font-bold text-gray-900 mb-2">Quản lý tài liệu</h1>
+            <p className="text-gray-600">Tải lên, quản lý và tổ chức tài liệu của bạn</p>
           </div>
-          <Link
-            to="/documents/search"
-            className="flex items-center gap-2 px-4 py-2 bg-purple-500 text-white rounded-lg hover:bg-purple-600 transition-colors"
-          >
-            <Search className="w-4 h-4" />
-            AI Search
-          </Link>
         </div>
       </div>
 
@@ -226,7 +219,7 @@ export const DocumentManagement: React.FC<DocumentManagementProps> = ({ classNam
               style={{ pointerEvents: 'auto' }}
             >
               <Plus className="w-4 h-4" />
-              Upload Document
+              Tải lên tài liệu
             </motion.button>
           )}
           

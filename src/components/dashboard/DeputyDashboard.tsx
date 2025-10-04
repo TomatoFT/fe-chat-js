@@ -5,29 +5,29 @@ import { Building2, Users, MessageSquare, FileText } from 'lucide-react';
 const DeputyDashboard: React.FC = () => {
   const quickActions = [
     {
-      title: 'AI Chat Assistant',
-      description: 'Ask questions about educational policies and documents',
+      title: 'Trợ lý AI Chat',
+      description: 'Đặt câu hỏi về chính sách giáo dục và tài liệu',
       icon: MessageSquare,
       link: '/chat',
       color: 'blue',
     },
     {
-      title: 'Manage Provinces',
-      description: 'Add, edit, and monitor all provinces',
+      title: 'Quản lý tỉnh thành',
+      description: 'Thêm, chỉnh sửa và giám sát tất cả tỉnh thành',
       icon: Building2,
       link: '/provinces',
       color: 'indigo',
     },
     {
-      title: 'View All Schools',
-      description: 'Monitor schools across all provinces',
+      title: 'Xem tất cả trường học',
+      description: 'Giám sát các trường học trên toàn tỉnh',
       icon: Users,
       link: '/schools',
       color: 'green',
     },
     {
-      title: 'Document Management',
-      description: 'Upload and manage educational documents',
+      title: 'Quản lý tài liệu',
+      description: 'Tải lên và quản lý tài liệu giáo dục',
       icon: FileText,
       link: '/documents',
       color: 'purple',
@@ -37,8 +37,8 @@ const DeputyDashboard: React.FC = () => {
   return (
     <div className="p-6">
       <div className="mb-8">
-        <h1 className="text-3xl font-bold text-gray-900 mb-2">Deputy Dashboard</h1>
-        <p className="text-gray-600">Oversee the entire educational system</p>
+        <h1 className="text-3xl font-bold text-gray-900 mb-2">Bảng điều khiển phó giám đốc</h1>
+        <p className="text-gray-600">Giám sát toàn bộ hệ thống giáo dục</p>
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">

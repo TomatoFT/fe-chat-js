@@ -25,8 +25,8 @@ export const useChatSessions = () => {
       });
 
       if (!response.ok) {
-        if (handleAuthError(response)) {
-          return; // Logout was triggered
+        if (handleAuthError(response, true)) {
+          throw new Error('Authentication failed. Please log in again.');
         }
         throw new Error('Failed to fetch chat sessions');
       }
@@ -49,8 +49,8 @@ export const useChatSession = (id: string) => {
       });
 
       if (!response.ok) {
-        if (handleAuthError(response)) {
-          return; // Logout was triggered
+        if (handleAuthError(response, true)) {
+          throw new Error('Authentication failed. Please log in again.');
         }
         throw new Error('Failed to fetch chat session');
       }
@@ -74,8 +74,8 @@ export const useChatMessages = (sessionId: string) => {
       });
 
       if (!response.ok) {
-        if (handleAuthError(response)) {
-          return; // Logout was triggered
+        if (handleAuthError(response, true)) {
+          throw new Error('Authentication failed. Please log in again.');
         }
         throw new Error('Failed to fetch messages');
       }
@@ -103,8 +103,8 @@ export const useCreateChatSession = () => {
       });
 
       if (!response.ok) {
-        if (handleAuthError(response)) {
-          return; // Logout was triggered
+        if (handleAuthError(response, true)) {
+          throw new Error('Authentication failed. Please log in again.');
         }
         const errorData = await response.json();
         throw new Error(errorData.detail || 'Failed to create chat session');
@@ -143,8 +143,8 @@ export const useSendMessage = () => {
       });
 
       if (!response.ok) {
-        if (handleAuthError(response)) {
-          return; // Logout was triggered
+        if (handleAuthError(response, true)) {
+          throw new Error('Authentication failed. Please log in again.');
         }
         const errorData = await response.json();
         throw new Error(errorData.detail || 'Failed to send message');
@@ -178,8 +178,8 @@ export const useRenameChatSession = () => {
       });
 
       if (!response.ok) {
-        if (handleAuthError(response)) {
-          return; // Logout was triggered
+        if (handleAuthError(response, true)) {
+          throw new Error('Authentication failed. Please log in again.');
         }
         const errorData = await response.json();
         throw new Error(errorData.detail || 'Failed to rename chat session');
@@ -209,8 +209,8 @@ export const useDeleteChatSession = () => {
       });
 
       if (!response.ok) {
-        if (handleAuthError(response)) {
-          return; // Logout was triggered
+        if (handleAuthError(response, true)) {
+          throw new Error('Authentication failed. Please log in again.');
         }
         throw new Error('Failed to delete chat session');
       }
@@ -234,8 +234,8 @@ export const useDocumentsForRAG = () => {
       });
 
       if (!response.ok) {
-        if (handleAuthError(response)) {
-          return; // Logout was triggered
+        if (handleAuthError(response, true)) {
+          throw new Error('Authentication failed. Please log in again.');
         }
         throw new Error('Failed to fetch documents');
       }
