@@ -76,7 +76,7 @@ const AddProvince: React.FC = () => {
                   type="text"
                   id="name"
                   className="input-field"
-                  placeholder="Enter province name"
+                  placeholder={t('management.enterProvinceName')}
                 />
                 {errors.name && (
                   <p className="mt-1 text-sm text-red-600">{errors.name.message}</p>
@@ -92,7 +92,7 @@ const AddProvince: React.FC = () => {
                   type="email"
                   id="email"
                   className="input-field"
-                  placeholder="Enter province manager email"
+                  placeholder={t('management.enterProvinceManagerEmail')}
                 />
                 {errors.email && (
                   <p className="mt-1 text-sm text-red-600">{errors.email.message}</p>
@@ -109,7 +109,7 @@ const AddProvince: React.FC = () => {
                 type="password"
                 id="password"
                 className="input-field"
-                placeholder="Enter password for province manager account"
+                placeholder={t('management.enterPasswordForProvinceManager')}
               />
               {errors.password && (
                 <p className="mt-1 text-sm text-red-600">{errors.password.message}</p>

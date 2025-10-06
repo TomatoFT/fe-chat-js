@@ -66,7 +66,6 @@ export const DocumentUploadModal: React.FC<DocumentUploadModalProps> = ({
   const validateFile = (file: File): string | null => {
     const maxSize = 10 * 1024 * 1024; // 10MB
     const allowedTypes = [
-      'application/pdf',
       'application/msword',
       'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
       'text/plain',
@@ -84,7 +83,7 @@ export const DocumentUploadModal: React.FC<DocumentUploadModalProps> = ({
     }
 
     if (!allowedTypes.includes(file.type)) {
-      return 'File type not supported. Please upload PDF, DOC, DOCX, TXT, XLS, XLSX, JPG, PNG, GIF, ZIP, or RAR files';
+      return 'File type not supported. Please upload DOC, DOCX, TXT, XLS, XLSX, JPG, PNG, GIF, ZIP, or RAR files';
     }
 
     return null;
@@ -93,7 +92,6 @@ export const DocumentUploadModal: React.FC<DocumentUploadModalProps> = ({
   // Get file icon based on type
   const getFileIcon = (file: File) => {
     const type = file.type;
-    if (type.includes('pdf')) return <FileText className="w-5 h-5 text-red-500" />;
     if (type.includes('word') || type.includes('document')) return <FileText className="w-5 h-5 text-blue-500" />;
     if (type.includes('sheet') || type.includes('excel')) return <FileSpreadsheet className="w-5 h-5 text-green-500" />;
     if (type.includes('image')) return <Image className="w-5 h-5 text-purple-500" />;
@@ -129,19 +127,12 @@ export const DocumentUploadModal: React.FC<DocumentUploadModalProps> = ({
           color: 'orange',
           hook: uploadExaminationsDocument,
         };
-      default:
-        return {
-          title: 'Tải lên tài liệu',
-          description: 'Tải lên tài liệu chung cho tổ chức của bạn.',
-          icon: <FileText className="w-8 h-8 text-blue-500" />,
-          color: 'blue',
-          hook: uploadDocument,
-        };
+
     }
   };
 
   const config = getUploadConfig();
-  const uploadHook = config.hook;
+  const uploadHook = config?.hook;
 
   const handleDrag = useCallback((e: React.DragEvent) => {
     e.preventDefault();
@@ -280,10 +271,10 @@ export const DocumentUploadModal: React.FC<DocumentUploadModalProps> = ({
         {/* Header */}
         <div className="flex items-center justify-between p-6 border-b border-gray-200">
           <div className="flex items-center gap-3">
-            {config.icon}
+            {config?.icon}
             <div>
-              <h2 className="text-xl font-semibold text-gray-900">{config.title}</h2>
-              <p className="text-sm text-gray-600">{config.description}</p>
+              <h2 className="text-xl font-semibold text-gray-900">{config?.title}</h2>
+              <p className="text-sm text-gray-600">{config?.description}</p>
             </div>
           </div>
           <button
@@ -301,7 +292,7 @@ export const DocumentUploadModal: React.FC<DocumentUploadModalProps> = ({
             <div
               className={`relative border-2 border-dashed rounded-lg p-8 text-center transition-all duration-200 ${
                 dragActive
-                  ? `border-${config.color}-500 bg-${config.color}-50`
+                  ? `border-${config?.color}-500 bg-${config?.color}-50`
                   : 'border-gray-300 hover:border-gray-400'
               }`}
               onDragEnter={handleDrag}
@@ -314,7 +305,7 @@ export const DocumentUploadModal: React.FC<DocumentUploadModalProps> = ({
                 type="file"
                 onChange={handleFileInput}
                 className="absolute inset-0 w-full h-full opacity-0 cursor-pointer"
-                accept=".pdf,.doc,.docx,.txt,.xlsx,.xls,.jpg,.jpeg,.png,.gif,.zip,.rar"
+                accept=".doc,.docx,.txt,.xlsx,.xls,.jpg,.jpeg,.png,.gif,.zip,.rar"
                 multiple
               />
               
@@ -334,7 +325,7 @@ export const DocumentUploadModal: React.FC<DocumentUploadModalProps> = ({
                     }
                   </p>
                   <p className="text-sm text-gray-500">
-                    Supports PDF, DOC, DOCX, TXT, XLSX, XLS, JPG, PNG, GIF, ZIP, RAR up to 10MB each
+                    Supports DOC, DOCX, TXT, XLSX, XLS, JPG, PNG, GIF, ZIP, RAR up to 10MB each
                   </p>
                 </div>
               </div>
@@ -427,7 +418,7 @@ export const DocumentUploadModal: React.FC<DocumentUploadModalProps> = ({
                 type="text"
                 id="title"
                 className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                placeholder="Enter document title"
+                placeholder="Enter title"
               />
               {errors.title && (
                 <p className="mt-1 text-sm text-red-600">{errors.title.message}</p>
@@ -444,7 +435,7 @@ export const DocumentUploadModal: React.FC<DocumentUploadModalProps> = ({
                 id="description"
                 rows={3}
                 className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                placeholder="Enter document description"
+                placeholder={t('documents.enterDescription')}
               />
               {errors.description && (
                 <p className="mt-1 text-sm text-red-600">{errors.description.message}</p>

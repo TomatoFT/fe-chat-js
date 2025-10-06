@@ -108,7 +108,7 @@ describe('Validation Schemas', () => {
 
   describe('documentUploadSchema', () => {
     it('should validate correct document upload data', () => {
-      const mockFile = new File(['test'], 'test.pdf', { type: 'application/pdf' });
+      const mockFile = new File(['test'], 'test.docx', { type: 'application/vnd.openxmlformats-officedocument.wordprocessingml.document' });
       const validData = {
         file: mockFile,
         title: 'Test Document',
@@ -119,7 +119,7 @@ describe('Validation Schemas', () => {
     });
 
     it('should validate with only required file', () => {
-      const mockFile = new File(['test'], 'test.pdf', { type: 'application/pdf' });
+      const mockFile = new File(['test'], 'test.docx', { type: 'application/vnd.openxmlformats-officedocument.wordprocessingml.document' });
       const validData = {
         file: mockFile,
       };

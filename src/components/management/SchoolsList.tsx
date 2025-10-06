@@ -5,6 +5,7 @@ import { Plus, Search, School, FileText, Eye, Edit, Trash2, MoreVertical } from 
 import { School as SchoolType } from '../../types';
 import { useSchools, useUpdateSchool, useDeleteSchool } from '../../hooks/useUsers';
 import { useAuth } from '../../context/AuthContext';
+import { useLanguage } from '../../context/LanguageContext';
 import { hasPermission } from '../../utils/userUtils';
 
 const SchoolsList: React.FC = () => {
@@ -15,6 +16,7 @@ const SchoolsList: React.FC = () => {
   
   // Auth context
   const { user } = useAuth();
+  const { t } = useLanguage();
   
   // Fetch schools from API
   const { data: schools, isLoading, error } = useSchools();
@@ -171,7 +173,7 @@ const SchoolsList: React.FC = () => {
                 value={formData.province_id}
                 onChange={(e) => setFormData(prev => ({ ...prev, province_id: e.target.value }))}
                 className={`input-field ${!hasPermission(user, 'manage_users') ? 'bg-gray-100 cursor-not-allowed' : ''}`}
-                placeholder="Enter province ID"
+                placeholder={t('management.enterProvinceId')}
                 disabled={!hasPermission(user, 'manage_users')}
               />
             </div>
@@ -183,7 +185,7 @@ const SchoolsList: React.FC = () => {
                 value={formData.email}
                 onChange={(e) => setFormData(prev => ({ ...prev, email: e.target.value }))}
                 className="input-field"
-                placeholder="Enter new email (optional)"
+                placeholder={t('management.enterNewEmail')}
               />
             </div>
             <div>
@@ -193,7 +195,7 @@ const SchoolsList: React.FC = () => {
                 value={formData.password}
                 onChange={(e) => setFormData(prev => ({ ...prev, password: e.target.value }))}
                 className="input-field"
-                placeholder="Enter new password"
+                placeholder={t('auth.enterPassword')}
                 required
               />
             </div>
@@ -267,7 +269,7 @@ const SchoolsList: React.FC = () => {
             <Search className="w-5 h-5 absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" />
             <input
               type="text"
-              placeholder="Search schools by name or email..."
+              placeholder={t('schools.searchSchools')}
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
               className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"

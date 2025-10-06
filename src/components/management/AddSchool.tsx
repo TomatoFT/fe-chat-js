@@ -82,7 +82,7 @@ const AddSchool: React.FC = () => {
                   type="text"
                   id="name"
                   className="input-field"
-                  placeholder="Enter school name"
+                  placeholder={t('management.enterSchoolName')}
                 />
                 {errors.name && (
                   <p className="mt-1 text-sm text-red-600">{errors.name.message}</p>
@@ -98,7 +98,7 @@ const AddSchool: React.FC = () => {
                   type="email"
                   id="email"
                   className="input-field"
-                  placeholder="Enter school email"
+                  placeholder={t('management.enterSchoolEmail')}
                 />
                 {errors.email && (
                   <p className="mt-1 text-sm text-red-600">{errors.email.message}</p>
@@ -116,7 +116,7 @@ const AddSchool: React.FC = () => {
                   type="password"
                   id="password"
                   className="input-field"
-                  placeholder="Enter password for school account"
+                  placeholder={t('management.enterPasswordForSchoolAccount')}
                 />
                 {errors.password && (
                   <p className="mt-1 text-sm text-red-600">{errors.password.message}</p>

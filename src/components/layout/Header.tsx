@@ -3,7 +3,6 @@ import { motion } from 'framer-motion';
 import { LogOut, Bell } from 'lucide-react';
 import { useAuth } from '../../context/AuthContext';
 import { useLanguage } from '../../context/LanguageContext';
-import LanguageSwitcher from './LanguageSwitcher';
 
 const Header: React.FC = () => {
   const { user, logout } = useAuth();
@@ -24,8 +23,6 @@ const Header: React.FC = () => {
         </div>
 
         <div className="flex items-center gap-4">
-          <LanguageSwitcher />
-          
           <motion.button
             whileHover={{ scale: 1.05 }}
             whileTap={{ scale: 0.95 }}

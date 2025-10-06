@@ -225,7 +225,6 @@ export const DocumentUploadPage: React.FC<DocumentUploadPageProps> = ({
             <div>
               <h4 className="font-semibold mb-2">Supported File Types:</h4>
               <ul className="space-y-1">
-                <li>• PDF documents (.pdf)</li>
                 <li>• Word documents (.doc, .docx)</li>
                 <li>• Excel spreadsheets (.xls, .xlsx)</li>
                 <li>• Text files (.txt)</li>

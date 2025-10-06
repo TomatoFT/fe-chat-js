@@ -16,6 +16,7 @@ import {
   Search
 } from 'lucide-react';
 import { useAuth } from '../../context/AuthContext';
+import { useLanguage } from '../../context/LanguageContext';
 import { 
   useDocuments, 
   useDeleteDocument, 
@@ -27,7 +28,6 @@ import {
 import { hasPermission } from '../../utils/userUtils';
 import { SimpleDocumentUploadModal } from './SimpleDocumentUploadModal';
 import { DocumentViewer } from './DocumentViewer';
-import { Link } from 'react-router-dom';
 
 interface DocumentManagementProps {
   className?: string;
@@ -35,6 +35,7 @@ interface DocumentManagementProps {
 
 export const DocumentManagement: React.FC<DocumentManagementProps> = ({ className = '' }) => {
   const { user } = useAuth();
+  const { t } = useLanguage();
   const [searchTerm, setSearchTerm] = useState('');
   const [filterType, setFilterType] = useState<'all' | 'general' | 'staff' | 'students' | 'examinations'>('all');
   const [showUploadModal, setShowUploadModal] = useState(false);
@@ -209,20 +210,7 @@ export const DocumentManagement: React.FC<DocumentManagementProps> = ({ classNam
 
       {/* Upload Actions */}
       <div className="mb-6">
-        <div className="flex flex-wrap gap-3">
-          {canUploadGeneral && (
-            <motion.button
-              whileHover={{ scale: 1.02 }}
-              whileTap={{ scale: 0.98 }}
-              onClick={() => handleUpload('general')}
-              className="flex items-center gap-2 px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition-colors cursor-pointer"
-              style={{ pointerEvents: 'auto' }}
-            >
-              <Plus className="w-4 h-4" />
-              Tải lên tài liệu
-            </motion.button>
-          )}
-          
+        <div className="flex flex-wrap gap-3">image.png
           {canUploadStaff && (
             <motion.button
               whileHover={{ scale: 1.02 }}
@@ -232,7 +220,7 @@ export const DocumentManagement: React.FC<DocumentManagementProps> = ({ classNam
               style={{ pointerEvents: 'auto' }}
             >
               <Users className="w-4 h-4" />
-              Upload Staff Document
+{t('documents.uploadStaffDocument')}
             </motion.button>
           )}
           
@@ -245,7 +233,7 @@ export const DocumentManagement: React.FC<DocumentManagementProps> = ({ classNam
               style={{ pointerEvents: 'auto' }}
             >
               <GraduationCap className="w-4 h-4" />
-              Upload Students Document
+{t('documents.uploadStudentsDocument')}
             </motion.button>
           )}
           
@@ -258,7 +246,7 @@ export const DocumentManagement: React.FC<DocumentManagementProps> = ({ classNam
               style={{ pointerEvents: 'auto' }}
             >
               <BookOpen className="w-4 h-4" />
-              Upload Examinations Document
+{t('documents.uploadExaminationsDocument')}
             </motion.button>
           )}
         </div>
@@ -269,10 +257,10 @@ export const DocumentManagement: React.FC<DocumentManagementProps> = ({ classNam
         <div className="bg-gray-50 rounded-lg p-4">
           <h3 className="text-lg font-semibold text-gray-900 mb-3 flex items-center gap-2">
             <File className="w-5 h-5 text-gray-600" />
-            Example Documents
+{t('documents.exampleDocuments')}
           </h3>
           <p className="text-sm text-gray-600 mb-4">
-            Download example Excel templates to see the required format for each document type.
+{t('documents.exampleDescription')}
           </p>
           <div className="flex flex-wrap gap-3">
             <motion.button
@@ -283,7 +271,7 @@ export const DocumentManagement: React.FC<DocumentManagementProps> = ({ classNam
               className="flex items-center gap-2 px-4 py-2 bg-green-100 text-green-700 rounded-lg hover:bg-green-200 transition-colors cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed"
             >
               <Download className="w-4 h-4" />
-              {downloadExampleStaff.isPending ? 'Downloading...' : 'Staff Template'}
+{downloadExampleStaff.isPending ? t('documents.downloading') : t('documents.staffTemplate')}
             </motion.button>
             
             <motion.button
@@ -294,7 +282,7 @@ export const DocumentManagement: React.FC<DocumentManagementProps> = ({ classNam
               className="flex items-center gap-2 px-4 py-2 bg-purple-100 text-purple-700 rounded-lg hover:bg-purple-200 transition-colors cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed"
             >
               <Download className="w-4 h-4" />
-              {downloadExampleStudents.isPending ? 'Downloading...' : 'Students Template'}
+{downloadExampleStudents.isPending ? t('documents.downloading') : t('documents.studentsTemplate')}
             </motion.button>
             
             <motion.button
@@ -305,7 +293,7 @@ export const DocumentManagement: React.FC<DocumentManagementProps> = ({ classNam
               className="flex items-center gap-2 px-4 py-2 bg-orange-100 text-orange-700 rounded-lg hover:bg-orange-200 transition-colors cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed"
             >
               <Download className="w-4 h-4" />
-              {downloadExampleExaminations.isPending ? 'Downloading...' : 'Examinations Template'}
+{downloadExampleExaminations.isPending ? t('documents.downloading') : t('documents.examinationsTemplate')}
             </motion.button>
           </div>
         </div>
@@ -318,7 +306,7 @@ export const DocumentManagement: React.FC<DocumentManagementProps> = ({ classNam
             <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-4 h-4" />
             <input
               type="text"
-              placeholder="Search documents..."
+              placeholder={t('documents.searchDocuments')}
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
               className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
@@ -332,11 +320,11 @@ export const DocumentManagement: React.FC<DocumentManagementProps> = ({ classNam
             onChange={(e) => setFilterType(e.target.value as any)}
             className="px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
           >
-            <option value="all">All Types</option>
-            <option value="general">General</option>
-            <option value="staff">Staff</option>
-            <option value="students">Students</option>
-            <option value="examinations">Examinations</option>
+            <option value="all">{t('documents.allTypes')}</option>
+            <option value="general">{t('documents.general')}</option>
+            <option value="staff">{t('documents.staff')}</option>
+            <option value="students">{t('documents.students')}</option>
+            <option value="examinations">{t('documents.examinations')}</option>
           </select>
         </div>
       </div>
@@ -386,7 +374,7 @@ export const DocumentManagement: React.FC<DocumentManagementProps> = ({ classNam
                   <button
                     onClick={() => handleView(doc)}
                     className="p-2 text-gray-400 hover:text-blue-500 transition-colors"
-                    title="View"
+                    title={t('documents.view')}
                   >
                     <Eye className="w-4 h-4" />
                   </button>
@@ -394,7 +382,7 @@ export const DocumentManagement: React.FC<DocumentManagementProps> = ({ classNam
                   <button
                     onClick={() => handleDownload(doc)}
                     className="p-2 text-gray-400 hover:text-green-500 transition-colors"
-                    title="Download"
+                    title={t('documents.download')}
                   >
                     <Download className="w-4 h-4" />
                   </button>
@@ -402,7 +390,7 @@ export const DocumentManagement: React.FC<DocumentManagementProps> = ({ classNam
                   <button
                     onClick={() => handleDelete(doc)}
                     className="p-2 text-gray-400 hover:text-red-500 transition-colors"
-                    title="Delete"
+                    title={t('documents.delete')}
                   >
                     <Trash2 className="w-4 h-4" />
                   </button>

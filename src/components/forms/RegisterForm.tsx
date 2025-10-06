@@ -68,7 +68,7 @@ export const RegisterForm: React.FC<RegisterFormProps> = ({ onSuccess, onError }
           id="name"
           autoComplete="name"
           className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
-          placeholder="Enter your full name"
+          placeholder={t('auth.enterFullName')}
         />
         {errors.name && (
           <p className="mt-1 text-sm text-red-600">{errors.name.message}</p>
@@ -85,7 +85,7 @@ export const RegisterForm: React.FC<RegisterFormProps> = ({ onSuccess, onError }
           id="email"
           autoComplete="email"
           className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
-          placeholder="Enter your email"
+          placeholder={t('auth.enterEmail')}
         />
         {errors.email && (
           <p className="mt-1 text-sm text-red-600">{errors.email.message}</p>
@@ -102,7 +102,7 @@ export const RegisterForm: React.FC<RegisterFormProps> = ({ onSuccess, onError }
           id="password"
           autoComplete="new-password"
           className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
-          placeholder="Create a password"
+          placeholder={t('auth.createPassword')}
         />
         {errors.password && (
           <p className="mt-1 text-sm text-red-600">{errors.password.message}</p>
@@ -121,7 +121,7 @@ export const RegisterForm: React.FC<RegisterFormProps> = ({ onSuccess, onError }
           id="confirmPassword"
           autoComplete="new-password"
           className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
-          placeholder="Confirm your password"
+          placeholder={t('auth.confirmYourPassword')}
         />
         {errors.confirmPassword && (
           <p className="mt-1 text-sm text-red-600">{errors.confirmPassword.message}</p>

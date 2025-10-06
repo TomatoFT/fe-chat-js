@@ -80,7 +80,6 @@ export const DocumentViewer: React.FC<DocumentViewerProps> = ({
   const getFileType = (filename: string) => {
     const ext = filename.split('.').pop()?.toLowerCase();
     switch (ext) {
-      case 'pdf': return 'PDF Document';
       case 'doc': case 'docx': return 'Word Document';
       case 'xls': case 'xlsx': return 'Excel Spreadsheet';
       case 'txt': return 'Text File';

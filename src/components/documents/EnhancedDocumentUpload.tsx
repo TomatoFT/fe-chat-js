@@ -18,7 +18,6 @@ import {
   Trash2,
   Plus,
   X,
-  CloudUpload,
   FolderOpen
 } from 'lucide-react';
 import { useForm } from 'react-hook-form';
@@ -84,7 +83,6 @@ export const EnhancedDocumentUpload: React.FC<EnhancedDocumentUploadProps> = ({
   const validateFile = (file: File): string | null => {
     const maxSize = 10 * 1024 * 1024; // 10MB
     const allowedTypes = [
-      'application/pdf',
       'application/msword',
       'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
       'text/plain',
@@ -111,7 +109,6 @@ export const EnhancedDocumentUpload: React.FC<EnhancedDocumentUploadProps> = ({
   // Get file icon based on type
   const getFileIcon = (file: File) => {
     const type = file.type;
-    if (type.includes('pdf')) return <FileText className="w-5 h-5 text-red-500" />;
     if (type.includes('word') || type.includes('document')) return <FileText className="w-5 h-5 text-blue-500" />;
     if (type.includes('sheet') || type.includes('excel')) return <FileSpreadsheet className="w-5 h-5 text-green-500" />;
     if (type.includes('image')) return <Image className="w-5 h-5 text-purple-500" />;
@@ -313,13 +310,13 @@ export const EnhancedDocumentUpload: React.FC<EnhancedDocumentUploadProps> = ({
           type="file"
           onChange={handleFileInput}
           className="absolute inset-0 w-full h-full opacity-0 cursor-pointer"
-          accept=".pdf,.doc,.docx,.txt,.xlsx,.xls,.jpg,.jpeg,.png,.gif,.zip,.rar"
+          accept=".doc,.docx,.txt,.xlsx,.xls,.jpg,.jpeg,.png,.gif,.zip,.rar"
           multiple
         />
         
         <div className="space-y-4">
           <div className="w-20 h-20 bg-gray-100 rounded-full flex items-center justify-center mx-auto">
-            <CloudUpload className="w-10 h-10 text-gray-400" />
+            <Upload className="w-10 h-10 text-gray-400" />
           </div>
           
           <div>
@@ -333,7 +330,7 @@ export const EnhancedDocumentUpload: React.FC<EnhancedDocumentUploadProps> = ({
               }
             </p>
             <p className="text-sm text-gray-500">
-              Supports PDF, DOC, DOCX, TXT, XLSX, XLS, JPG, PNG, GIF, ZIP, RAR up to 10MB each
+              Supports DOC, DOCX, TXT, XLSX, XLS, JPG, PNG, GIF, ZIP, RAR up to 10MB each
             </p>
           </div>
         </div>

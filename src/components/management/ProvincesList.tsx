@@ -202,7 +202,7 @@ const ProvincesList: React.FC = () => {
                 value={formData.department_id}
                 onChange={(e) => setFormData(prev => ({ ...prev, department_id: e.target.value }))}
                 className={`input-field ${!hasPermission(user, 'manage_users') ? 'bg-gray-100 cursor-not-allowed' : ''}`}
-                placeholder="Enter department ID (optional)"
+                placeholder={t('management.enterDepartmentId')}
                 disabled={!hasPermission(user, 'manage_users')}
               />
             </div>
@@ -217,7 +217,7 @@ const ProvincesList: React.FC = () => {
                 type="email"
                 value={formData.email}
                 className="input-field bg-gray-100 cursor-not-allowed"
-                placeholder="Email cannot be updated"
+                placeholder={t('management.emailCannotBeUpdated')}
                 disabled
               />
             </div>
@@ -230,7 +230,7 @@ const ProvincesList: React.FC = () => {
                 value={formData.password}
                 onChange={(e) => setFormData(prev => ({ ...prev, password: e.target.value }))}
                 className="input-field"
-                placeholder="Enter new password"
+                placeholder={t('auth.enterPassword')}
                 required
               />
             </div>
@@ -304,7 +304,7 @@ const ProvincesList: React.FC = () => {
             <Search className="w-5 h-5 absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" />
             <input
               type="text"
-              placeholder="Search provinces by name..."
+              placeholder={t('provinces.searchProvinces')}
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
               className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"

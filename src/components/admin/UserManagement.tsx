@@ -80,7 +80,7 @@ export const UserManagement: React.FC = () => {
       <div className="max-w-md">
         <input
           type="text"
-          placeholder="Search users..."
+          placeholder={t('users.searchUsers')}
           value={searchTerm}
           onChange={(e) => setSearchTerm(e.target.value)}
           className="w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500"

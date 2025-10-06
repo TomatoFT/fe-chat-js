@@ -36,7 +36,6 @@ const DocumentsManager: React.FC = () => {
   const handleFiles = async (files: File[]) => {
     const validFiles = files.filter(file => {
       const validTypes = [
-        'application/pdf',
         'application/msword',
         'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
         'application/vnd.ms-excel',
@@ -104,7 +103,6 @@ const DocumentsManager: React.FC = () => {
   };
 
   const getFileIcon = (type: string) => {
-    if (type.includes('pdf')) return '📄';
     if (type.includes('word')) return '📝';
     if (type.includes('sheet')) return '📊';
     return '📄';
@@ -203,7 +201,7 @@ const DocumentsManager: React.FC = () => {
             <input
               type="file"
               multiple
-              accept=".pdf,.doc,.docx,.xls,.xlsx"
+              accept=".doc,.docx,.xls,.xlsx"
               onChange={(e) => handleFiles(Array.from(e.target.files || []))}
               className="absolute inset-0 w-full h-full opacity-0 cursor-pointer"
             />

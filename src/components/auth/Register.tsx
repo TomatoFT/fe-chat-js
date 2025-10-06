@@ -93,7 +93,7 @@ const Register: React.FC = () => {
                 value={formData.name}
                 onChange={handleChange}
                 className="input-field"
-                placeholder="Enter school name"
+                placeholder={t('auth.enterSchoolName')}
                 required
               />
             </div>
@@ -109,7 +109,7 @@ const Register: React.FC = () => {
                 value={formData.email}
                 onChange={handleChange}
                 className="input-field"
-                placeholder="Enter school email"
+                placeholder={t('auth.enterSchoolEmail')}
                 required
               />
             </div>
@@ -146,7 +146,7 @@ const Register: React.FC = () => {
                 value={formData.password}
                 onChange={handleChange}
                 className="input-field"
-                placeholder="Enter password"
+                placeholder={t('auth.enterPassword')}
                 required
               />
             </div>
@@ -162,7 +162,7 @@ const Register: React.FC = () => {
                 value={formData.confirmPassword}
                 onChange={handleChange}
                 className="input-field"
-                placeholder="Confirm password"
+                placeholder={t('auth.confirmPassword')}
                 required
               />
             </div>

@@ -19,6 +19,7 @@ import {
   useUploadStudentsDocument, 
   useUploadExaminationsDocument 
 } from '../../hooks/useDocuments';
+import { useLanguage } from '../../context/LanguageContext';
 
 interface SimpleDocumentUploadModalProps {
   uploadType: 'general' | 'staff' | 'students' | 'examinations';
@@ -31,6 +32,7 @@ export const SimpleDocumentUploadModal: React.FC<SimpleDocumentUploadModalProps>
   onClose,
   onSuccess,
 }) => {
+  const { t } = useLanguage();
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
   const [uploadError, setUploadError] = useState<string | null>(null);
   const [dragActive, setDragActive] = useState(false);
@@ -95,25 +97,15 @@ export const SimpleDocumentUploadModal: React.FC<SimpleDocumentUploadModalProps>
   const validateFile = (file: File): string | null => {
     const maxSize = 10 * 1024 * 1024; // 10MB
     const allowedTypes = [
-      'application/pdf',
-      'application/msword',
-      'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
-      'text/plain',
-      'application/vnd.ms-excel',
-      'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
-      'image/jpeg',
-      'image/png',
-      'image/gif',
-      'application/zip',
-      'application/x-rar-compressed'
+      'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
     ];
 
     if (file.size > maxSize) {
-      return 'File size must be less than 10MB';
+      return 'Kích thước tệp phải nhỏ hơn 10MB';
     }
 
     if (!allowedTypes.includes(file.type)) {
-      return 'File type not supported. Please upload PDF, DOC, DOCX, TXT, XLS, XLSX, JPG, PNG, GIF, ZIP, or RAR files';
+      return 'Chỉ hỗ trợ tệp Excel XLSX';
     }
 
     return null;
@@ -176,7 +168,7 @@ export const SimpleDocumentUploadModal: React.FC<SimpleDocumentUploadModalProps>
     
     // Manual file validation since we're not using form validation for the file
     if (!selectedFile) {
-      setUploadError('Please select a file to upload');
+      setUploadError('Vui lòng chọn tệp để tải lên');
       return;
     }
     
@@ -248,7 +240,7 @@ export const SimpleDocumentUploadModal: React.FC<SimpleDocumentUploadModalProps>
                 type="file"
                 onChange={handleFileInput}
                 className="absolute inset-0 w-full h-full opacity-0 cursor-pointer"
-                accept=".pdf,.doc,.docx,.txt,.xlsx,.xls,.jpg,.jpeg,.png,.gif,.zip,.rar"
+                accept=".xlsx"
               />
               
               <div className="space-y-4">
@@ -258,16 +250,16 @@ export const SimpleDocumentUploadModal: React.FC<SimpleDocumentUploadModalProps>
                 
                 <div>
                   <h3 className="text-lg font-medium text-gray-900 mb-2">
-                    {selectedFile ? 'File Selected' : 'Drop your file here'}
+                    {selectedFile ? t('documents.fileSelected') : t('documents.dropFileHere')}
                   </h3>
                   <p className="text-gray-600 mb-4">
                     {selectedFile 
                       ? `${selectedFile.name} (${formatFileSize(selectedFile.size)})`
-                      : 'or click to browse files'
+                      : t('documents.clickToBrowse')
                     }
                   </p>
                   <p className="text-sm text-gray-500">
-                    Supports PDF, DOC, DOCX, TXT, XLSX, XLS, JPG, PNG, GIF, ZIP, RAR up to 10MB
+                    {t('documents.supportsExcel')}
                   </p>
                 </div>
               </div>
@@ -290,24 +282,23 @@ export const SimpleDocumentUploadModal: React.FC<SimpleDocumentUploadModalProps>
                   type="button"
                   onClick={clearFile}
                   className="p-1 text-gray-400 hover:text-red-500 transition-colors"
-                  title="Remove file"
+                  title={t('documents.removeFile')}
                 >
                   <X className="w-4 h-4" />
                 </button>
               </div>
             )}
 
-            {/* Document Title */}
             <div>
               <label htmlFor="title" className="block text-sm font-medium text-gray-700 mb-2">
-                Document Title (Optional)
+                {t('documents.documentTitleOptional')}
               </label>
               <input
                 {...register('title')}
                 type="text"
                 id="title"
                 className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                placeholder="Enter document title"
+                placeholder={t('documents.enterTitle')}
               />
               {errors.title && (
                 <p className="mt-1 text-sm text-red-600">{errors.title.message}</p>
@@ -317,14 +308,14 @@ export const SimpleDocumentUploadModal: React.FC<SimpleDocumentUploadModalProps>
             {/* Document Description */}
             <div>
               <label htmlFor="description" className="block text-sm font-medium text-gray-700 mb-2">
-                Description (Optional)
+                {t('documents.descriptionOptional')}
               </label>
               <textarea
                 {...register('description')}
                 id="description"
                 rows={3}
                 className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                placeholder="Enter document description"
+                placeholder={t('documents.enterDescription')}
               />
               {errors.description && (
                 <p className="mt-1 text-sm text-red-600">{errors.description.message}</p>
@@ -357,12 +348,12 @@ export const SimpleDocumentUploadModal: React.FC<SimpleDocumentUploadModalProps>
                 {uploadHook.isPending ? (
                   <>
                     <Loader2 className="w-4 h-4 animate-spin" />
-                    Uploading...
+                    {t('documents.uploading')}
                   </>
                 ) : (
                   <>
                     <Upload className="w-4 h-4" />
-                    Tải lên tài liệu
+                    {t('documents.uploadDocument')}
                   </>
                 )}
               </button>

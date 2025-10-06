@@ -133,7 +133,7 @@ export const DocumentUpload: React.FC<DocumentUploadProps> = ({
               type="file"
               onChange={handleFileInput}
               className="absolute inset-0 w-full h-full opacity-0 cursor-pointer"
-              accept=".pdf,.doc,.docx,.txt,.xlsx,.xls"
+              accept=".doc,.docx,.txt,.xlsx,.xls"
             />
             <div className="space-y-2">
               <svg
@@ -155,7 +155,7 @@ export const DocumentUpload: React.FC<DocumentUploadProps> = ({
                 </span>{' '}
                 or drag and drop
               </div>
-              <p className="text-xs text-gray-500">PDF, DOC, DOCX, TXT, XLSX, XLS up to 10MB</p>
+              <p className="text-xs text-gray-500">DOC, DOCX, TXT, XLSX, XLS up to 10MB</p>
             </div>
           </div>
 
@@ -187,7 +187,7 @@ export const DocumentUpload: React.FC<DocumentUploadProps> = ({
               type="text"
               id="title"
               className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
-              placeholder="Enter document title"
+              placeholder={t('documents.enterTitle')}
             />
             {errors.title && (
               <p className="mt-1 text-sm text-red-600">{errors.title.message}</p>
@@ -204,7 +204,7 @@ export const DocumentUpload: React.FC<DocumentUploadProps> = ({
               id="description"
               rows={3}
               className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
-              placeholder="Enter document description"
+              placeholder={t('documents.enterDescription')}
             />
             {errors.description && (
               <p className="mt-1 text-sm text-red-600">{errors.description.message}</p>
