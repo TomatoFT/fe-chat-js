@@ -134,7 +134,7 @@ export const StaffManagement: React.FC<StaffManagementProps> = ({ className = ''
   return (
     <div className={`space-y-6 ${className}`}>
       {/* Header */}
-      <div className="flex justify-between items-center">
+      <div className="p-4 flex justify-between items-center">
         <div>
           <h2 className="text-2xl font-bold text-gray-900">Staff Management</h2>
           <p className="text-gray-600">Manage staff records and information</p>

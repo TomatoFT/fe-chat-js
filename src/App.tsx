@@ -7,7 +7,6 @@ import ProtectedRoute from './components/ProtectedRoute';
 import Layout from './components/layout/Layout';
 import Login from './components/auth/Login';
 import Register from './components/auth/Register';
-import { Dashboard } from './components/dashboard/Dashboard';
 import { DocumentManagement } from './components/documents/DocumentManagement';
 import { DocumentIndexing } from './components/documents/DocumentIndexing';
 import { ChatInterface } from './components/chat/ChatInterface';
@@ -38,15 +37,7 @@ function App() {
                     </ProtectedRoute>
                   }
                 >
-                  <Route index element={<Navigate to="/dashboard" replace />} />
-                  <Route 
-                    path="dashboard" 
-                    element={
-                      <ProtectedRoute allowedRoles={['school_manager', 'admin', 'province_manager', 'department_manager']}>
-                        <Dashboard />
-                      </ProtectedRoute>
-                    } 
-                  />
+                  <Route index element={<Navigate to="/school-management" replace />} />
                   <Route 
                     path="chat" 
                     element={

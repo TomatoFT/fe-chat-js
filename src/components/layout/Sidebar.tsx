@@ -6,7 +6,6 @@ import {
   FileText,
   Users,
   Building2,
-  BarChart3,
   BookOpen,
   Database,
 } from 'lucide-react';
@@ -23,7 +22,6 @@ const Sidebar: React.FC = () => {
     switch (user?.role) {
       case 'admin':
         return [
-          { icon: BarChart3, label: t('nav.dashboard'), path: '/dashboard' },
           { icon: Users, label: t('nav.userManagement'), path: '/admin/users' },
           { icon: Building2, label: t('nav.systemTree'), path: '/admin/tree' },
           { icon: FileText, label: t('nav.documentStore'), path: '/admin/documents' },
@@ -44,7 +42,6 @@ const Sidebar: React.FC = () => {
         ];
       case 'school_manager':
         return [
-          { icon: BarChart3, label: t('nav.dashboard'), path: '/dashboard' },
           { icon: Users, label: 'School Management', path: '/school-management' },
           { icon: MessageSquare, label: t('nav.chat'), path: '/chat' },
           { icon: FileText, label: t('nav.documents'), path: '/documents' },

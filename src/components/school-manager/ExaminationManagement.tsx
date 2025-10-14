@@ -132,7 +132,7 @@ export const ExaminationManagement: React.FC<ExaminationManagementProps> = ({ cl
   return (
     <div className={`space-y-6 ${className}`}>
       {/* Header */}
-      <div className="flex justify-between items-center">
+      <div className="p-4 flex justify-between items-center">
         <div>
           <h2 className="text-2xl font-bold text-gray-900">Examination Management</h2>
           <p className="text-gray-600">Manage examinations and assessments</p>

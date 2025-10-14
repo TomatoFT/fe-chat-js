@@ -22,14 +22,13 @@ import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { documentUploadSchema, type DocumentUploadInput } from '../../lib/validations';
 import { 
-  useUploadDocument, 
   useUploadStaffDocument, 
   useUploadStudentsDocument, 
   useUploadExaminationsDocument 
 } from '../../hooks/useDocuments';
 
 interface DocumentUploadModalProps {
-  uploadType: 'general' | 'staff' | 'students' | 'examinations';
+  uploadType: 'staff' | 'students' | 'examinations';
   onClose: () => void;
   onSuccess: () => void;
 }
@@ -46,7 +45,6 @@ export const DocumentUploadModal: React.FC<DocumentUploadModalProps> = ({
   const [isUploading, setIsUploading] = useState(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
 
-  const uploadDocument = useUploadDocument();
   const uploadStaffDocument = useUploadStaffDocument();
   const uploadStudentsDocument = useUploadStudentsDocument();
   const uploadExaminationsDocument = useUploadExaminationsDocument();

@@ -13,12 +13,13 @@ const Header: React.FC = () => {
       <div className="flex items-center justify-between">
         <div>
           <h2 className="text-2xl font-bold text-gray-900">
-            {t('dashboard.welcome')}, {user?.name}
+            Chào mừng bạn tới hệ thống thống kê giáo dục
           </h2>
           <p className="text-gray-600">
-            {user?.role === 'school' && t('dashboard.schoolSubtitle')}
-            {user?.role === 'province' && t('dashboard.provinceSubtitle')}
-            {user?.role === 'deputy' && t('dashboard.deputySubtitle')}
+            {user?.role === 'school_manager' && 'Quản lý trường học'}
+            {user?.role === 'province_manager' && 'Quản lý xã'}
+            {user?.role === 'department_manager' && 'Quản lý sở'}
+            {user?.role === 'admin' && 'Quản lý hệ thống'}
           </p>
         </div>
 

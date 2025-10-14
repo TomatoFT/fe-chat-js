@@ -5,31 +5,8 @@ const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || 'http://157.10.52.80:8
 // Statistics query keys
 export const statisticsKeys = {
   all: ['statistics'] as const,
-  dashboard: () => [...statisticsKeys.all, 'dashboard'] as const,
   system: () => [...statisticsKeys.all, 'system'] as const,
   activity: () => [...statisticsKeys.all, 'activity'] as const,
-};
-
-// Get dashboard statistics
-export const useDashboardStats = () => {
-  return useQuery({
-    queryKey: statisticsKeys.dashboard(),
-    queryFn: async () => {
-      const token = localStorage.getItem('token');
-      const response = await fetch(`${API_BASE_URL}/statistics/dashboard`, {
-        headers: {
-          'Authorization': `Bearer ${token}`,
-        },
-      });
-
-      if (!response.ok) {
-        // Fallback to individual API calls if statistics endpoint doesn't exist
-        return await getFallbackStats();
-      }
-
-      return response.json();
-    },
-  });
 };
 
 // Get system health and performance metrics
@@ -84,63 +61,6 @@ export const useRecentActivity = () => {
       return response.json();
     },
   });
-};
-
-// Fallback function to get stats from individual endpoints
-const getFallbackStats = async () => {
-  const token = localStorage.getItem('token');
-  
-  try {
-    const [documentsRes, sessionsRes, usersRes] = await Promise.allSettled([
-      fetch(`${API_BASE_URL}/documents/`, {
-        headers: { 'Authorization': `Bearer ${token}` },
-      }),
-      fetch(`${API_BASE_URL}/chat/sessions`, {
-        headers: { 'Authorization': `Bearer ${token}` },
-      }),
-      fetch(`${API_BASE_URL}/users/?limit=1000`, {
-        headers: { 'Authorization': `Bearer ${token}` },
-      }),
-    ]);
-
-    const documents = documentsRes.status === 'fulfilled' ? await documentsRes.value.json() : [];
-    const sessions = sessionsRes.status === 'fulfilled' ? await sessionsRes.value.json() : [];
-    const users = usersRes.status === 'fulfilled' ? await usersRes.value.json() : [];
-
-    return {
-      totalDocuments: Array.isArray(documents) ? documents.length : 0,
-      totalSessions: Array.isArray(sessions) ? sessions.length : 0,
-      totalUsers: Array.isArray(users) ? users.length : 0,
-      recentActivity: 'Active',
-      documentsThisWeek: Array.isArray(documents) 
-        ? documents.filter((doc: any) => {
-            const docDate = new Date(doc.created_at || doc.uploaded_at);
-            // Check if date is valid
-            if (isNaN(docDate.getTime())) {
-              return false;
-            }
-            const weekAgo = new Date();
-            weekAgo.setDate(weekAgo.getDate() - 7);
-            return docDate > weekAgo;
-          }).length 
-        : 0,
-      messagesThisWeek: Array.isArray(sessions) 
-        ? sessions.reduce((total: number, session: any) => {
-            return total + (session.message_count || 0);
-          }, 0) 
-        : 0,
-    };
-  } catch (error) {
-    console.error('Error fetching fallback stats:', error);
-    return {
-      totalDocuments: 0,
-      totalSessions: 0,
-      totalUsers: 0,
-      recentActivity: 'Unknown',
-      documentsThisWeek: 0,
-      messagesThisWeek: 0,
-    };
-  }
 };
 
 // Get document statistics by status

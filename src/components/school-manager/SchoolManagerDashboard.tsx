@@ -22,9 +22,9 @@ export const SchoolManagerDashboard: React.FC<SchoolManagerDashboardProps> = ({ 
 
 
   const tabs = [
-    { id: 'students', label: 'Students', icon: Users },
-    { id: 'staff', label: 'Staff', icon: UserCheck },
-    { id: 'examinations', label: 'Examinations', icon: BookOpen },
+    { id: 'students', label: 'Học sinh', icon: Users },
+    { id: 'staff', label: 'Nhân viên', icon: UserCheck },
+    { id: 'examinations', label: 'Thi cử', icon: BookOpen },
   ];
 
 
@@ -44,13 +44,6 @@ export const SchoolManagerDashboard: React.FC<SchoolManagerDashboardProps> = ({ 
 
   return (
     <div className={`space-y-6 ${className}`}>
-      {/* Header */}
-      <div className="flex justify-between items-center">
-        <div>
-          <h1 className="text-3xl font-bold text-gray-900">School Management</h1>
-          <p className="text-gray-600">Manage students, staff, and examinations for your school</p>
-        </div>
-      </div>
 
       {/* Tabs */}
       <div className="bg-white rounded-lg border border-gray-200 p-1">

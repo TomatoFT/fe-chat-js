@@ -54,11 +54,11 @@ export const StudentManagement: React.FC<StudentManagementProps> = ({ className 
   };
 
   const handleDelete = async (studentId: string) => {
-    if (window.confirm('Are you sure you want to delete this student?')) {
+    if (window.confirm('Bạn có chắc chắn muốn xóa học sinh này?')) {
       try {
         await deleteStudent.mutateAsync(studentId);
       } catch (error) {
-        console.error('Error deleting student:', error);
+        console.error('Lỗi khi xóa học sinh:', error);
       }
     }
   };
@@ -115,7 +115,7 @@ export const StudentManagement: React.FC<StudentManagementProps> = ({ className 
   if (isLoading) {
     return (
       <div className="flex justify-center items-center h-64">
-        <div className="text-lg text-gray-600">Loading students...</div>
+        <div className="text-lg text-gray-600">Đang tải danh sách học sinh...</div>
       </div>
     );
   }
@@ -123,7 +123,7 @@ export const StudentManagement: React.FC<StudentManagementProps> = ({ className 
   if (error) {
     return (
       <div className="flex justify-center items-center h-64">
-        <div className="text-lg text-red-600">Error loading students: {error.message}</div>
+        <div className="text-lg text-red-600">Lỗi khi tải danh sách học sinh: {error.message}</div>
       </div>
     );
   }
@@ -131,10 +131,10 @@ export const StudentManagement: React.FC<StudentManagementProps> = ({ className 
   return (
     <div className={`space-y-6 ${className}`}>
       {/* Header */}
-      <div className="flex justify-between items-center">
+      <div className="p-4 flex justify-between items-center">
         <div>
-          <h2 className="text-2xl font-bold text-gray-900">Student Management</h2>
-          <p className="text-gray-600">Manage student records and information</p>
+          <h2 className="text-2xl font-bold text-gray-900">Quản lý học sinh</h2>
+          <p className="text-gray-600">Quản lý hồ sơ và thông tin học sinh</p>
         </div>
         <motion.button
           whileHover={{ scale: 1.05 }}
@@ -143,7 +143,7 @@ export const StudentManagement: React.FC<StudentManagementProps> = ({ className 
           className="flex items-center gap-2 bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition-colors"
         >
           <Plus className="w-5 h-5" />
-          Add Student
+          Thêm học sinh
         </motion.button>
       </div>
 
@@ -154,7 +154,7 @@ export const StudentManagement: React.FC<StudentManagementProps> = ({ className 
             <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-5 h-5" />
             <input
               type="text"
-              placeholder="Search students by name, ID, or class..."
+              placeholder="Tìm kiếm học sinh theo tên, ID hoặc lớp..."
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
               className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
@@ -170,22 +170,22 @@ export const StudentManagement: React.FC<StudentManagementProps> = ({ className 
             <thead className="bg-gray-50">
               <tr>
                 <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                  Student
+                  Học sinh
                 </th>
                 <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                  Class & Academic Year
+                  Lớp & Năm học
                 </th>
                 <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                  Birth Date & Gender
+                  Ngày sinh & Giới tính
                 </th>
                 <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                  Ethnic & Status
+                  Dân tộc & Trạng thái
                 </th>
                 <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                  Notes
+                  Ghi chú
                 </th>
                 <th className="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">
-                  Actions
+                  Thao tác
                 </th>
               </tr>
             </thead>
@@ -206,7 +206,7 @@ export const StudentManagement: React.FC<StudentManagementProps> = ({ className 
                       </div>
                       <div className="ml-4">
                         <div className="text-sm font-medium text-gray-900">{student.full_name}</div>
-                        <div className="text-sm text-gray-500">ID: {student.id}</div>
+                        <div className="text-sm text-gray-500">Mã: {student.id}</div>
                       </div>
                     </div>
                   </td>
@@ -227,12 +227,12 @@ export const StudentManagement: React.FC<StudentManagementProps> = ({ className 
                       <div className="text-sm text-gray-900">{student.ethnic}</div>
                       <span className={`inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-xs font-medium ${getStatusColor(student.is_poor)}`}>
                         {getStatusIcon(student.is_poor)}
-                        {student.is_poor ? 'Poor' : 'Normal'}
+                        {student.is_poor ? 'Nghèo' : 'Bình thường'}
                       </span>
                     </div>
                   </td>
                   <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
-                    {student.notes || 'No notes'}
+                    {student.notes || 'Không có ghi chú'}
                   </td>
                   <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
                     <div className="flex justify-end gap-2">
@@ -263,9 +263,9 @@ export const StudentManagement: React.FC<StudentManagementProps> = ({ className 
         {filteredStudents.length === 0 && (
           <div className="text-center py-12">
             <Users className="mx-auto h-12 w-12 text-gray-400" />
-            <h3 className="mt-2 text-sm font-medium text-gray-900">No students found</h3>
+            <h3 className="mt-2 text-sm font-medium text-gray-900">Không tìm thấy học sinh</h3>
             <p className="mt-1 text-sm text-gray-500">
-              {searchTerm ? 'Try adjusting your search criteria.' : 'Get started by adding a new student.'}
+              {searchTerm ? 'Thử điều chỉnh tiêu chí tìm kiếm.' : 'Bắt đầu bằng cách thêm học sinh mới.'}
             </p>
           </div>
         )}
@@ -280,22 +280,22 @@ export const StudentManagement: React.FC<StudentManagementProps> = ({ className 
               disabled={currentPage === 1}
               className="relative inline-flex items-center px-4 py-2 border border-gray-300 text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed"
             >
-              Previous
+              Trước
             </button>
             <button
               onClick={handleNextPage}
               disabled={currentPage === totalPages}
               className="ml-3 relative inline-flex items-center px-4 py-2 border border-gray-300 text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed"
             >
-              Next
+              Tiếp
             </button>
           </div>
           <div className="hidden sm:flex-1 sm:flex sm:items-center sm:justify-between">
             <div>
               <p className="text-sm text-gray-700">
-                Showing <span className="font-medium">{startIndex + 1}</span> to{' '}
-                <span className="font-medium">{Math.min(endIndex, filteredStudents.length)}</span> of{' '}
-                <span className="font-medium">{filteredStudents.length}</span> results
+                Hiển thị <span className="font-medium">{startIndex + 1}</span> đến{' '}
+                <span className="font-medium">{Math.min(endIndex, filteredStudents.length)}</span> trong{' '}
+                <span className="font-medium">{filteredStudents.length}</span> kết quả
               </p>
             </div>
             <div>
@@ -401,14 +401,14 @@ const StudentForm: React.FC<StudentFormProps> = ({ student, onSuccess, onCancel,
         className="bg-white rounded-lg p-6 w-full max-w-2xl max-h-[90vh] overflow-y-auto"
       >
         <h3 className="text-lg font-semibold mb-4">
-          {student ? 'Edit Student' : 'Add New Student'}
+          {student ? 'Chỉnh sửa học sinh' : 'Thêm học sinh mới'}
         </h3>
         
         <form onSubmit={handleSubmit} className="space-y-4">
           <div className="grid grid-cols-2 gap-4">
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-1">
-                Full Name *
+                Họ và tên *
               </label>
               <input
                 type="text"
@@ -421,7 +421,7 @@ const StudentForm: React.FC<StudentFormProps> = ({ student, onSuccess, onCancel,
             </div>
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-1">
-                Birth Date *
+                Ngày sinh *
               </label>
               <input
                 type="date"
@@ -437,27 +437,27 @@ const StudentForm: React.FC<StudentFormProps> = ({ student, onSuccess, onCancel,
           <div className="grid grid-cols-2 gap-4">
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-1">
-                Gender
+                Giới tính
               </label>
               <input
                 type="text"
                 name="gender"
                 value={formData.gender}
                 onChange={handleChange}
-                placeholder="e.g., Nam, Nữ"
+                placeholder="ví dụ: Nam, Nữ"
                 className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
               />
             </div>
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-1">
-                Class Name
+                Tên lớp
               </label>
               <input
                 type="text"
                 name="class_name"
                 value={formData.class_name}
                 onChange={handleChange}
-                placeholder="e.g., 10A1"
+                placeholder="ví dụ: 10A1"
                 className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
               />
             </div>
@@ -466,27 +466,27 @@ const StudentForm: React.FC<StudentFormProps> = ({ student, onSuccess, onCancel,
           <div className="grid grid-cols-2 gap-4">
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-1">
-                Academic Year
+                Năm học
               </label>
               <input
                 type="text"
                 name="academic_year"
                 value={formData.academic_year}
                 onChange={handleChange}
-                placeholder="e.g., 2024-2025"
+                placeholder="ví dụ: 2024-2025"
                 className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
               />
             </div>
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-1">
-                Ethnic
+                Dân tộc
               </label>
               <input
                 type="text"
                 name="ethnic"
                 value={formData.ethnic}
                 onChange={handleChange}
-                placeholder="e.g., Kinh"
+                placeholder="ví dụ: Kinh"
                 className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
               />
             </div>
@@ -501,20 +501,20 @@ const StudentForm: React.FC<StudentFormProps> = ({ student, onSuccess, onCancel,
                 onChange={(e) => setFormData(prev => ({ ...prev, is_poor: e.target.checked }))}
                 className="mr-2"
               />
-              <span className="text-sm font-medium text-gray-700">Poor Student</span>
+              <span className="text-sm font-medium text-gray-700">Học sinh nghèo</span>
             </label>
           </div>
 
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-1">
-              Notes
+              Ghi chú
             </label>
             <textarea
               name="notes"
               value={formData.notes}
               onChange={handleChange}
               rows={3}
-              placeholder="Additional notes about the student..."
+              placeholder="Ghi chú thêm về học sinh..."
               className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
             />
           </div>
@@ -525,13 +525,13 @@ const StudentForm: React.FC<StudentFormProps> = ({ student, onSuccess, onCancel,
               onClick={onCancel}
               className="px-4 py-2 text-gray-700 bg-gray-200 rounded-lg hover:bg-gray-300 transition-colors"
             >
-              Cancel
+              Hủy
             </button>
             <button
               type="submit"
               className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
             >
-              {student ? 'Update Student' : 'Add Student'}
+              {student ? 'Cập nhật học sinh' : 'Thêm học sinh'}
             </button>
           </div>
         </form>

@@ -210,7 +210,7 @@ export const DocumentManagement: React.FC<DocumentManagementProps> = ({ classNam
 
       {/* Upload Actions */}
       <div className="mb-6">
-        <div className="flex flex-wrap gap-3">image.png
+        <div className="flex flex-wrap gap-3">
           {canUploadStaff && (
             <motion.button
               whileHover={{ scale: 1.02 }}

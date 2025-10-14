@@ -63,7 +63,6 @@ const translations: { [key: string]: string } = {
   'auth.passwordAny': 'Mật khẩu: bất kỳ',
   
   // Navigation
-  'nav.dashboard': 'Bảng điều khiển',
   'nav.chat': 'Trò chuyện',
   'nav.documents': 'Tài liệu',
   'nav.schools': 'Trường học của tôi',
@@ -71,18 +70,6 @@ const translations: { [key: string]: string } = {
   'nav.userManagement': 'Quản lý người dùng',
   'nav.systemTree': 'Cây hệ thống',
   'nav.documentStore': 'Kho tài liệu',
-  
-  // Dashboard
-  'dashboard.welcome': 'Chào mừng trở lại',
-  'dashboard.schoolSubtitle': 'Quản lý tài liệu và trò chuyện với AI',
-  'dashboard.provinceSubtitle': 'Giám sát các trường học trong tỉnh',
-  'dashboard.deputySubtitle': 'Giám sát tất cả các cơ sở giáo dục',
-  'dashboard.aiAssistant': 'Trợ lý AI',
-  'dashboard.askQuestions': 'Đặt câu hỏi về tài liệu đã tải lên',
-  'dashboard.manageDocuments': 'Quản lý tài liệu',
-  'dashboard.totalProvinces': 'Tổng số tỉnh',
-  'dashboard.totalSchools': 'Tổng số trường',
-  'dashboard.totalDocuments': 'Tổng số tài liệu',
   
   // Chat
   'chat.newChat': 'Cuộc trò chuyện mới',
