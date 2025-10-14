@@ -3,12 +3,10 @@ import { NavLink } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import {
   MessageSquare,
-  Upload,
   FileText,
   Users,
   Building2,
   BarChart3,
-  Settings,
   BookOpen,
   Database,
 } from 'lucide-react';
@@ -46,6 +44,8 @@ const Sidebar: React.FC = () => {
         ];
       case 'school_manager':
         return [
+          { icon: BarChart3, label: t('nav.dashboard'), path: '/dashboard' },
+          { icon: Users, label: 'School Management', path: '/school-management' },
           { icon: MessageSquare, label: t('nav.chat'), path: '/chat' },
           { icon: FileText, label: t('nav.documents'), path: '/documents' },
         ];

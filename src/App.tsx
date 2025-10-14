@@ -18,6 +18,7 @@ import ProvincesList from './components/management/ProvincesList';
 import { UserManagement } from './components/admin/UserManagement';
 import SystemTree from './components/admin/SystemTree';
 import DocumentStore from './components/admin/DocumentStore';
+import { SchoolManagerDashboard } from './components/school-manager/SchoolManagerDashboard';
 
 function App() {
   return (
@@ -75,6 +76,14 @@ function App() {
                     element={
                       <ProtectedRoute allowedRoles={['school_manager', 'province_manager', 'department_manager', 'admin']}>
                         <DocumentManagement />
+                      </ProtectedRoute>
+                    } 
+                  />
+                  <Route 
+                    path="school-management" 
+                    element={
+                      <ProtectedRoute allowedRoles={['school_manager']}>
+                        <SchoolManagerDashboard />
                       </ProtectedRoute>
                     } 
                   />

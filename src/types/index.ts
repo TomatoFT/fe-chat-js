@@ -60,3 +60,46 @@ export interface ChatSession {
   createdAt: string;
   updatedAt: string;
 }
+
+export interface Student {
+  id: string;
+  full_name: string;
+  birth_date: string;
+  gender: string;
+  class_name: string;
+  academic_year: string;
+  ethnic: string;
+  is_poor: boolean;
+  notes?: string;
+  school_id: string;
+  created_at?: string;
+  updated_at?: string;
+}
+
+export interface Staff {
+  id: string;
+  full_name?: string;
+  birth_date: string;
+  gender?: string;
+  subject?: string;
+  position?: string;
+  ethnic?: string;
+  notes?: string;
+  school_id?: string;
+  created_at?: string;
+  updated_at?: string;
+}
+
+export interface Examination {
+  id: string;
+  exam_name?: string;
+  date: string;
+  student_name?: string;
+  student_class?: string;
+  subject?: string;
+  point?: number;
+  notes?: string;
+  school_id?: string;
+  created_at?: string;
+  updated_at?: string;
+}

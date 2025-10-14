@@ -66,6 +66,12 @@ export const hasPermission = (user: User | null, action: string): boolean => {
     case 'document_indexing':
       return user.role === 'admin';
     
+    case 'manage_students':
+    case 'manage_staff':
+    case 'manage_examinations':
+    case 'school_management':
+      return user.role === 'school_manager';
+    
     default:
       return false;
   }
