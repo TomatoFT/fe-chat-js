@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { motion } from 'framer-motion';
-import { Plus, Building2, AlertCircle, CheckCircle } from 'lucide-react';
+import { Plus, AlertCircle, CheckCircle } from 'lucide-react';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { provinceCreateSchema, type ProvinceCreateInput } from '../../lib/validations';
@@ -30,15 +30,15 @@ const AddProvince: React.FC = () => {
       setSuccess(true);
       reset();
     } catch (err: any) {
-      setError(err.message || 'Failed to create province. Please try again.');
+      setError(err.message || 'Không thể tạo tỉnh. Vui lòng thử lại.');
     }
   };
 
   return (
     <div className="p-6">
       <div className="mb-8">
-        <h1 className="text-3xl font-bold text-gray-900 mb-2">Add New Province</h1>
-        <p className="text-gray-600">Create a new province management account</p>
+        <h1 className="text-3xl font-bold text-gray-900 mb-2">Thêm tỉnh mới</h1>
+        <p className="text-gray-600">Tạo tài khoản quản lý tỉnh mới</p>
       </div>
 
       <div className="max-w-2xl">
@@ -49,7 +49,7 @@ const AddProvince: React.FC = () => {
             className="bg-green-50 border border-green-200 rounded-lg p-4 mb-6 flex items-center gap-3"
           >
             <CheckCircle className="w-5 h-5 text-green-500" />
-            <span className="text-green-700">Province account created successfully!</span>
+            <span className="text-green-700">Tài khoản tỉnh đã được tạo thành công!</span>
           </motion.div>
         )}
 
@@ -69,14 +69,14 @@ const AddProvince: React.FC = () => {
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
               <div>
                 <label htmlFor="name" className="block text-sm font-medium text-gray-700 mb-2">
-                  Province Name *
+                  Tên tỉnh *
                 </label>
                 <input
                   {...register('name')}
                   type="text"
                   id="name"
                   className="input-field"
-                  placeholder={t('management.enterProvinceName')}
+                  placeholder="Nhập tên tỉnh"
                 />
                 {errors.name && (
                   <p className="mt-1 text-sm text-red-600">{errors.name.message}</p>
@@ -85,14 +85,14 @@ const AddProvince: React.FC = () => {
 
               <div>
                 <label htmlFor="email" className="block text-sm font-medium text-gray-700 mb-2">
-                  Email Address *
+                  Địa chỉ Email *
                 </label>
                 <input
                   {...register('email')}
                   type="email"
                   id="email"
                   className="input-field"
-                  placeholder={t('management.enterProvinceManagerEmail')}
+                  placeholder="Nhập email quản lý tỉnh"
                 />
                 {errors.email && (
                   <p className="mt-1 text-sm text-red-600">{errors.email.message}</p>
@@ -102,14 +102,14 @@ const AddProvince: React.FC = () => {
 
             <div>
               <label htmlFor="password" className="block text-sm font-medium text-gray-700 mb-2">
-                Password *
+                Mật khẩu *
               </label>
               <input
                 {...register('password')}
                 type="password"
                 id="password"
                 className="input-field"
-                placeholder={t('management.enterPasswordForProvinceManager')}
+                placeholder="Nhập mật khẩu cho quản lý tỉnh"
               />
               {errors.password && (
                 <p className="mt-1 text-sm text-red-600">{errors.password.message}</p>
@@ -118,7 +118,7 @@ const AddProvince: React.FC = () => {
 
             <div className="flex items-center justify-between pt-6 border-t border-gray-200">
               <p className="text-sm text-gray-600">
-                * Required fields
+                * Các trường bắt buộc
               </p>
               <button
                 type="submit"
@@ -137,12 +137,12 @@ const AddProvince: React.FC = () => {
         </div>
 
         <div className="mt-6 bg-blue-50 rounded-lg p-4">
-          <h3 className="font-semibold text-blue-900 mb-2">Important Notes:</h3>
+          <h3 className="font-semibold text-blue-900 mb-2">Lưu ý quan trọng:</h3>
           <ul className="space-y-1 text-blue-700 text-sm">
-            <li>• The province manager will receive login credentials via email</li>
-            <li>• Province managers can add and manage schools in their region</li>
-            <li>• They can monitor all school activities and document uploads</li>
-            <li>• Province accounts can change their password after first login</li>
+            <li>• Quản lý tỉnh sẽ nhận thông tin đăng nhập qua email</li>
+            <li>• Quản lý tỉnh có thể thêm và quản lý các trường học trong khu vực</li>
+            <li>• Họ có thể theo dõi tất cả hoạt động của trường học và tải lên tài liệu</li>
+            <li>• Tài khoản tỉnh có thể thay đổi mật khẩu sau lần đăng nhập đầu tiên</li>
           </ul>
         </div>
       </div>

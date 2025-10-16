@@ -3,20 +3,22 @@ import { useQueryClient } from '@tanstack/react-query';
 import { useChatSessions, useChatSession, useSendMessage, useCreateChatSession, useRenameChatSession, useDocumentsForRAG } from '../../hooks/useChat';
 import { Send, Plus, MessageCircle, Bot, User, Edit2, Check, X, Sparkles, BarChart3, FileText, CheckCircle } from 'lucide-react';
 import { formatTime, sortByDate } from '../../utils/dateUtils';
+import { AIProgressVisualization } from './AIProgressVisualization';
 
 export const ChatInterface: React.FC = () => {
   const [selectedSessionId, setSelectedSessionId] = useState<string | null>(null);
   const [message, setMessage] = useState('');
   const [isCreatingSession, setIsCreatingSession] = useState(false);
-  const [isTyping, setIsTyping] = useState(false);
   const [editingSessionId, setEditingSessionId] = useState<string | null>(null);
   const [editingName, setEditingName] = useState('');
   const [showMentions, setShowMentions] = useState(false);
   const [mentionQuery, setMentionQuery] = useState('');
   const [mentionPosition, setMentionPosition] = useState(0);
-  const [isGenerating, setIsGenerating] = useState(false);
   const [selectedDocuments, setSelectedDocuments] = useState<string[]>([]);
   const [showDocumentSelection, setShowDocumentSelection] = useState(false);
+  const [showProgressVisualization, setShowProgressVisualization] = useState(false);
+  const [responseStartTime, setResponseStartTime] = useState<number | null>(null);
+  const [actualResponseTime, setActualResponseTime] = useState<number | null>(null);
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLInputElement>(null);
   const editInputRef = useRef<HTMLInputElement>(null);
@@ -178,9 +180,10 @@ export const ChatInterface: React.FC = () => {
     setShowMentions(false);
     setShowDocumentSelection(false);
     
-    // Show typing indicator immediately after user sends message
-    setIsTyping(true);
-    setIsGenerating(true);
+    // Show progress visualization immediately after user sends message
+    const startTime = Date.now();
+    setResponseStartTime(startTime);
+    setShowProgressVisualization(true);
 
     try {
       const messageData = {
@@ -200,8 +203,8 @@ export const ChatInterface: React.FC = () => {
     } catch (error) {
       console.error('Error sending message:', error);
       // Hide indicators on error
-      setIsTyping(false);
-      setIsGenerating(false);
+      setShowProgressVisualization(false);
+      setResponseStartTime(null);
     }
   };
 
@@ -211,8 +214,8 @@ export const ChatInterface: React.FC = () => {
       try {
         if (!selectedSessionId) {
           clearInterval(pollInterval);
-          setIsTyping(false);
-          setIsGenerating(false);
+          setShowProgressVisualization(false);
+          setResponseStartTime(null);
           return;
         }
 
@@ -231,10 +234,15 @@ export const ChatInterface: React.FC = () => {
           // Check if there's a new AI message (last message from assistant)
           const lastMessage = messages[messages.length - 1];
           if (lastMessage && (lastMessage.sender === 'assistant' || lastMessage.sender === 'AI')) {
-            // AI response received, hide indicators
+            // AI response received, calculate actual response time
+            const endTime = Date.now();
+            const actualTime = responseStartTime ? (endTime - responseStartTime) / 1000 : null;
+            setActualResponseTime(actualTime);
+            
+            // Hide indicators
             clearInterval(pollInterval);
-            setIsTyping(false);
-            setIsGenerating(false);
+            setShowProgressVisualization(false);
+            setResponseStartTime(null);
             
             // Invalidate queries to refresh the UI
             queryClient.invalidateQueries({ queryKey: ['chat', 'sessions', selectedSessionId] });
@@ -244,18 +252,18 @@ export const ChatInterface: React.FC = () => {
         console.error('Error polling for AI response:', error);
         // On error, stop polling and hide indicators
         clearInterval(pollInterval);
-        setIsTyping(false);
-        setIsGenerating(false);
+        setShowProgressVisualization(false);
+        setResponseStartTime(null);
       }
     }, 2000); // Poll every 2 seconds
 
     // Set a maximum timeout of 5 minutes to prevent infinite polling
     setTimeout(() => {
       clearInterval(pollInterval);
-      setIsTyping(false);
-      setIsGenerating(false);
+      setShowProgressVisualization(false);
+      setResponseStartTime(null);
     }, 300000); // 5 minutes timeout
-  }, [selectedSessionId, queryClient]);
+  }, [selectedSessionId, queryClient, responseStartTime]);
 
   const handleMessageKeyPress = (e: React.KeyboardEvent) => {
     if (e.key === 'Enter' && !e.shiftKey) {
@@ -458,8 +466,8 @@ export const ChatInterface: React.FC = () => {
                   <Bot className="w-6 h-6 text-white" />
                 </div>
                 <div>
-                  <h3 className="font-semibold text-gray-900">AI Assistant</h3>
-                  <p className="text-sm text-gray-500">Always here to help</p>
+                  <h3 className="font-semibold text-gray-900">Trợ lý AI</h3>
+                  <p className="text-sm text-gray-500">Luôn sẵn sàng hỗ trợ</p>
                 </div>
               </div>
             </div>
@@ -532,47 +540,16 @@ export const ChatInterface: React.FC = () => {
                 ))
               )}
               
-              {/* Enhanced Typing Indicator */}
-              {isTyping && (
-                <div className="flex justify-start animate-fade-in">
-                  <div className="flex items-end space-x-2">
-                    <div className="w-8 h-8 bg-gradient-to-r from-purple-500 to-pink-500 rounded-full flex items-center justify-center animate-pulse">
-                      <Bot className="w-4 h-4 text-white" />
-                    </div>
-                    <div className="bg-gradient-to-r from-purple-50 to-pink-50 border border-purple-200 rounded-2xl rounded-bl-md px-4 py-3 shadow-lg">
-                      <div className="flex items-center space-x-2">
-                        <div className="flex space-x-1">
-                          <div className="w-2 h-2 bg-purple-400 rounded-full typing-dot-enhanced"></div>
-                          <div className="w-2 h-2 bg-pink-400 rounded-full typing-dot-enhanced"></div>
-                          <div className="w-2 h-2 bg-purple-400 rounded-full typing-dot-enhanced"></div>
-                        </div>
-                        <span className="text-xs text-purple-600 font-medium animate-pulse">AI đang suy nghĩ... (có thể mất vài phút)</span>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              )}
-
-              {/* Enhanced Generating Indicator */}
-              {isGenerating && (
-                <div className="flex justify-start animate-fade-in">
-                  <div className="flex items-end space-x-2">
-                    <div className="w-8 h-8 bg-gradient-to-r from-blue-500 to-cyan-500 rounded-full flex items-center justify-center animate-bounce">
-                      <Sparkles className="w-4 h-4 text-white" />
-                    </div>
-                    <div className="bg-gradient-to-r from-blue-50 to-cyan-50 border border-blue-200 rounded-2xl rounded-bl-md px-4 py-3 shadow-lg">
-                      <div className="flex items-center space-x-2">
-                        <div className="flex space-x-1">
-                          <div className="w-2 h-2 bg-blue-400 rounded-full animate-pulse"></div>
-                          <div className="w-2 h-2 bg-cyan-400 rounded-full animate-pulse" style={{ animationDelay: '0.2s' }}></div>
-                          <div className="w-2 h-2 bg-blue-400 rounded-full animate-pulse" style={{ animationDelay: '0.4s' }}></div>
-                        </div>
-                        <span className="text-xs text-blue-600 font-medium">Đang tạo phản hồi... (có thể mất vài phút)</span>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              )}
+              {/* AI Progress Visualization */}
+              <AIProgressVisualization
+                isVisible={showProgressVisualization}
+                expectedDuration={180} // 3 minutes
+                actualDuration={actualResponseTime || undefined}
+                onComplete={() => {
+                  // Optional: Add any completion logic here
+                  console.log('Progress visualization completed');
+                }}
+              />
               
               <div ref={messagesEndRef} />
             </div>
@@ -618,7 +595,7 @@ export const ChatInterface: React.FC = () => {
                       className="absolute bottom-full left-0 right-0 mb-2 bg-white border border-gray-200 rounded-xl shadow-xl z-50 max-h-48 overflow-y-auto mention-dropdown"
                     >
                       <div className="p-2">
-                        <div className="text-xs text-gray-500 mb-2 px-2">Available prompts:</div>
+                        <div className="text-xs text-gray-500 mb-2 px-2">Các lệnh có sẵn:</div>
                         {filteredMentions.map((mention) => {
                           const IconComponent = mention.icon;
                           return (
@@ -702,13 +679,13 @@ export const ChatInterface: React.FC = () => {
                         ) : (
                           <div className="text-center py-8">
                             <FileText className="w-12 h-12 text-gray-300 mx-auto mb-3" />
-                            <p className="text-gray-500">No documents available</p>
+                            <p className="text-gray-500">Không có tài liệu nào</p>
                           </div>
                         )}
                         
                         <div className="mt-4 pt-4 border-t border-gray-200">
                           <div className="text-sm text-gray-500 text-center">
-                            Click on a document to select it
+                            Nhấp vào tài liệu để chọn
                           </div>
                         </div>
                       </div>

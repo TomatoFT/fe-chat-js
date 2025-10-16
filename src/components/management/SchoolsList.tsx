@@ -1,11 +1,10 @@
 import React, { useState } from 'react';
 import { motion } from 'framer-motion';
 import { Link } from 'react-router-dom';
-import { Plus, Search, School, FileText, Eye, Edit, Trash2, MoreVertical } from 'lucide-react';
+import { Plus, Search, School, FileText, Eye, Edit, Trash2 } from 'lucide-react';
 import { School as SchoolType } from '../../types';
 import { useSchools, useUpdateSchool, useDeleteSchool } from '../../hooks/useUsers';
 import { useAuth } from '../../context/AuthContext';
-import { useLanguage } from '../../context/LanguageContext';
 import { hasPermission } from '../../utils/userUtils';
 
 const SchoolsList: React.FC = () => {
@@ -16,7 +15,6 @@ const SchoolsList: React.FC = () => {
   
   // Auth context
   const { user } = useAuth();
-  const { t } = useLanguage();
   
   // Fetch schools from API
   const { data: schools, isLoading, error } = useSchools();
@@ -27,24 +25,6 @@ const SchoolsList: React.FC = () => {
     school.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
     school.email.toLowerCase().includes(searchTerm.toLowerCase())
   );
-
-  const formatDate = (dateString: string) => {
-    return new Date(dateString).toLocaleDateString('en-US', {
-      year: 'numeric',
-      month: 'short',
-      day: 'numeric',
-    });
-  };
-
-  const getActivityStatus = (lastActive: string) => {
-    const now = new Date();
-    const lastActiveDate = new Date(lastActive);
-    const diffInHours = (now.getTime() - lastActiveDate.getTime()) / (1000 * 60 * 60);
-    
-    if (diffInHours < 24) return { status: 'active', color: 'green' };
-    if (diffInHours < 72) return { status: 'recent', color: 'yellow' };
-    return { status: 'inactive', color: 'red' };
-  };
 
   const handleEdit = (school: SchoolType) => {
     setEditingSchool(school);
@@ -73,7 +53,7 @@ const SchoolsList: React.FC = () => {
     return (
       <div className="p-6">
         <div className="flex justify-center items-center h-64">
-          <div className="text-lg text-gray-600">Loading schools...</div>
+          <div className="text-lg text-gray-600">Đang tải danh sách trường học...</div>
         </div>
       </div>
     );
@@ -83,7 +63,7 @@ const SchoolsList: React.FC = () => {
     return (
       <div className="p-6">
         <div className="bg-red-50 border border-red-200 rounded-md p-4">
-          <div className="text-red-800">Error loading schools: {error.message}</div>
+          <div className="text-red-800">Lỗi tải danh sách trường học: {error.message}</div>
         </div>
       </div>
     );
@@ -96,10 +76,10 @@ const SchoolsList: React.FC = () => {
         animate={{ opacity: 1, scale: 1 }}
         className="bg-white rounded-lg p-6 w-full max-w-md mx-4"
       >
-        <h3 className="text-lg font-semibold text-gray-900 mb-4">School Details</h3>
+        <h3 className="text-lg font-semibold text-gray-900 mb-4">Chi tiết trường học</h3>
         <div className="space-y-3">
           <div>
-            <label className="text-sm font-medium text-gray-600">Name</label>
+            <label className="text-sm font-medium text-gray-600">Tên trường</label>
             <p className="text-gray-900">{school.name}</p>
           </div>
           <div>
@@ -107,16 +87,8 @@ const SchoolsList: React.FC = () => {
             <p className="text-gray-900">{school.email}</p>
           </div>
           <div>
-            <label className="text-sm font-medium text-gray-600">Documents</label>
-            <p className="text-gray-900">{school.documentsCount}</p>
-          </div>
-          <div>
-            <label className="text-sm font-medium text-gray-600">Last Active</label>
-            <p className="text-gray-900">{formatDate(school.lastActive)}</p>
-          </div>
-          <div>
-            <label className="text-sm font-medium text-gray-600">Created</label>
-            <p className="text-gray-900">{formatDate(school.createdAt)}</p>
+            <label className="text-sm font-medium text-gray-600">Số tài liệu</label>
+            <p className="text-gray-900">{school.documentsCount || 0}</p>
           </div>
         </div>
         <div className="flex gap-3 pt-4 mt-4 border-t">
@@ -124,7 +96,7 @@ const SchoolsList: React.FC = () => {
             onClick={() => setShowViewModal(null)}
             className="flex-1 btn-secondary"
           >
-            Close
+            Đóng
           </button>
         </div>
       </motion.div>
@@ -158,14 +130,14 @@ const SchoolsList: React.FC = () => {
           animate={{ opacity: 1, scale: 1 }}
           className="bg-white rounded-lg p-6 w-full max-w-md mx-4"
         >
-          <h3 className="text-lg font-semibold text-gray-900 mb-4">Edit School</h3>
+          <h3 className="text-lg font-semibold text-gray-900 mb-4">Chỉnh sửa trường học</h3>
           <form onSubmit={handleSubmit} className="space-y-4">
             {/* Province ID - only editable by admin */}
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-1">
-                Province ID
+                Mã tỉnh
                 {!hasPermission(user, 'manage_users') && (
-                  <span className="text-xs text-gray-500 ml-1">(Read-only)</span>
+                  <span className="text-xs text-gray-500 ml-1">(Chỉ đọc)</span>
                 )}
               </label>
               <input
@@ -173,7 +145,7 @@ const SchoolsList: React.FC = () => {
                 value={formData.province_id}
                 onChange={(e) => setFormData(prev => ({ ...prev, province_id: e.target.value }))}
                 className={`input-field ${!hasPermission(user, 'manage_users') ? 'bg-gray-100 cursor-not-allowed' : ''}`}
-                placeholder={t('management.enterProvinceId')}
+                placeholder="Nhập mã tỉnh"
                 disabled={!hasPermission(user, 'manage_users')}
               />
             </div>
@@ -185,17 +157,17 @@ const SchoolsList: React.FC = () => {
                 value={formData.email}
                 onChange={(e) => setFormData(prev => ({ ...prev, email: e.target.value }))}
                 className="input-field"
-                placeholder={t('management.enterNewEmail')}
+                placeholder="Nhập email mới"
               />
             </div>
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">New Password</label>
+              <label className="block text-sm font-medium text-gray-700 mb-1">Mật khẩu mới</label>
               <input
                 type="password"
                 value={formData.password}
                 onChange={(e) => setFormData(prev => ({ ...prev, password: e.target.value }))}
                 className="input-field"
-                placeholder={t('auth.enterPassword')}
+                placeholder="Nhập mật khẩu"
                 required
               />
             </div>
@@ -205,10 +177,10 @@ const SchoolsList: React.FC = () => {
                 onClick={() => setEditingSchool(null)}
                 className="flex-1 btn-secondary"
               >
-                Cancel
+                Hủy
               </button>
               <button type="submit" className="flex-1 btn-primary">
-                Save Changes
+                Lưu thay đổi
               </button>
             </div>
           </form>
@@ -224,22 +196,22 @@ const SchoolsList: React.FC = () => {
         animate={{ opacity: 1, scale: 1 }}
         className="bg-white rounded-lg p-6 w-full max-w-md mx-4"
       >
-        <h3 className="text-lg font-semibold text-gray-900 mb-4">Delete School</h3>
+        <h3 className="text-lg font-semibold text-gray-900 mb-4">Xóa trường học</h3>
         <p className="text-gray-600 mb-6">
-          Are you sure you want to delete this school? This action cannot be undone.
+          Bạn có chắc chắn muốn xóa trường học này? Hành động này không thể hoàn tác.
         </p>
         <div className="flex gap-3">
           <button
             onClick={() => setShowDeleteModal(null)}
             className="flex-1 btn-secondary"
           >
-            Cancel
+            Hủy
           </button>
           <button
             onClick={confirmDelete}
             className="flex-1 bg-red-600 hover:bg-red-700 text-white px-4 py-2 rounded-lg font-medium transition-colors"
           >
-            Delete
+            Xóa
           </button>
         </div>
       </motion.div>
@@ -250,129 +222,126 @@ const SchoolsList: React.FC = () => {
     <div className="p-6">
       <div className="flex items-center justify-between mb-8">
         <div>
-          <h1 className="text-3xl font-bold text-gray-900 mb-2">Schools Management</h1>
-          <p className="text-gray-600">Manage schools in your province</p>
+          <h1 className="text-3xl font-bold text-gray-900 mb-2">Quản lý trường học</h1>
+          <p className="text-gray-600">Quản lý các trường học trong tỉnh của bạn</p>
         </div>
         <Link
           to="/add-school"
           className="btn-primary flex items-center gap-2"
         >
           <Plus className="w-4 h-4" />
-          Add New School
+          Thêm trường học mới
         </Link>
       </div>
 
-      {/* Search and Filters */}
+      {/* Search */}
       <div className="card mb-6">
         <div className="flex items-center gap-4">
           <div className="flex-1 relative">
             <Search className="w-5 h-5 absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" />
             <input
               type="text"
-              placeholder={t('schools.searchSchools')}
+              placeholder="Tìm kiếm trường học..."
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
               className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
             />
           </div>
           <div className="text-sm text-gray-600">
-            {filteredSchools.length} of {schools?.length || 0} schools
+            {filteredSchools.length} trong tổng số {schools?.length || 0} trường học
           </div>
         </div>
       </div>
 
-      {/* Schools Grid */}
-      <div className="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-6">
-        {filteredSchools.map((school: any, index: number) => {
-          const activityStatus = getActivityStatus(school.lastActive);
-          
-          return (
-            <motion.div
-              key={school.id}
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: index * 0.1 }}
-              className="card hover:shadow-lg transition-shadow duration-200"
-            >
-              <div className="flex items-start justify-between mb-4">
-                <div className="flex items-center gap-3">
-                  <div className="w-12 h-12 bg-blue-100 rounded-lg flex items-center justify-center">
-                    <School className="w-6 h-6 text-blue-600" />
-                  </div>
-                  <div>
-                    <h3 className="font-semibold text-gray-900">{school.name}</h3>
-                    <p className="text-sm text-gray-600">{school.email}</p>
-                  </div>
-                </div>
-                <button className="p-1 text-gray-400 hover:text-gray-600">
-                  <MoreVertical className="w-4 h-4" />
-                </button>
-              </div>
-
-              <div className="space-y-3">
-                <div className="flex items-center justify-between">
-                  <div className="flex items-center gap-2">
-                    <FileText className="w-4 h-4 text-gray-400" />
-                    <span className="text-sm text-gray-600">Documents</span>
-                  </div>
-                  <span className="font-medium text-gray-900">{school.documentsCount}</span>
-                </div>
-
-                <div className="flex items-center justify-between">
-                  <div className="flex items-center gap-2">
-                    <div className={`w-2 h-2 rounded-full bg-${activityStatus.color}-500`}></div>
-                    <span className="text-sm text-gray-600">Last Active</span>
-                  </div>
-                  <span className="text-sm text-gray-900">
-                    {formatDate(school.lastActive)}
-                  </span>
-                </div>
-
-                <div className="flex items-center justify-between">
-                  <span className="text-sm text-gray-600">Joined</span>
-                  <span className="text-sm text-gray-900">
-                    {formatDate(school.createdAt)}
-                  </span>
-                </div>
-              </div>
-
-              <div className="mt-4 pt-4 border-t border-gray-200 flex gap-2">
-                <button 
-                  onClick={() => handleView(school)}
-                  className="flex-1 btn-secondary text-sm py-2 flex items-center justify-center gap-1"
+      {/* Schools Table */}
+      <div className="card overflow-hidden">
+        <div className="overflow-x-auto">
+          <table className="w-full">
+            <thead className="bg-gray-50 border-b border-gray-200">
+              <tr>
+                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                  Trường học
+                </th>
+                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                  Email
+                </th>
+                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                  Số tài liệu
+                </th>
+                <th className="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">
+                  Thao tác
+                </th>
+              </tr>
+            </thead>
+            <tbody className="bg-white divide-y divide-gray-200">
+              {filteredSchools.map((school: any, index: number) => (
+                <motion.tr
+                  key={school.id}
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ delay: index * 0.05 }}
+                  className="hover:bg-gray-50 transition-colors"
                 >
-                  <Eye className="w-3 h-3" />
-                  View
-                </button>
-                <button 
-                  onClick={() => handleEdit(school)}
-                  className="flex-1 btn-primary text-sm py-2 flex items-center justify-center gap-1"
-                >
-                  <Edit className="w-3 h-3" />
-                  Edit
-                </button>
-                <button 
-                  onClick={() => handleDelete(school.id)}
-                  className="flex-1 bg-red-600 hover:bg-red-700 text-white text-sm py-2 rounded-lg font-medium transition-colors flex items-center justify-center gap-1"
-                >
-                  <Trash2 className="w-3 h-3" />
-                  Delete
-                </button>
-              </div>
-            </motion.div>
-          );
-        })}
+                  <td className="px-6 py-4 whitespace-nowrap">
+                    <div className="flex items-center">
+                      <div className="w-10 h-10 bg-blue-100 rounded-lg flex items-center justify-center mr-3">
+                        <School className="w-5 h-5 text-blue-600" />
+                      </div>
+                      <div>
+                        <div className="text-sm font-medium text-gray-900">{school.name}</div>
+                      </div>
+                    </div>
+                  </td>
+                  <td className="px-6 py-4 whitespace-nowrap">
+                    <div className="text-sm text-gray-900">{school.email}</div>
+                  </td>
+                  <td className="px-6 py-4 whitespace-nowrap">
+                    <div className="flex items-center">
+                      <FileText className="w-4 h-4 text-gray-400 mr-2" />
+                      <span className="text-sm text-gray-900">{school.documentsCount || 0}</span>
+                    </div>
+                  </td>
+                  <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
+                    <div className="flex items-center justify-end gap-2">
+                      <button
+                        onClick={() => handleView(school)}
+                        className="text-gray-400 hover:text-blue-600 transition-colors p-1"
+                        title="Xem"
+                      >
+                        <Eye className="w-4 h-4" />
+                      </button>
+                      <button
+                        onClick={() => handleEdit(school)}
+                        className="text-gray-400 hover:text-green-600 transition-colors p-1"
+                        title="Chỉnh sửa"
+                      >
+                        <Edit className="w-4 h-4" />
+                      </button>
+                      <button
+                        onClick={() => handleDelete(school.id)}
+                        className="text-gray-400 hover:text-red-600 transition-colors p-1"
+                        title="Xóa"
+                      >
+                        <Trash2 className="w-4 h-4" />
+                      </button>
+                    </div>
+                  </td>
+                </motion.tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
       </div>
 
       {filteredSchools.length === 0 && (
         <div className="text-center py-12">
           <School className="w-16 h-16 text-gray-300 mx-auto mb-4" />
-          <h3 className="text-lg font-medium text-gray-900 mb-2">No schools found</h3>
+          <h3 className="text-lg font-medium text-gray-900 mb-2">Không tìm thấy trường học</h3>
           <p className="text-gray-600 mb-4">
-            {searchTerm ? 'Try adjusting your search terms' : 'Get started by adding your first school'}
+            {searchTerm ? 'Thử điều chỉnh từ khóa tìm kiếm' : 'Bắt đầu bằng cách thêm trường học đầu tiên'}
           </p>
           <Link to="/add-school" className="btn-primary">
-            Add New School
+            Thêm trường học mới
           </Link>
         </div>
       )}

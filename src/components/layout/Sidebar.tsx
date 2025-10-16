@@ -7,7 +7,6 @@ import {
   Users,
   Building2,
   BookOpen,
-  Database,
 } from 'lucide-react';
 import { useAuth } from '../../context/AuthContext';
 import { useLanguage } from '../../context/LanguageContext';
@@ -25,26 +24,21 @@ const Sidebar: React.FC = () => {
           { icon: Users, label: t('nav.userManagement'), path: '/admin/users' },
           { icon: Building2, label: t('nav.systemTree'), path: '/admin/tree' },
           { icon: FileText, label: t('nav.documentStore'), path: '/admin/documents' },
-          { icon: FileText, label: 'Quản lý tài liệu', path: '/documents' },
-          { icon: Database, label: 'Lập chỉ mục tài liệu', path: '/documents/indexing' },
         ];
       case 'department_manager':
         return [
           { icon: MessageSquare, label: t('nav.chat'), path: '/chat' },
           { icon: Building2, label: t('nav.provinces'), path: '/provinces' },
-          { icon: FileText, label: t('nav.documents'), path: '/documents' },
         ];
       case 'province_manager':
         return [
           { icon: Users, label: t('nav.schools'), path: '/schools' },
-          { icon: FileText, label: t('nav.documents'), path: '/documents' },
           { icon: MessageSquare, label: t('nav.chat'), path: '/chat' },
         ];
       case 'school_manager':
         return [
           { icon: Users, label: 'School Management', path: '/school-management' },
           { icon: MessageSquare, label: t('nav.chat'), path: '/chat' },
-          { icon: FileText, label: t('nav.documents'), path: '/documents' },
         ];
       default:
         return [];
