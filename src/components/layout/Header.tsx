@@ -3,10 +3,19 @@ import { motion } from 'framer-motion';
 import { LogOut, Bell } from 'lucide-react';
 import { useAuth } from '../../context/AuthContext';
 import { useLanguage } from '../../context/LanguageContext';
+import { useLogout } from '../../hooks/useAuth';
 
 const Header: React.FC = () => {
-  const { user, logout } = useAuth();
+  const { user, logout: authLogout } = useAuth();
   const { t } = useLanguage();
+  const queryLogout = useLogout();
+
+  const handleLogout = () => {
+    // Clear React Query cache
+    queryLogout();
+    // Clear AuthContext state
+    authLogout();
+  };
 
   return (
     <header className="bg-white border-b border-gray-200 px-6 py-4">
@@ -35,7 +44,7 @@ const Header: React.FC = () => {
           <motion.button
             whileHover={{ scale: 1.05 }}
             whileTap={{ scale: 0.95 }}
-            onClick={logout}
+            onClick={handleLogout}
             className="flex items-center gap-2 px-4 py-2 text-red-600 hover:text-red-700 hover:bg-red-50 rounded-lg transition-colors"
           >
             <LogOut className="w-4 h-4" />

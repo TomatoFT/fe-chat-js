@@ -1,6 +1,8 @@
 import React, { createContext, useContext, useState, useEffect } from 'react';
 import { User } from '../types';
 import { setGlobalLogout } from '../lib/errorHandler';
+import { clearAuthToken } from '../lib/api-client';
+import { useQueryClient } from '@tanstack/react-query';
 
 interface AuthContextType {
   user: User | null;
@@ -23,6 +25,7 @@ export const useAuth = () => {
 export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const [user, setUser] = useState<User | null>(null);
   const [loading, setLoading] = useState(true);
+  const queryClient = useQueryClient();
 
   useEffect(() => {
     // Check for stored user session and token
@@ -96,6 +99,9 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       
       setUser(user);
       localStorage.setItem('user', JSON.stringify(user));
+      
+      // Invalidate all queries to ensure fresh data is fetched for the new user
+      queryClient.invalidateQueries();
     } catch (error) {
       console.error('Login error:', error);
       throw error;
@@ -167,6 +173,10 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     setUser(null);
     localStorage.removeItem('user');
     localStorage.removeItem('token');
+    clearAuthToken();
+    
+    // Clear all cached queries
+    queryClient.clear();
   };
 
   // Register global logout function for error handling
