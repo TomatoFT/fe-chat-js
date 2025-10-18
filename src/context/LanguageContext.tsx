@@ -268,6 +268,12 @@ const translations: { [key: string]: string } = {
   'documents.supportsExcel': 'Hỗ trợ XLSX lên đến 10MB',
   'documents.documentTitleOptional': 'Tiêu đề tài liệu (Tùy chọn)',
   'documents.descriptionOptional': 'Mô tả (Tùy chọn)',
+  'documents.uploadSuccess': 'Tải lên thành công!',
+  'documents.uploadError': 'Lỗi tải lên',
+  'documents.deleteConfirm': 'Bạn có chắc chắn muốn xóa tài liệu này?',
+  'documents.noDocumentsFound': 'Không tìm thấy tài liệu',
+  'documents.tryAdjustingSearch': 'Thử điều chỉnh tiêu chí tìm kiếm hoặc lọc',
+  'documents.uploadFirstDocument': 'Tải lên tài liệu đầu tiên để bắt đầu',
 };
 
 export const LanguageProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {

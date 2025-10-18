@@ -25,12 +25,14 @@ interface SimpleDocumentUploadModalProps {
   uploadType: 'general' | 'staff' | 'students' | 'examinations';
   onClose: () => void;
   onSuccess: () => void;
+  onError?: (error: any) => void;
 }
 
 export const SimpleDocumentUploadModal: React.FC<SimpleDocumentUploadModalProps> = ({
   uploadType,
   onClose,
   onSuccess,
+  onError,
 }) => {
   const { t } = useLanguage();
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
@@ -184,7 +186,9 @@ export const SimpleDocumentUploadModal: React.FC<SimpleDocumentUploadModalProps>
       onSuccess();
     } catch (error: any) {
       console.error('Upload error:', error);
-      setUploadError(error.message || 'Upload failed. Please try again.');
+      const errorMessage = error.message || 'Upload failed. Please try again.';
+      setUploadError(errorMessage);
+      onError?.(error);
     }
   };
 

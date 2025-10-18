@@ -12,51 +12,32 @@ export const documentKeys = {
   detail: (id: string) => [...documentKeys.details(), id] as const,
 };
 
-// Get documents (returns array according to schema)
+// Get documents - NOTE: API doesn't have a GET /documents/ endpoint
+// The server only supports upload endpoints, not retrieval
+// This hook returns an empty array as a placeholder
 export const useDocuments = () => {
   return useQuery({
     queryKey: documentKeys.lists(),
     queryFn: async () => {
-      const token = localStorage.getItem('token');
-      const response = await fetch(`${API_BASE_URL}/documents/`, {
-        headers: {
-          'Authorization': `Bearer ${token}`,
-        },
-      });
-
-      if (!response.ok) {
-        if (handleAuthError(response, true)) {
-          throw new Error('Authentication failed. Please log in again.');
-        }
-        throw new Error('Failed to fetch documents');
-      }
-
-      return response.json();
+      // API doesn't support document retrieval, return empty array
+      console.warn('Document retrieval not supported by API - returning empty array');
+      return [];
     },
+    staleTime: Infinity, // Never refetch since we always return empty
   });
 };
 
-// Get single document
+// Get single document - NOTE: API doesn't have a GET /documents/{id} endpoint
+// This hook returns null as a placeholder
 export const useDocument = (id: string) => {
   return useQuery({
     queryKey: documentKeys.detail(id),
     queryFn: async () => {
-      const token = localStorage.getItem('token');
-      const response = await fetch(`${API_BASE_URL}/documents/${id}`, {
-        headers: {
-          'Authorization': `Bearer ${token}`,
-        },
-      });
-
-      if (!response.ok) {
-        if (handleAuthError(response, true)) {
-          throw new Error('Authentication failed. Please log in again.');
-        }
-        throw new Error('Failed to fetch document');
-      }
-
-      return response.json();
+      // API doesn't support single document retrieval, return null
+      console.warn(`Document retrieval for ID ${id} not supported by API - returning null`);
+      return null;
     },
+    staleTime: Infinity, // Never refetch since we always return null
     enabled: !!id,
   });
 };
@@ -92,26 +73,15 @@ export const useUploadDocument = () => {
   });
 };
 
-// Delete document
+// Delete document - NOTE: API doesn't have a DELETE /documents/{id} endpoint
+// This hook throws an error as a placeholder
 export const useDeleteDocument = () => {
   const queryClient = useQueryClient();
 
   return useMutation({
     mutationFn: async (id: string) => {
-      const token = localStorage.getItem('token');
-      const response = await fetch(`${API_BASE_URL}/documents/${id}`, {
-        method: 'DELETE',
-        headers: {
-          'Authorization': `Bearer ${token}`,
-        },
-      });
-
-      if (!response.ok) {
-        if (handleAuthError(response, true)) {
-          throw new Error('Authentication failed. Please log in again.');
-        }
-        throw new Error('Failed to delete document');
-      }
+      // API doesn't support document deletion, throw error
+      throw new Error(`Document deletion for ID ${id} not supported by API`);
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: documentKeys.all });
@@ -212,25 +182,13 @@ export const useUploadExaminationsDocument = () => {
   });
 };
 
-// Download document
+// Download document - NOTE: API doesn't have a GET /documents/{id}/download endpoint
+// This hook throws an error as a placeholder
 export const useDownloadDocument = () => {
   return useMutation({
     mutationFn: async (id: string) => {
-      const token = localStorage.getItem('token');
-      const response = await fetch(`${API_BASE_URL}/documents/${id}/download`, {
-        headers: {
-          'Authorization': `Bearer ${token}`,
-        },
-      });
-
-      if (!response.ok) {
-        if (handleAuthError(response, true)) {
-          throw new Error('Authentication failed. Please log in again.');
-        }
-        throw new Error('Failed to download document');
-      }
-
-      return response.blob();
+      // API doesn't support document download, throw error
+      throw new Error(`Document download for ID ${id} not supported by API`);
     },
   });
 };

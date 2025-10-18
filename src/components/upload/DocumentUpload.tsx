@@ -2,7 +2,12 @@ import React, { useState, useCallback } from 'react';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { documentUploadSchema, type DocumentUploadInput } from '../../lib/validations';
-import { useUploadDocument } from '../../hooks/useDocuments';
+import { 
+  useUploadDocument, 
+  useUploadStaffDocument, 
+  useUploadStudentsDocument, 
+  useUploadExaminationsDocument 
+} from '../../hooks/useDocuments';
 
 interface DocumentUploadProps {
   uploadType?: 'general' | 'staff' | 'students' | 'examinations';
@@ -18,21 +23,37 @@ export const DocumentUpload: React.FC<DocumentUploadProps> = ({
   const [dragActive, setDragActive] = useState(false);
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
 
+  // Use the appropriate upload hook based on uploadType
   const uploadDocument = useUploadDocument();
+  const uploadStaffDocument = useUploadStaffDocument();
+  const uploadStudentsDocument = useUploadStudentsDocument();
+  const uploadExaminationsDocument = useUploadExaminationsDocument();
+
+  // Get the correct upload function based on type
+  const getUploadFunction = () => {
+    switch (uploadType) {
+      case 'staff':
+        return uploadStaffDocument;
+      case 'students':
+        return uploadStudentsDocument;
+      case 'examinations':
+        return uploadExaminationsDocument;
+      default:
+        return uploadDocument;
+    }
+  };
+
+  const uploadFunction = getUploadFunction();
 
   const {
     register,
     handleSubmit,
     formState: { errors },
     setValue,
-    watch,
     reset,
   } = useForm<DocumentUploadInput>({
     resolver: zodResolver(documentUploadSchema),
   });
-
-  // const title = watch('title');
-  // const description = watch('description');
 
   const handleDrag = useCallback((e: React.DragEvent) => {
     e.preventDefault();
@@ -71,7 +92,7 @@ export const DocumentUpload: React.FC<DocumentUploadProps> = ({
       if (data.title) formData.append('title', data.title);
       if (data.description) formData.append('description', data.description);
       
-      await uploadDocument.mutateAsync(formData);
+      await uploadFunction.mutateAsync(formData);
       reset();
       setSelectedFile(null);
       onSuccess?.();
@@ -97,17 +118,17 @@ export const DocumentUpload: React.FC<DocumentUploadProps> = ({
   const getUploadDescription = () => {
     switch (uploadType) {
       case 'staff':
-        return 'Upload staff-related documents';
+        return 'Tải lên tài liệu liên quan đến nhân viên';
       case 'students':
-        return 'Upload student-related documents';
+        return 'Tải lên tài liệu liên quan đến học sinh';
       case 'examinations':
-        return 'Upload examination-related documents';
+        return 'Tải lên tài liệu liên quan đến thi cử';
       default:
-        return 'Upload any document';
+        return 'Tải lên bất kỳ tài liệu nào';
     }
   };
 
-  const isUploading = uploadDocument.isPending;
+  const isUploading = uploadFunction.isPending;
 
   return (
     <div className="max-w-2xl mx-auto p-6">
@@ -151,11 +172,11 @@ export const DocumentUpload: React.FC<DocumentUploadProps> = ({
               </svg>
               <div className="text-sm text-gray-600">
                 <span className="font-medium text-indigo-600 hover:text-indigo-500">
-                  Click to upload
+                  Nhấp để tải lên
                 </span>{' '}
-                or drag and drop
+                hoặc kéo thả
               </div>
-              <p className="text-xs text-gray-500">DOC, DOCX, TXT, XLSX, XLS up to 10MB</p>
+              <p className="text-xs text-gray-500">DOC, DOCX, TXT, XLSX, XLS tối đa 10MB</p>
             </div>
           </div>
 
@@ -180,14 +201,14 @@ export const DocumentUpload: React.FC<DocumentUploadProps> = ({
           {/* Title */}
           <div>
             <label htmlFor="title" className="block text-sm font-medium text-gray-700">
-              Title (Optional)
+              Tiêu đề (Tùy chọn)
             </label>
             <input
               {...register('title')}
               type="text"
               id="title"
               className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
-              placeholder={t('documents.enterTitle')}
+              placeholder="Nhập tiêu đề tài liệu"
             />
             {errors.title && (
               <p className="mt-1 text-sm text-red-600">{errors.title.message}</p>
@@ -197,14 +218,14 @@ export const DocumentUpload: React.FC<DocumentUploadProps> = ({
           {/* Description */}
           <div>
             <label htmlFor="description" className="block text-sm font-medium text-gray-700">
-              Description (Optional)
+              Mô tả (Tùy chọn)
             </label>
             <textarea
               {...register('description')}
               id="description"
               rows={3}
               className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
-              placeholder={t('documents.enterDescription')}
+              placeholder="Nhập mô tả tài liệu"
             />
             {errors.description && (
               <p className="mt-1 text-sm text-red-600">{errors.description.message}</p>

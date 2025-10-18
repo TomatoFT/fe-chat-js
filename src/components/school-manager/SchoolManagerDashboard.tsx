@@ -5,8 +5,6 @@ import {
   UserCheck, 
   BookOpen
 } from 'lucide-react';
-import { useAuth } from '../../context/AuthContext';
-import { useLanguage } from '../../context/LanguageContext';
 import { StudentManagement } from './StudentManagement';
 import { StaffManagement } from './StaffManagement';
 import { ExaminationManagement } from './ExaminationManagement';
@@ -16,18 +14,13 @@ interface SchoolManagerDashboardProps {
 }
 
 export const SchoolManagerDashboard: React.FC<SchoolManagerDashboardProps> = ({ className = '' }) => {
-  const { user } = useAuth();
-  const { t } = useLanguage();
   const [activeTab, setActiveTab] = useState<'students' | 'staff' | 'examinations'>('students');
-
 
   const tabs = [
     { id: 'students', label: 'Học sinh', icon: Users },
     { id: 'staff', label: 'Nhân viên', icon: UserCheck },
     { id: 'examinations', label: 'Thi cử', icon: BookOpen },
   ];
-
-
 
   const renderActiveTab = () => {
     switch (activeTab) {

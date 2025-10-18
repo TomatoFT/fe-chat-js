@@ -65,7 +65,7 @@ function App() {
                   <Route 
                     path="documents" 
                     element={
-                      <ProtectedRoute allowedRoles={['school_manager', 'province_manager', 'department_manager', 'admin']}>
+                      <ProtectedRoute allowedRoles={['school_manager']}>
                         <DocumentManagement />
                       </ProtectedRoute>
                     } 
