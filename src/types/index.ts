@@ -16,7 +16,7 @@ export interface School {
   name: string;
   email: string;
   provinceId: string;
-  documentsCount: number;
+  usersCount: number;
   lastActive: string;
   createdAt: string;
 }
@@ -28,7 +28,7 @@ export interface Province {
   user_id?: string;
   email?: string;
   schoolsCount: number;
-  documentsCount: number;
+  usersCount: number;
   lastActive: string;
   createdAt: string;
 }

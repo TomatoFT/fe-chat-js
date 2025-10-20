@@ -21,9 +21,7 @@ const Sidebar: React.FC = () => {
     switch (user?.role) {
       case 'admin':
         return [
-          { icon: Users, label: t('nav.userManagement'), path: '/admin/users' },
-          { icon: Building2, label: t('nav.systemTree'), path: '/admin/tree' },
-          { icon: FileText, label: t('nav.documentStore'), path: '/admin/documents' },
+          { icon: Building2, label: 'Department Management', path: '/admin/departments' },
         ];
       case 'department_manager':
         return [

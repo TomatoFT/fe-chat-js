@@ -118,7 +118,7 @@ export const StaffManagement: React.FC<StaffManagementProps> = ({ className = ''
   if (isLoading) {
     return (
       <div className="flex justify-center items-center h-64">
-        <div className="text-lg text-gray-600">Loading staff...</div>
+        <div className="text-lg text-gray-600">{t('common.loading')} {t('common.staff')}...</div>
       </div>
     );
   }

@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { motion } from 'framer-motion';
 import { Link } from 'react-router-dom';
-import { Plus, Search, School, FileText, Eye, Edit, Trash2 } from 'lucide-react';
+import { Plus, Search, School, Users, Eye, Edit, Trash2 } from 'lucide-react';
 import { School as SchoolType } from '../../types';
 import { useSchools, useUpdateSchool, useDeleteSchool } from '../../hooks/useUsers';
 import { useAuth } from '../../context/AuthContext';
@@ -86,10 +86,7 @@ const SchoolsList: React.FC = () => {
             <label className="text-sm font-medium text-gray-600">Email</label>
             <p className="text-gray-900">{school.email}</p>
           </div>
-          <div>
-            <label className="text-sm font-medium text-gray-600">Số tài liệu</label>
-            <p className="text-gray-900">{school.documentsCount || 0}</p>
-          </div>
+
         </div>
         <div className="flex gap-3 pt-4 mt-4 border-t">
           <button
@@ -297,8 +294,8 @@ const SchoolsList: React.FC = () => {
                   </td>
                   <td className="px-6 py-4 whitespace-nowrap">
                     <div className="flex items-center">
-                      <FileText className="w-4 h-4 text-gray-400 mr-2" />
-                      <span className="text-sm text-gray-900">{school.documentsCount || 0}</span>
+                      <Users className="w-4 h-4 text-gray-400 mr-2" />
+                      <span className="text-sm text-gray-900">{school.usersCount || 0}</span>
                     </div>
                   </td>
                   <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">

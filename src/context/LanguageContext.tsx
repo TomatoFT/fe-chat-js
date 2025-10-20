@@ -43,6 +43,7 @@ const translations: { [key: string]: string } = {
   'common.schools': 'Trường học',
   'common.provinces': 'Tỉnh thành',
   'common.users': 'Người dùng',
+  'common.staff': 'nhân viên',
   
   // Auth
   'auth.login': 'Đăng nhập',
@@ -61,6 +62,7 @@ const translations: { [key: string]: string } = {
   'auth.signInHere': 'Đăng nhập tại đây',
   'auth.demoAccounts': 'Tài khoản demo:',
   'auth.passwordAny': 'Mật khẩu: bất kỳ',
+  'auth.invalidCredentials': 'Email hoặc mật khẩu không hợp lệ',
   
   // Navigation
   'nav.chat': 'Trò chuyện',

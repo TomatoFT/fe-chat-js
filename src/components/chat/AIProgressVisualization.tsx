@@ -13,7 +13,7 @@ import './AIProgressVisualization.css';
 interface AIProgressVisualizationProps {
   isVisible: boolean;
   onComplete?: () => void;
-  expectedDuration?: number; // in seconds, default 180 (3 minutes)
+  expectedDuration?: number; // in seconds, default 240 (4 minutes)
   actualDuration?: number; // actual response time, if known
 }
 
@@ -33,35 +33,35 @@ const STAGES: StageConfig[] = [
     label: 'SUY NGHĨ',
     icon: <Brain className="w-6 h-6" />,
     color: 'bg-blue-500',
-    duration: 45
+    duration: 60
   },
   {
     id: 'query',
     label: 'TÌM KIẾM',
     icon: <Search className="w-6 h-6" />,
     color: 'bg-purple-500',
-    duration: 45
+    duration: 60
   },
   {
     id: 'combine',
     label: 'KẾT HỢP DỮ LIỆU',
     icon: <Puzzle className="w-6 h-6" />,
     color: 'bg-green-500',
-    duration: 45
+    duration: 60
   },
   {
     id: 'generate',
     label: 'TẠO CÂU TRẢ LỜI',
     icon: <Sparkles className="w-6 h-6" />,
     color: 'bg-orange-500',
-    duration: 45
+    duration: 60
   }
 ];
 
 export const AIProgressVisualization: React.FC<AIProgressVisualizationProps> = ({
   isVisible,
   onComplete,
-  expectedDuration = 180,
+  expectedDuration = 240,
   actualDuration
 }) => {
   const [currentStage, setCurrentStage] = useState<ProgressStage | null>(null);
@@ -157,7 +157,7 @@ export const AIProgressVisualization: React.FC<AIProgressVisualizationProps> = (
         animate={{ opacity: 1, y: 0 }}
         exit={{ opacity: 0, y: -20 }}
         transition={{ duration: 0.5 }}
-        className="bg-white rounded-lg border border-gray-200 p-6 shadow-sm mb-4"
+        className="bg-white rounded-lg border border-gray-200 p-4 shadow-sm mb-4 max-w-md mx-auto"
       >
         {/* INFO HUB Indicator */}
         <div className="flex items-center justify-center mb-6">
@@ -175,7 +175,7 @@ export const AIProgressVisualization: React.FC<AIProgressVisualizationProps> = (
           >
             <Info className="w-6 h-6" />
           </motion.div>
-          <span className="ml-3 text-lg font-semibold text-gray-700">TRUNG TÂM THÔNG TIN</span>
+          <span className="ml-3 text-sm font-medium text-gray-700">QUY TRÌNH LÝ LUẬN</span>
         </div>
 
         {/* Progress Stages */}

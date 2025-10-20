@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { motion } from 'framer-motion';
 import { Link } from 'react-router-dom';
-import { Plus, Search, Building2, Users, FileText, Eye, Edit, Trash2 } from 'lucide-react';
+import { Plus, Search, Building2, Users, Eye, Edit, Trash2 } from 'lucide-react';
 import { Province } from '../../types';
 import { useProvinces, useUpdateProvince, useDeleteProvince } from '../../hooks/useUsers';
 import { useAuth } from '../../context/AuthContext';
@@ -89,10 +89,6 @@ const ProvincesList: React.FC = () => {
             <label className="text-sm font-medium text-gray-600">Số trường học</label>
             <p className="text-gray-900">{province.schoolsCount || 0}</p>
           </div>
-          <div>
-            <label className="text-sm font-medium text-gray-600">Số tài liệu</label>
-            <p className="text-gray-900">{province.documentsCount || 0}</p>
-          </div>
         </div>
         <div className="flex gap-3 pt-4 mt-4 border-t">
           <button
@@ -110,7 +106,7 @@ const ProvincesList: React.FC = () => {
     const [formData, setFormData] = useState({
       email: province.email || '',
       password: '',
-      department_id: province.departmentId || '',
+      department_id: province.department_id || '',
     });
 
     const handleSubmit = async (e: React.FormEvent) => {
@@ -316,8 +312,8 @@ const ProvincesList: React.FC = () => {
                   </td>
                   <td className="px-6 py-4 whitespace-nowrap">
                     <div className="flex items-center">
-                      <FileText className="w-4 h-4 text-gray-400 mr-2" />
-                      <span className="text-sm text-gray-900">{province.documentsCount || 0}</span>
+                      <Users className="w-4 h-4 text-gray-400 mr-2" />
+                      <span className="text-sm text-gray-900">{province.usersCount || 0}</span>
                     </div>
                   </td>
                   <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">

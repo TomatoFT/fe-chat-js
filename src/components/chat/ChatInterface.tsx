@@ -1,7 +1,7 @@
 import React, { useState, useRef, useEffect, useCallback } from 'react';
 import { useQueryClient } from '@tanstack/react-query';
-import { useChatSessions, useChatSession, useSendMessage, useCreateChatSession, useRenameChatSession, useDocumentsForRAG } from '../../hooks/useChat';
-import { Send, Plus, MessageCircle, Bot, User, Edit2, Check, X, Sparkles, BarChart3, FileText, CheckCircle } from 'lucide-react';
+import { useChatSessions, useChatSession, useSendMessage, useCreateChatSession, useRenameChatSession, useDeleteChatSession, useDocumentsForRAG } from '../../hooks/useChat';
+import { Send, Plus, MessageCircle, Bot, User, Edit2, Check, X, Sparkles, BarChart3, FileText, CheckCircle, Trash2 } from 'lucide-react';
 import { formatTime, sortByDate } from '../../utils/dateUtils';
 import { AIProgressVisualization } from './AIProgressVisualization';
 
@@ -32,6 +32,7 @@ export const ChatInterface: React.FC = () => {
   const sendMessage = useSendMessage();
   const createSession = useCreateChatSession();
   const renameSession = useRenameChatSession();
+  const deleteSession = useDeleteChatSession();
 
   // Mention options
   const mentionOptions = [
@@ -325,6 +326,21 @@ export const ChatInterface: React.FC = () => {
     }
   };
 
+  const handleDeleteSession = async (sessionId: string) => {
+    if (window.confirm('Bạn có chắc chắn muốn xóa cuộc trò chuyện này? Hành động này không thể hoàn tác.')) {
+      try {
+        await deleteSession.mutateAsync(sessionId);
+        // If the deleted session was selected, clear the selection
+        if (selectedSessionId === sessionId) {
+          setSelectedSessionId(null);
+        }
+      } catch (error) {
+        console.error('Error deleting session:', error);
+        alert('Không thể xóa cuộc trò chuyện. Vui lòng thử lại.');
+      }
+    }
+  };
+
 
   return (
     <div className="flex h-screen bg-gradient-to-br from-blue-50 to-indigo-100">
@@ -433,17 +449,30 @@ export const ChatInterface: React.FC = () => {
                               {formatTime(session.created_at)}
                             </div>
                           </div>
-                          <button
-                            onClick={(e) => {
-                              e.stopPropagation();
-                              handleStartEdit(session.id, session.name);
-                            }}
-                            className={`opacity-0 group-hover:opacity-100 p-1 rounded hover:bg-white/20 transition-all duration-200 ${
-                              selectedSessionId === session.id ? 'text-white' : 'text-gray-400'
-                            }`}
-                          >
-                            <Edit2 className="w-4 h-4" />
-                          </button>
+                          <div className="flex items-center space-x-1">
+                            <button
+                              onClick={(e) => {
+                                e.stopPropagation();
+                                handleStartEdit(session.id, session.name);
+                              }}
+                              className={`opacity-0 group-hover:opacity-100 p-1 rounded hover:bg-white/20 transition-all duration-200 ${
+                                selectedSessionId === session.id ? 'text-white' : 'text-gray-400'
+                              }`}
+                            >
+                              <Edit2 className="w-4 h-4" />
+                            </button>
+                            <button
+                              onClick={(e) => {
+                                e.stopPropagation();
+                                handleDeleteSession(session.id);
+                              }}
+                              className={`opacity-0 group-hover:opacity-100 p-1 rounded hover:bg-red-500/20 transition-all duration-200 ${
+                                selectedSessionId === session.id ? 'text-white hover:text-red-300' : 'text-gray-400 hover:text-red-500'
+                              }`}
+                            >
+                              <Trash2 className="w-4 h-4" />
+                            </button>
+                          </div>
                         </div>
                       )}
                     </div>

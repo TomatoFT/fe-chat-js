@@ -8,15 +8,12 @@ import Layout from './components/layout/Layout';
 import Login from './components/auth/Login';
 import Register from './components/auth/Register';
 import { DocumentManagement } from './components/documents/DocumentManagement';
-import { DocumentIndexing } from './components/documents/DocumentIndexing';
 import { ChatInterface } from './components/chat/ChatInterface';
 import AddSchool from './components/management/AddSchool';
 import AddProvince from './components/management/AddProvince';
 import SchoolsList from './components/management/SchoolsList';
 import ProvincesList from './components/management/ProvincesList';
-import { UserManagement } from './components/admin/UserManagement';
-import SystemTree from './components/admin/SystemTree';
-import DocumentStore from './components/admin/DocumentStore';
+import DepartmentManagement from './components/admin/DepartmentManagement';
 import { SchoolManagerDashboard } from './components/school-manager/SchoolManagerDashboard';
 
 function App() {
@@ -79,14 +76,6 @@ function App() {
                     } 
                   />
                   <Route 
-                    path="documents/indexing" 
-                    element={
-                      <ProtectedRoute allowedRoles={['admin']}>
-                        <DocumentIndexing />
-                      </ProtectedRoute>
-                    } 
-                  />
-                  <Route 
                     path="schools" 
                     element={
                       <ProtectedRoute allowedRoles={['province_manager', 'department_manager', 'admin']}>
@@ -103,26 +92,10 @@ function App() {
                     } 
                   />
                   <Route 
-                    path="admin/users" 
+                    path="admin/departments" 
                     element={
                       <ProtectedRoute allowedRoles={['admin']}>
-                        <UserManagement />
-                      </ProtectedRoute>
-                    } 
-                  />
-                  <Route 
-                    path="admin/tree" 
-                    element={
-                      <ProtectedRoute allowedRoles={['admin']}>
-                        <SystemTree />
-                      </ProtectedRoute>
-                    } 
-                  />
-                  <Route 
-                    path="admin/documents" 
-                    element={
-                      <ProtectedRoute allowedRoles={['admin']}>
-                        <DocumentStore />
+                        <DepartmentManagement />
                       </ProtectedRoute>
                     } 
                   />

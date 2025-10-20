@@ -1,8 +1,7 @@
 import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { ChevronRight, ChevronDown, Building2, School, Users, FileText, Plus, Edit, Trash2, Eye } from 'lucide-react';
+import { ChevronRight, ChevronDown, Building2, School, Users, Plus, Edit, Trash2, Eye } from 'lucide-react';
 import { useProvinces, useSchools } from '../../hooks/useUsers';
-import { useDocuments } from '../../hooks/useDocuments';
 import { useUsers } from '../../hooks/useUsers';
 
 interface TreeNode {
@@ -10,7 +9,6 @@ interface TreeNode {
   name: string;
   type: 'deputy' | 'province' | 'school';
   children?: TreeNode[];
-  documentsCount?: number;
   usersCount?: number;
   expanded?: boolean;
 }
@@ -19,7 +17,6 @@ const SystemTree: React.FC = () => {
   // Fetch real data from APIs
   const { data: provinces, isLoading: provincesLoading } = useProvinces();
   const { data: schools, isLoading: schoolsLoading } = useSchools();
-  const { data: documents, isLoading: documentsLoading } = useDocuments();
   const { data: users, isLoading: usersLoading } = useUsers({ skip: 0, limit: 1000 });
 
   // Build tree data from API responses
@@ -35,7 +32,6 @@ const SystemTree: React.FC = () => {
         id: province.id,
         name: province.name,
         type: 'province' as const,
-        documentsCount: documents?.filter((doc: any) => doc.provinceId === province.id).length || 0,
         usersCount: users?.filter((user: any) => user.provinceId === province.id).length || 0,
         expanded: false,
         children: schools
@@ -44,7 +40,6 @@ const SystemTree: React.FC = () => {
             id: school.id,
             name: school.name,
             type: 'school' as const,
-            documentsCount: documents?.filter((doc: any) => doc.schoolId === school.id).length || 0,
             usersCount: users?.filter((user: any) => user.schoolId === school.id).length || 0,
           })) || [],
       })),
@@ -60,9 +55,9 @@ const SystemTree: React.FC = () => {
     if (provinces && schools) {
       setTreeData(buildTreeData());
     }
-  }, [provinces, schools, documents, users]);
+  }, [provinces, schools, users]);
 
-  if (provincesLoading || schoolsLoading || documentsLoading || usersLoading) {
+  if (provincesLoading || schoolsLoading || usersLoading) {
     return (
       <div className="p-6">
         <div className="flex justify-center items-center h-64">
@@ -161,12 +156,6 @@ const SystemTree: React.FC = () => {
             <div className="flex-1">
               <h3 className="font-medium text-gray-900">{node.name}</h3>
               <div className="flex items-center gap-4 text-xs text-gray-500">
-                {node.documentsCount !== undefined && (
-                  <span className="flex items-center gap-1">
-                    <FileText className="w-3 h-3" />
-                    {node.documentsCount} docs
-                  </span>
-                )}
                 {node.usersCount !== undefined && (
                   <span className="flex items-center gap-1">
                     <Users className="w-3 h-3" />
@@ -263,7 +252,7 @@ const SystemTree: React.FC = () => {
       </div>
 
       {/* Quick Stats */}
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mt-8">
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mt-8">
         <div className="card">
           <div className="flex items-center gap-3">
             <div className="w-12 h-12 bg-blue-100 rounded-lg flex items-center justify-center">
@@ -284,18 +273,6 @@ const SystemTree: React.FC = () => {
             <div>
               <p className="text-sm text-gray-600">Total Schools</p>
               <p className="text-2xl font-bold text-gray-900">{schools?.length || 0}</p>
-            </div>
-          </div>
-        </div>
-        
-        <div className="card">
-          <div className="flex items-center gap-3">
-            <div className="w-12 h-12 bg-purple-100 rounded-lg flex items-center justify-center">
-              <FileText className="w-6 h-6 text-purple-600" />
-            </div>
-            <div>
-              <p className="text-sm text-gray-600">Total Documents</p>
-              <p className="text-2xl font-bold text-gray-900">{documents?.length || 0}</p>
             </div>
           </div>
         </div>
