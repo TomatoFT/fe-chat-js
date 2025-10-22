@@ -36,25 +36,26 @@ export const SchoolManagerDashboard: React.FC<SchoolManagerDashboardProps> = ({ 
   };
 
   return (
-    <div className={`space-y-6 ${className}`}>
+    <div className={`space-y-4 md:space-y-6 p-4 md:p-6 ${className}`}>
 
       {/* Tabs */}
       <div className="bg-white rounded-lg border border-gray-200 p-1">
-        <div className="flex space-x-1">
+        <div className="flex flex-col sm:flex-row space-y-1 sm:space-y-0 sm:space-x-1">
           {tabs.map((tab) => (
             <motion.button
               key={tab.id}
               whileHover={{ scale: 1.02 }}
               whileTap={{ scale: 0.98 }}
               onClick={() => setActiveTab(tab.id as any)}
-              className={`flex items-center gap-2 px-4 py-2 rounded-md text-sm font-medium transition-colors ${
+              className={`flex items-center justify-center sm:justify-start gap-2 px-3 sm:px-4 py-2 rounded-md text-sm font-medium transition-colors ${
                 activeTab === tab.id
                   ? 'bg-blue-100 text-blue-700'
                   : 'text-gray-600 hover:text-gray-900 hover:bg-gray-50'
               }`}
             >
               <tab.icon className="w-4 h-4" />
-              {tab.label}
+              <span className="hidden sm:inline">{tab.label}</span>
+              <span className="sm:hidden">{tab.label.split(' ')[0]}</span>
             </motion.button>
           ))}
         </div>

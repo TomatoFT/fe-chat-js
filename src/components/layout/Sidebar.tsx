@@ -7,12 +7,18 @@ import {
   Users,
   Building2,
   BookOpen,
+  X,
 } from 'lucide-react';
 import { useAuth } from '../../context/AuthContext';
 import { useLanguage } from '../../context/LanguageContext';
 // import { useUserDisplayName } from '../../hooks/useUserDetails';
 
-const Sidebar: React.FC = () => {
+interface SidebarProps {
+  isOpen?: boolean;
+  onClose?: () => void;
+}
+
+const Sidebar: React.FC<SidebarProps> = ({ isOpen = true, onClose }) => {
   const { user } = useAuth();
   const { t } = useLanguage();
   // const { name: displayName, isLoading: nameLoading } = useUserDisplayName();
@@ -47,18 +53,41 @@ const Sidebar: React.FC = () => {
   const navItems = getNavItems();
 
   return (
-    <div className="w-64 bg-white border-r border-gray-200 h-full flex flex-col">
-      <div className="p-6 border-b border-gray-200">
-        <div className="flex items-center gap-3">
-          <div className="w-10 h-10 bg-blue-100 rounded-lg flex items-center justify-center">
-            <BookOpen className="w-6 h-6 text-blue-600" />
-          </div>
-          <div>
-            <h1 className="text-xl font-semibold text-gray-900">TKGD</h1>
-            <p className="text-sm text-gray-600 capitalize">VietTechKey</p>
+    <>
+      {/* Mobile Overlay */}
+      {isOpen && (
+        <div 
+          className="fixed inset-0 bg-black bg-opacity-50 z-40 lg:hidden"
+          onClick={onClose}
+        />
+      )}
+      
+      {/* Sidebar */}
+      <div className={`
+        fixed lg:static inset-y-0 left-0 z-50 w-64 bg-white border-r border-gray-200 h-full flex flex-col transform transition-transform duration-300 ease-in-out
+        ${isOpen ? 'translate-x-0' : '-translate-x-full lg:translate-x-0'}
+      `}>
+        {/* Mobile Close Button */}
+        <div className="lg:hidden flex justify-end p-4 border-b border-gray-200">
+          <button
+            onClick={onClose}
+            className="p-2 rounded-lg hover:bg-gray-100 transition-colors"
+          >
+            <X className="w-6 h-6 text-gray-600" />
+          </button>
+        </div>
+
+        <div className="p-6 border-b border-gray-200">
+          <div className="flex items-center gap-3">
+            <div className="w-10 h-10 bg-blue-100 rounded-lg flex items-center justify-center">
+              <BookOpen className="w-6 h-6 text-blue-600" />
+            </div>
+            <div>
+              <h1 className="text-xl font-semibold text-gray-900">TKGD</h1>
+              <p className="text-sm text-gray-600 capitalize">VietTechKey</p>
+            </div>
           </div>
         </div>
-      </div>
 
       <nav className="flex-1 p-4">
         <ul className="space-y-2">
@@ -71,6 +100,12 @@ const Sidebar: React.FC = () => {
             >
               <NavLink
                 to={item.path}
+                onClick={() => {
+                  // Close mobile sidebar when navigating
+                  if (onClose) {
+                    onClose();
+                  }
+                }}
                 className={({ isActive }) =>
                   `flex items-center gap-3 px-4 py-3 rounded-lg transition-all duration-200 ${
                     isActive
@@ -95,7 +130,8 @@ const Sidebar: React.FC = () => {
           <p className="text-sm text-gray-600 capitalize">{user?.role?.replace('_', ' ')}</p>
         </div>
       </div>
-    </div>
+      </div>
+    </>
   );
 };
 

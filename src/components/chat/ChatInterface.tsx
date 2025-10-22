@@ -1,7 +1,7 @@
 import React, { useState, useRef, useEffect, useCallback } from 'react';
 import { useQueryClient } from '@tanstack/react-query';
 import { useChatSessions, useChatSession, useSendMessage, useCreateChatSession, useRenameChatSession, useDeleteChatSession, useDocumentsForRAG } from '../../hooks/useChat';
-import { Send, Plus, MessageCircle, Bot, User, Edit2, Check, X, Sparkles, BarChart3, FileText, CheckCircle, Trash2 } from 'lucide-react';
+import { Send, Plus, MessageCircle, Bot, User, Edit2, Check, X, Sparkles, BarChart3, FileText, CheckCircle, Trash2, PanelLeftClose, PanelLeftOpen, Menu } from 'lucide-react';
 import { formatTime, sortByDate } from '../../utils/dateUtils';
 import { AIProgressVisualization } from './AIProgressVisualization';
 
@@ -19,6 +19,8 @@ export const ChatInterface: React.FC = () => {
   const [showProgressVisualization, setShowProgressVisualization] = useState(false);
   const [responseStartTime, setResponseStartTime] = useState<number | null>(null);
   const [actualResponseTime, setActualResponseTime] = useState<number | null>(null);
+  const [sidebarVisible, setSidebarVisible] = useState(false); // Start with sidebar hidden for better mobile experience
+  const [showMobileSessionsModal, setShowMobileSessionsModal] = useState(false);
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLInputElement>(null);
   const editInputRef = useRef<HTMLInputElement>(null);
@@ -36,18 +38,18 @@ export const ChatInterface: React.FC = () => {
 
   // Mention options
   const mentionOptions = [
-    {
-      id: 'vtk-rag',
-      name: 'VTK RAG',
-      description: 'Document retrieval and analysis',
-      icon: Sparkles,
-      color: 'from-purple-500 to-pink-500',
-      hasDocumentSelection: true
-    },
+    // {
+    //   id: 'vtk-rag',
+    //   name: 'VTK RAG',
+    //   description: 'Document retrieval and analysis',
+    //   icon: Sparkles,
+    //   color: 'from-purple-500 to-pink-500',
+    //   hasDocumentSelection: true
+    // },
     {
       id: 'stats',
-      name: 'Statistics',
-      description: 'Data analysis and insights',
+      name: 'Thống kê',
+      description: 'Phân tích dữ liệu và thống kê',
       icon: BarChart3,
       color: 'from-blue-500 to-cyan-500',
       hasDocumentSelection: false
@@ -140,7 +142,7 @@ export const ChatInterface: React.FC = () => {
     }, 0);
   }, []);
 
-  // Close mentions and document selection on outside click
+  // Close mentions, document selection, and mobile modal on outside click
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
       if (mentionDropdownRef.current && !mentionDropdownRef.current.contains(event.target as Node)) {
@@ -171,6 +173,19 @@ export const ChatInterface: React.FC = () => {
       editInputRef.current.select();
     }
   }, [editingSessionId]);
+
+  // Keyboard shortcut for toggling sidebar (Ctrl/Cmd + B)
+  useEffect(() => {
+    const handleKeyDown = (event: KeyboardEvent) => {
+      if ((event.ctrlKey || event.metaKey) && event.key === 'b') {
+        event.preventDefault();
+        setSidebarVisible(!sidebarVisible);
+      }
+    };
+
+    document.addEventListener('keydown', handleKeyDown);
+    return () => document.removeEventListener('keydown', handleKeyDown);
+  }, [sidebarVisible]);
 
   const handleSendMessage = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -345,7 +360,10 @@ export const ChatInterface: React.FC = () => {
   return (
     <div className="flex h-screen bg-gradient-to-br from-blue-50 to-indigo-100">
       {/* Sidebar */}
-      <div className="w-80 bg-white shadow-xl border-r border-gray-200 flex flex-col">
+      <div className={`${sidebarVisible ? 'w-80 lg:w-80 md:w-64 sm:w-64' : 'w-0'} bg-white shadow-xl border-r border-gray-200 flex flex-col hidden md:flex transition-all duration-300 ease-in-out overflow-hidden`}>
+        {/* Sidebar Content - Only render when visible */}
+        {sidebarVisible && (
+          <>
         {/* Header */}
         <div className="p-6 border-b border-gray-100 bg-gradient-to-r from-blue-600 to-indigo-600">
           <div className="flex items-center justify-between">
@@ -358,13 +376,26 @@ export const ChatInterface: React.FC = () => {
                 <p className="text-blue-100 text-sm">Trợ lý AI</p>
               </div>
             </div>
-            <button
-              onClick={handleCreateSession}
-              disabled={isCreatingSession}
-              className="w-10 h-10 bg-white/20 hover:bg-white/30 rounded-full flex items-center justify-center transition-all duration-200 disabled:opacity-50"
-            >
-              <Plus className="w-5 h-5 text-white" />
-            </button>
+            <div className="flex items-center space-x-2">
+              <button
+                onClick={() => setSidebarVisible(!sidebarVisible)}
+                className="w-10 h-10 bg-white/20 hover:bg-white/30 rounded-full flex items-center justify-center transition-all duration-200"
+                title={sidebarVisible ? "Hide sidebar (Ctrl+B)" : "Show sidebar (Ctrl+B)"}
+              >
+                {sidebarVisible ? (
+                  <PanelLeftClose className="w-5 h-5 text-white" />
+                ) : (
+                  <PanelLeftOpen className="w-5 h-5 text-white" />
+                )}
+              </button>
+              <button
+                onClick={handleCreateSession}
+                disabled={isCreatingSession}
+                className="w-10 h-10 bg-white/20 hover:bg-white/30 rounded-full flex items-center justify-center transition-all duration-200 disabled:opacity-50"
+              >
+                <Plus className="w-5 h-5 text-white" />
+              </button>
+            </div>
           </div>
         </div>
         
@@ -482,7 +513,191 @@ export const ChatInterface: React.FC = () => {
             </div>
           )}
         </div>
+          </>
+        )}
       </div>
+
+      {/* Mobile Floating Action Button */}
+      <div className="md:hidden mobile-fab">
+        <div className="flex flex-col items-end space-y-3">
+          {/* Sessions Modal Button */}
+          <button
+            onClick={() => setShowMobileSessionsModal(true)}
+            className="w-12 h-12 bg-blue-600 hover:bg-blue-700 text-white rounded-full flex items-center justify-center shadow-lg transition-all duration-200 hover:scale-105"
+            title="Chat Sessions"
+          >
+            <Menu className="w-5 h-5" />
+          </button>
+          
+          {/* Create New Session Button */}
+          <button
+            onClick={handleCreateSession}
+            disabled={isCreatingSession}
+            className="w-10 h-10 bg-green-600 hover:bg-green-700 text-white rounded-full flex items-center justify-center shadow-lg transition-all duration-200 hover:scale-105 disabled:opacity-50"
+            title="New Chat"
+          >
+            <Plus className="w-4 h-4" />
+          </button>
+        </div>
+      </div>
+
+      {/* Desktop Floating Toggle Button - Only visible when sidebar is hidden */}
+      {!sidebarVisible && (
+        <div className="fixed top-4 left-4 z-50 md:block hidden">
+          <button
+            onClick={() => setSidebarVisible(true)}
+            className="w-12 h-12 bg-blue-600 hover:bg-blue-700 text-white rounded-full flex items-center justify-center shadow-lg transition-all duration-200 hover:scale-105"
+            title="Show sidebar (Ctrl+B)"
+          >
+            <PanelLeftOpen className="w-6 h-6" />
+          </button>
+        </div>
+      )}
+
+      {/* Mobile Sessions Modal */}
+      {showMobileSessionsModal && (
+        <div className="md:hidden fixed inset-0 bg-black bg-opacity-50 z-50 flex items-end" onClick={() => setShowMobileSessionsModal(false)}>
+          <div className="w-full bg-white rounded-t-3xl max-h-[80vh] overflow-hidden flex flex-col" onClick={(e) => e.stopPropagation()}>
+            {/* Modal Header */}
+            <div className="p-4 border-b border-gray-200 bg-gradient-to-r from-blue-600 to-indigo-600">
+              <div className="flex items-center justify-between">
+                <div className="flex items-center space-x-3">
+                  <div className="w-10 h-10 bg-white/20 rounded-full flex items-center justify-center">
+                    <MessageCircle className="w-6 h-6 text-white" />
+                  </div>
+                  <div>
+                    <h2 className="text-xl font-bold text-white">Chat Sessions</h2>
+                    <p className="text-blue-100 text-sm">Select or create a conversation</p>
+                  </div>
+                </div>
+                <button
+                  onClick={() => setShowMobileSessionsModal(false)}
+                  className="w-10 h-10 bg-white/20 hover:bg-white/30 rounded-full flex items-center justify-center transition-all duration-200"
+                >
+                  <X className="w-5 h-5 text-white" />
+                </button>
+              </div>
+            </div>
+            
+            {/* Sessions List */}
+            <div className="flex-1 overflow-hidden">
+              <div className="h-full overflow-y-auto p-4 scrollbar-thin scrollbar-thumb-gray-300 scrollbar-track-gray-100 mobile-sessions-scroll" style={{ maxHeight: 'calc(80vh - 200px)' }}>
+                {sessionsLoading ? (
+                <div className="text-center py-8">
+                  <div className="animate-spin w-8 h-8 border-2 border-blue-600 border-t-transparent rounded-full mx-auto mb-2"></div>
+                  <p className="text-gray-500">Loading chats...</p>
+                </div>
+              ) : sessions?.length === 0 ? (
+                <div className="text-center py-8">
+                  <MessageCircle className="w-12 h-12 text-gray-300 mx-auto mb-3" />
+                  <p className="text-gray-500 mb-4">No conversations yet</p>
+                  <button
+                    onClick={() => {
+                      handleCreateSession();
+                      setShowMobileSessionsModal(false);
+                    }}
+                    disabled={isCreatingSession}
+                    className="bg-blue-600 text-white px-4 py-2 rounded-full hover:bg-blue-700 disabled:opacity-50 transition-colors duration-200"
+                  >
+                    {isCreatingSession ? 'Creating...' : 'Start Conversation'}
+                  </button>
+                </div>
+              ) : (
+                <div className="space-y-3 pb-4">
+                  {sessions?.map((session: any) => (
+                    <div
+                      key={session.id}
+                      className={`p-4 rounded-xl transition-all duration-200 ${
+                        selectedSessionId === session.id
+                          ? 'bg-gradient-to-r from-blue-500 to-indigo-500 text-white shadow-lg'
+                          : 'hover:bg-gray-50 text-gray-700 border border-gray-200'
+                      }`}
+                    >
+                      <div className="flex items-center space-x-3">
+                        <div 
+                          className={`w-10 h-10 rounded-full flex items-center justify-center ${
+                            selectedSessionId === session.id ? 'bg-white/20' : 'bg-blue-100'
+                          }`}
+                          onClick={() => {
+                            setSelectedSessionId(session.id);
+                            setShowMobileSessionsModal(false);
+                          }}
+                        >
+                          <MessageCircle className={`w-5 h-5 ${
+                            selectedSessionId === session.id ? 'text-white' : 'text-blue-600'
+                          }`} />
+                        </div>
+                        <div className="flex-1 min-w-0">
+                          <div 
+                            className="font-medium truncate cursor-pointer"
+                            onClick={() => {
+                              setSelectedSessionId(session.id);
+                              setShowMobileSessionsModal(false);
+                            }}
+                          >
+                            {session.name}
+                          </div>
+                          <div className={`text-sm ${
+                            selectedSessionId === session.id ? 'text-blue-100' : 'text-gray-500'
+                          }`}>
+                            {formatTime(session.created_at)}
+                          </div>
+                        </div>
+                        <div className="flex items-center space-x-1">
+                          <button
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              handleStartEdit(session.id, session.name);
+                            }}
+                            className={`opacity-0 group-hover:opacity-100 p-1 rounded hover:bg-white/20 transition-all duration-200 ${
+                              selectedSessionId === session.id ? 'text-white' : 'text-gray-400'
+                            }`}
+                          >
+                            <Edit2 className="w-4 h-4" />
+                          </button>
+                          <button
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              handleDeleteSession(session.id);
+                            }}
+                            className={`opacity-0 group-hover:opacity-100 p-1 rounded hover:bg-red-500/20 transition-all duration-200 ${
+                              selectedSessionId === session.id ? 'text-white hover:text-red-300' : 'text-gray-400 hover:text-red-500'
+                            }`}
+                          >
+                            <Trash2 className="w-4 h-4" />
+                          </button>
+                        </div>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              )}
+              </div>
+            </div>
+            
+            {/* Modal Footer */}
+            <div className="p-4 border-t border-gray-200 bg-gray-50">
+              <button
+                onClick={() => {
+                  handleCreateSession();
+                  setShowMobileSessionsModal(false);
+                }}
+                disabled={isCreatingSession}
+                className="w-full bg-gradient-to-r from-blue-500 to-indigo-500 text-white px-4 py-3 rounded-full hover:from-blue-600 hover:to-indigo-600 disabled:opacity-50 transition-all duration-200 font-semibold"
+              >
+                {isCreatingSession ? (
+                  <div className="flex items-center justify-center space-x-2">
+                    <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
+                    <span>Creating...</span>
+                  </div>
+                ) : (
+                  'Start New Conversation'
+                )}
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
 
       {/* Chat Area */}
       <div className="flex-1 flex flex-col">
@@ -502,7 +717,7 @@ export const ChatInterface: React.FC = () => {
             </div>
 
             {/* Messages */}
-            <div className="flex-1 overflow-y-auto p-6 space-y-4 bg-gradient-to-b from-gray-50 to-white chat-messages">
+            <div className="flex-1 overflow-y-auto p-3 md:p-6 space-y-4 bg-gradient-to-b from-gray-50 to-white chat-messages">
               {sessionLoading ? (
                 <div className="flex justify-center">
                   <div className="animate-spin w-8 h-8 border-2 border-blue-600 border-t-transparent rounded-full"></div>
@@ -528,7 +743,7 @@ export const ChatInterface: React.FC = () => {
                     className={`flex ${msg.sender === 'user' ? 'justify-end' : 'justify-start'} animate-fade-in`}
                     style={{ animationDelay: `${index * 0.1}s` }}
                   >
-                    <div className={`flex items-end space-x-2 max-w-xs lg:max-w-md ${
+                    <div className={`flex items-end space-x-2 max-w-xs sm:max-w-sm md:max-w-md lg:max-w-lg ${
                       msg.sender === 'user' ? 'flex-row-reverse space-x-reverse' : ''
                     }`}>
                       {/* Avatar */}
@@ -584,8 +799,8 @@ export const ChatInterface: React.FC = () => {
             </div>
 
             {/* Message Input */}
-            <div className="bg-white border-t border-gray-200 p-4 relative">
-              <form onSubmit={handleSendMessage} className="flex items-center space-x-3">
+            <div className="bg-white border-t border-gray-200 p-3 md:p-4 relative">
+              <form onSubmit={handleSendMessage} className="flex items-center space-x-2 md:space-x-3">
                 <div className="flex-1 relative">
                   <input
                     ref={inputRef}
@@ -593,8 +808,8 @@ export const ChatInterface: React.FC = () => {
                     value={message}
                     onChange={handleMessageChange}
                     onKeyPress={handleMessageKeyPress}
-                    placeholder="Nhập tin nhắn của bạn... Sử dụng @ để đề cập"
-                    className="w-full px-4 py-3 border border-gray-300 rounded-full focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200"
+                    placeholder="Nhập tin nhắn..."
+                    className="w-full px-3 md:px-4 py-2 md:py-3 border border-gray-300 rounded-full focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200 text-sm md:text-base"
                     disabled={sendMessage.isPending}
                   />
                   
@@ -724,7 +939,7 @@ export const ChatInterface: React.FC = () => {
                 <button
                   type="submit"
                   disabled={!message.trim() || sendMessage.isPending}
-                  className="w-12 h-12 bg-gradient-to-r from-blue-500 to-indigo-500 text-white rounded-full flex items-center justify-center hover:from-blue-600 hover:to-indigo-600 disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-200 transform hover:scale-105 disabled:hover:scale-100 shadow-lg"
+                  className="w-10 h-10 md:w-12 md:h-12 bg-gradient-to-r from-blue-500 to-indigo-500 text-white rounded-full flex items-center justify-center hover:from-blue-600 hover:to-indigo-600 disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-200 transform hover:scale-105 disabled:hover:scale-100 shadow-lg"
                 >
                   {sendMessage.isPending ? (
                     <div className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
@@ -735,8 +950,8 @@ export const ChatInterface: React.FC = () => {
               </form>
               
               {/* AI Disclaimer */}
-              <div className="px-4 py-1">
-                <p className="text-[10px] text-gray-500 italic text-center leading-tight">
+              <div className="px-2 md:px-4 py-1">
+                <p className="text-[8px] md:text-[10px] text-gray-500 italic text-center leading-tight">
                   Công nghệ trí tuệ nhân tạo được đội ngũ Viettechkey nghiên cứu và huấn luyện. AI có thể xảy ra sai sót, vui lòng kiểm tra lại thông tin. Xin chân thành cảm ơn.
                 </p>
               </div>

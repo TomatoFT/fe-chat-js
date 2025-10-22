@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
-import { LogIn, BookOpen, AlertCircle, Shield, Brain, Lock, Sparkles, Star, Zap } from 'lucide-react';
+import { LogIn, BookOpen, AlertCircle, Shield, Brain, Lock, Sparkles, Star } from 'lucide-react';
 import { useAuth } from '../../context/AuthContext';
 import { useLanguage } from '../../context/LanguageContext';
 
@@ -27,7 +27,7 @@ const Login: React.FC = () => {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-purple-50 via-blue-50 to-indigo-100 flex items-center justify-center px-4 py-8">
-      <div className="max-w-6xl w-full grid lg:grid-cols-2 gap-8 items-center">
+      <div className="max-w-6xl w-full grid lg:grid-cols-2 gap-4 lg:gap-8 items-center">
         {/* Left Side - Advertisement */}
         <motion.div
           initial={{ opacity: 0, x: -50 }}
@@ -215,14 +215,14 @@ const Login: React.FC = () => {
           initial={{ opacity: 0, x: 50 }}
           animate={{ opacity: 1, x: 0 }}
           transition={{ duration: 0.8 }}
-          className="flex justify-center lg:justify-end"
+          className="flex justify-center lg:justify-end order-first lg:order-last"
         >
           <div className="w-full max-w-md">
       <motion.div
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.5 }}
-              className="bg-white rounded-2xl shadow-xl p-8 border border-gray-200"
+              className="bg-white rounded-2xl shadow-xl p-6 md:p-8 border border-gray-200"
       >
           <div className="text-center mb-8">
                 <motion.div
@@ -239,8 +239,8 @@ const Login: React.FC = () => {
                 >
                   <BookOpen className="w-8 h-8 text-white" />
                 </motion.div>
-                <h1 className="text-3xl font-bold text-gray-900">Thống kê giáo dục</h1>
-            <p className="text-gray-600 mt-2">{t('auth.signIn')}</p>
+                <h1 className="text-2xl md:text-3xl font-bold text-gray-900">Thống kê giáo dục</h1>
+            <p className="text-gray-600 mt-2 text-sm md:text-base">{t('auth.signIn')}</p>
           </div>
 
           {error && (

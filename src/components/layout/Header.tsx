@@ -1,11 +1,15 @@
 import React from 'react';
 import { motion } from 'framer-motion';
-import { LogOut, Bell } from 'lucide-react';
+import { LogOut, Bell, Menu } from 'lucide-react';
 import { useAuth } from '../../context/AuthContext';
 import { useLanguage } from '../../context/LanguageContext';
 import { useLogout } from '../../hooks/useAuth';
 
-const Header: React.FC = () => {
+interface HeaderProps {
+  onMenuClick?: () => void;
+}
+
+const Header: React.FC<HeaderProps> = ({ onMenuClick }) => {
   const { user, logout: authLogout } = useAuth();
   const { t } = useLanguage();
   const queryLogout = useLogout();
@@ -18,13 +22,27 @@ const Header: React.FC = () => {
   };
 
   return (
-    <header className="bg-white border-b border-gray-200 px-6 py-4">
+    <header className="bg-white border-b border-gray-200 px-4 lg:px-6 py-4">
       <div className="flex items-center justify-between">
-        <div>
-          <h2 className="text-2xl font-bold text-gray-900">
-            Chào mừng bạn tới hệ thống thống kê giáo dục
+        {/* Mobile Menu Button */}
+        <div className="lg:hidden">
+          <motion.button
+            whileHover={{ scale: 1.05 }}
+            whileTap={{ scale: 0.95 }}
+            onClick={onMenuClick}
+            className="p-2 text-gray-600 hover:text-gray-900 hover:bg-gray-100 rounded-lg transition-colors"
+          >
+            <Menu className="w-6 h-6" />
+          </motion.button>
+        </div>
+
+        {/* Title Section */}
+        <div className="flex-1 lg:flex-none">
+          <h2 className="text-lg lg:text-2xl font-bold text-gray-900">
+            <span className="hidden sm:inline">Chào mừng bạn tới hệ thống thống kê giáo dục</span>
+            <span className="sm:hidden">TKGD</span>
           </h2>
-          <p className="text-gray-600">
+          <p className="text-sm lg:text-base text-gray-600 hidden sm:block">
             {user?.role === 'school_manager' && 'Quản lý trường học'}
             {user?.role === 'province_manager' && 'Quản lý xã'}
             {user?.role === 'department_manager' && 'Quản lý sở'}
@@ -32,7 +50,8 @@ const Header: React.FC = () => {
           </p>
         </div>
 
-        <div className="flex items-center gap-4">
+        {/* Action Buttons */}
+        <div className="flex items-center gap-2 lg:gap-4">
           <motion.button
             whileHover={{ scale: 1.05 }}
             whileTap={{ scale: 0.95 }}
@@ -45,10 +64,10 @@ const Header: React.FC = () => {
             whileHover={{ scale: 1.05 }}
             whileTap={{ scale: 0.95 }}
             onClick={handleLogout}
-            className="flex items-center gap-2 px-4 py-2 text-red-600 hover:text-red-700 hover:bg-red-50 rounded-lg transition-colors"
+            className="flex items-center gap-1 lg:gap-2 px-2 lg:px-4 py-2 text-red-600 hover:text-red-700 hover:bg-red-50 rounded-lg transition-colors"
           >
             <LogOut className="w-4 h-4" />
-            <span className="font-medium">{t('auth.logout')}</span>
+            <span className="font-medium text-sm lg:text-base hidden sm:inline">{t('auth.logout')}</span>
           </motion.button>
         </div>
       </div>

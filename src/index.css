@@ -231,6 +231,10 @@
   animation: slideDown 0.2s ease-out;
 }
 
+.animate-slide-down {
+  animation: slideDown 0.3s ease-out;
+}
+
 /* Enhanced pulse animation */
 @keyframes enhancedPulse {
   0%, 100% {
@@ -252,13 +256,84 @@ button, input, .chat-session-item {
   transition: all 0.2s ease-out;
 }
 
-/* Hover effects */
-button:hover {
-  transform: translateY(-1px);
+/* Hover effects - only on non-touch devices */
+@media (hover: hover) {
+  button:hover {
+    transform: translateY(-1px);
+  }
 }
 
+/* Touch-friendly active states */
 button:active {
   transform: translateY(0);
+}
+
+/* Mobile touch improvements */
+@media (max-width: 768px) {
+  button:active {
+    transform: scale(0.98);
+    transition: transform 0.1s ease-out;
+  }
+  
+  /* Improve touch targets */
+  a, button, input, select, textarea {
+    min-height: 44px;
+    min-width: 44px;
+  }
+  
+  /* Better touch scrolling */
+  * {
+    -webkit-overflow-scrolling: touch;
+  }
+
+  /* Mobile scrollbar styles */
+  .scrollbar-thin {
+    scrollbar-width: thin;
+    scrollbar-color: #cbd5e1 #f1f5f9;
+  }
+
+  .scrollbar-thin::-webkit-scrollbar {
+    width: 6px;
+  }
+
+  .scrollbar-thin::-webkit-scrollbar-track {
+    background: #f1f5f9;
+    border-radius: 3px;
+  }
+
+  .scrollbar-thin::-webkit-scrollbar-thumb {
+    background: #cbd5e1;
+    border-radius: 3px;
+  }
+
+  .scrollbar-thin::-webkit-scrollbar-thumb:hover {
+    background: #94a3b8;
+  }
+
+  /* Mobile modal scrolling improvements */
+  .mobile-sessions-scroll {
+    -webkit-overflow-scrolling: touch;
+    scroll-behavior: smooth;
+    overscroll-behavior: contain;
+  }
+
+  /* Mobile floating action buttons */
+  .mobile-fab {
+    position: fixed;
+    top: 5rem;
+    right: 1rem;
+    z-index: 50;
+    pointer-events: auto;
+  }
+
+  /* Ensure buttons don't interfere with chat input */
+  .mobile-fab button {
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  }
+
+  .mobile-fab button:hover {
+    box-shadow: 0 6px 16px rgba(0, 0, 0, 0.2);
+  }
 }
 
 /* Focus styles */
@@ -296,6 +371,72 @@ input:focus {
   
   .message-bubble {
     max-width: 85%;
+  }
+
+  /* Mobile-specific improvements */
+  .btn-primary {
+    @apply px-3 py-2 text-sm;
+  }
+  
+  .btn-secondary {
+    @apply px-3 py-2 text-sm;
+  }
+  
+  .input-field {
+    @apply px-3 py-2 text-sm;
+  }
+  
+  .card {
+    @apply p-4;
+  }
+
+  /* Touch-friendly buttons */
+  button, .btn-primary, .btn-secondary {
+    min-height: 44px;
+    min-width: 44px;
+  }
+
+  /* Mobile form improvements */
+  input, textarea, select {
+    font-size: 16px; /* Prevents zoom on iOS */
+  }
+
+  /* Mobile table responsiveness */
+  .table-responsive {
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  /* Mobile navigation improvements */
+  .mobile-nav-item {
+    @apply py-3 px-4 text-base;
+  }
+
+  /* Mobile chat improvements */
+  .chat-message {
+    @apply px-2 py-3;
+  }
+  
+  .chat-bubble {
+    @apply max-w-xs text-sm;
+  }
+}
+
+/* Tablet responsiveness */
+@media (min-width: 769px) and (max-width: 1024px) {
+  .chat-bubble {
+    @apply max-w-sm;
+  }
+  
+  .btn-primary {
+    @apply px-4 py-2;
+  }
+}
+
+/* Large screen optimizations */
+@media (min-width: 1025px) {
+  .chat-bubble {
+    @apply max-w-md;
   }
 }
 
