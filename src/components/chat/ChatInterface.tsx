@@ -21,6 +21,7 @@ export const ChatInterface: React.FC = () => {
   const [actualResponseTime, setActualResponseTime] = useState<number | null>(null);
   const [sidebarVisible, setSidebarVisible] = useState(false); // Start with sidebar hidden for better mobile experience
   const [showMobileSessionsModal, setShowMobileSessionsModal] = useState(false);
+  const [pendingMessages, setPendingMessages] = useState<any[]>([]);
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLInputElement>(null);
   const editInputRef = useRef<HTMLInputElement>(null);
@@ -159,7 +160,12 @@ export const ChatInterface: React.FC = () => {
 
   useEffect(() => {
     scrollToBottom();
-  }, [currentSession?.messages]);
+  }, [currentSession?.messages, pendingMessages]);
+
+  // Clear pending messages when session changes
+  useEffect(() => {
+    setPendingMessages([]);
+  }, [selectedSessionId]);
 
   useEffect(() => {
     if (selectedSessionId && inputRef.current) {
@@ -196,6 +202,17 @@ export const ChatInterface: React.FC = () => {
     setShowMentions(false);
     setShowDocumentSelection(false);
     
+    // Add optimistic update - show user message immediately
+    const optimisticMessage = {
+      id: `temp-${Date.now()}`,
+      content: messageText,
+      sender: 'user',
+      created_at: new Date().toISOString(),
+      timestamp: new Date().toISOString(),
+    };
+    
+    setPendingMessages(prev => [...prev, optimisticMessage]);
+    
     // Show progress visualization immediately after user sends message
     const startTime = Date.now();
     setResponseStartTime(startTime);
@@ -213,11 +230,16 @@ export const ChatInterface: React.FC = () => {
       // Clear selected documents after sending
       setSelectedDocuments([]);
       
+      // Remove the optimistic message since it's now in the real data
+      setPendingMessages(prev => prev.filter(msg => msg.id !== optimisticMessage.id));
+      
       // Start polling for AI response
       pollForAIResponse();
       
     } catch (error) {
       console.error('Error sending message:', error);
+      // Remove optimistic message on error
+      setPendingMessages(prev => prev.filter(msg => msg.id !== optimisticMessage.id));
       // Hide indicators on error
       setShowProgressVisualization(false);
       setResponseStartTime(null);
@@ -260,8 +282,11 @@ export const ChatInterface: React.FC = () => {
             setShowProgressVisualization(false);
             setResponseStartTime(null);
             
-            // Invalidate queries to refresh the UI
-            queryClient.invalidateQueries({ queryKey: ['chat', 'sessions', selectedSessionId] });
+            // Update the query data directly to prevent message disappearance
+            queryClient.setQueryData(['chat', 'sessions', selectedSessionId], sessionData);
+            
+            // Clear pending messages since we now have the real data
+            setPendingMessages([]);
           }
         }
       } catch (error) {
@@ -736,7 +761,7 @@ export const ChatInterface: React.FC = () => {
                   </div>
                 </div>
               ) : (
-                sortByDate(currentSession?.messages || [], 'created_at', true)
+                sortByDate([...(currentSession?.messages || []), ...pendingMessages], 'created_at', true)
                   ?.map((msg: any, index: number) => (
                   <div
                     key={msg.id || `${msg.sender}-${msg.created_at}-${index}`}
