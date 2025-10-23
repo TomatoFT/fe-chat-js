@@ -1,9 +1,18 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
-import { LogIn, BookOpen, AlertCircle, Shield, Brain, Lock, Sparkles, Star } from 'lucide-react';
+import { LogIn, BookOpen, AlertCircle, Shield, Lock, Sparkles, Star } from 'lucide-react';
 import { useAuth } from '../../context/AuthContext';
 import { useLanguage } from '../../context/LanguageContext';
+
+// Dak Lak Education Logo Component
+const DakLakEducationLogo: React.FC<{ className?: string }> = ({ className = "w-10 h-10" }) => (
+  <img
+    src="/images/daklak-logo.png"
+    alt="Sở Giáo dục và Đào tạo Đắk Lắk"
+    className={className}
+  />
+);
 
 const Login: React.FC = () => {
   const [email, setEmail] = useState('');
@@ -86,12 +95,12 @@ const Login: React.FC = () => {
                     repeat: Infinity,
                     ease: "easeInOut"
                   }}
-                  className="inline-flex items-center justify-center w-20 h-20 bg-gradient-to-r from-purple-500 to-pink-500 rounded-full mb-4 shadow-lg"
+                  className="inline-flex items-center justify-center w-20 h-20 bg-white rounded-full mb-4 shadow-lg border-2 border-gray-200"
                 >
-                  <Brain className="w-10 h-10 text-white" />
+                  <DakLakEducationLogo className="w-30 h-30" />
                 </motion.div>
                 <h1 className="text-4xl font-bold bg-gradient-to-r from-purple-600 to-pink-600 bg-clip-text text-transparent mb-2">
-                  Thống kê giáo dục 
+                SỞ GIÁO DỤC VÀ ĐÀO TẠO ĐẮK LẮK
                 </h1>
                 <p className="text-gray-600 text-lg">Trí tuệ nhân tạo tiên tiến được phát triển bởi VietTechKey</p>
               </motion.div>

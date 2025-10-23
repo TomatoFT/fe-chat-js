@@ -103,24 +103,24 @@ export const DocumentUploadModal: React.FC<DocumentUploadModalProps> = ({
     switch (uploadType) {
       case 'staff':
         return {
-          title: 'Tải lên tài liệu nhân viên',
-          description: 'Tải lên tài liệu liên quan đến quản lý nhân viên, hồ sơ và hành chính.',
+          title: 'Tải lên dữ liệu nhân viên',
+          description: 'Tải lên dữ liệu liên quan đến quản lý nhân viên, hồ sơ và hành chính.',
           icon: <Users className="w-8 h-8 text-green-500" />,
           color: 'green',
           hook: uploadStaffDocument,
         };
       case 'students':
         return {
-          title: 'Tải lên tài liệu học sinh',
-          description: 'Tải lên tài liệu liên quan đến hồ sơ học sinh, tuyển sinh và tiến độ học tập.',
+          title: 'Tải lên dữ liệu học sinh',
+          description: 'Tải lên dữ liệu liên quan đến hồ sơ học sinh, tuyển sinh và tiến độ học tập.',
           icon: <GraduationCap className="w-8 h-8 text-purple-500" />,
           color: 'purple',
           hook: uploadStudentsDocument,
         };
       case 'examinations':
         return {
-          title: 'Tải lên tài liệu thi cử',
-          description: 'Tải lên tài liệu liên quan đến thi cử, đánh giá và kết quả kiểm tra.',
+          title: 'Tải lên dữ liệu thi cử',
+          description: 'Tải lên dữ liệu liên quan đến thi cử, đánh giá và kết quả kiểm tra.',
           icon: <BookOpen className="w-8 h-8 text-orange-500" />,
           color: 'orange',
           hook: uploadExaminationsDocument,
