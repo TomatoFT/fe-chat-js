@@ -4,6 +4,7 @@ import { LogOut, Bell, Menu } from 'lucide-react';
 import { useAuth } from '../../context/AuthContext';
 import { useLanguage } from '../../context/LanguageContext';
 import { useLogout } from '../../hooks/useAuth';
+import { LiveLoadStatsComponent } from '../statistics/LiveLoadStatsComponent';
 
 interface HeaderProps {
   onMenuClick?: () => void;
@@ -42,12 +43,18 @@ const Header: React.FC<HeaderProps> = ({ onMenuClick }) => {
             <span className="hidden sm:inline">Chào mừng bạn tới hệ thống thống kê giáo dục</span>
             <span className="sm:hidden">TKGD</span>
           </h2>
-          <p className="text-sm lg:text-base text-gray-600 hidden sm:block">
-            {user?.role === 'school_manager' && 'Quản lý trường học'}
-            {user?.role === 'province_manager' && 'Quản lý xã'}
-            {user?.role === 'department_manager' && 'Quản lý sở'}
-            {user?.role === 'admin' && 'Quản lý hệ thống'}
-          </p>
+          <div className="flex items-center gap-4">
+            <p className="text-sm lg:text-base text-gray-600 hidden sm:block">
+              {user?.role === 'school_manager' && 'Quản lý trường học'}
+              {user?.role === 'province_manager' && 'Quản lý xã'}
+              {user?.role === 'department_manager' && 'Quản lý sở'}
+              {user?.role === 'admin' && 'Quản lý hệ thống'}
+            </p>
+            {/* Live Load Statistics */}
+            <div className="hidden lg:block">
+              <LiveLoadStatsComponent compact={true} />
+            </div>
+          </div>
         </div>
 
         {/* Action Buttons */}

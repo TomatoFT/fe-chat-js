@@ -1397,53 +1397,6 @@
         }
       }
     },
-    "/documents/upload": {
-      "post": {
-        "tags": [
-          "documents"
-        ],
-        "summary": "Upload Document",
-        "description": "Upload a document to MinIO",
-        "operationId": "upload_document_documents_upload_post",
-        "requestBody": {
-          "content": {
-            "multipart/form-data": {
-              "schema": {
-                "$ref": "#/components/schemas/Body_upload_document_documents_upload_post"
-              }
-            }
-          },
-          "required": true
-        },
-        "responses": {
-          "200": {
-            "description": "Successful Response",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/DocumentResponse"
-                }
-              }
-            }
-          },
-          "422": {
-            "description": "Validation Error",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/HTTPValidationError"
-                }
-              }
-            }
-          }
-        },
-        "security": [
-          {
-            "HTTPBearer": []
-          }
-        ]
-      }
-    },
     "/documents/": {
       "get": {
         "tags": [
@@ -1473,151 +1426,6 @@
             "HTTPBearer": []
           }
         ]
-      }
-    },
-    "/documents/{document_id}/download": {
-      "get": {
-        "tags": [
-          "documents"
-        ],
-        "summary": "Download Document",
-        "description": "Download a document from MinIO",
-        "operationId": "download_document_documents__document_id__download_get",
-        "security": [
-          {
-            "HTTPBearer": []
-          }
-        ],
-        "parameters": [
-          {
-            "name": "document_id",
-            "in": "path",
-            "required": true,
-            "schema": {
-              "type": "string",
-              "format": "uuid",
-              "title": "Document Id"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "Successful Response",
-            "content": {
-              "application/json": {
-                "schema": {
-
-                }
-              }
-            }
-          },
-          "422": {
-            "description": "Validation Error",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/HTTPValidationError"
-                }
-              }
-            }
-          }
-        }
-      }
-    },
-    "/documents/{document_id}": {
-      "get": {
-        "tags": [
-          "documents"
-        ],
-        "summary": "Get Document",
-        "description": "Get document by ID",
-        "operationId": "get_document_documents__document_id__get",
-        "security": [
-          {
-            "HTTPBearer": []
-          }
-        ],
-        "parameters": [
-          {
-            "name": "document_id",
-            "in": "path",
-            "required": true,
-            "schema": {
-              "type": "string",
-              "format": "uuid",
-              "title": "Document Id"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "Successful Response",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/DocumentResponse"
-                }
-              }
-            }
-          },
-          "422": {
-            "description": "Validation Error",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/HTTPValidationError"
-                }
-              }
-            }
-          }
-        }
-      },
-      "delete": {
-        "tags": [
-          "documents"
-        ],
-        "summary": "Delete Document",
-        "description": "Delete a document from MinIO and database",
-        "operationId": "delete_document_documents__document_id__delete",
-        "security": [
-          {
-            "HTTPBearer": []
-          }
-        ],
-        "parameters": [
-          {
-            "name": "document_id",
-            "in": "path",
-            "required": true,
-            "schema": {
-              "type": "string",
-              "format": "uuid",
-              "title": "Document Id"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "Successful Response",
-            "content": {
-              "application/json": {
-                "schema": {
-
-                }
-              }
-            }
-          },
-          "422": {
-            "description": "Validation Error",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/HTTPValidationError"
-                }
-              }
-            }
-          }
-        }
       }
     },
     "/documents/upload-staff": {
@@ -2337,6 +2145,11 @@
         "summary": "Create Student",
         "description": "Create a new student",
         "operationId": "create_student_api_v1_school_audit_students__post",
+        "security": [
+          {
+            "HTTPBearer": []
+          }
+        ],
         "requestBody": {
           "required": true,
           "content": {
@@ -2377,6 +2190,11 @@
         "summary": "Get Students",
         "description": "Get all students",
         "operationId": "get_students_api_v1_school_audit_students__get",
+        "security": [
+          {
+            "HTTPBearer": []
+          }
+        ],
         "parameters": [
           {
             "name": "skip",
@@ -2405,11 +2223,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "type": "array",
-                  "items": {
-                    "$ref": "#/components/schemas/Student"
-                  },
-                  "title": "Response Get Students Api V1 School Audit Students  Get"
+                  "$ref": "#/components/schemas/PaginatedStudents"
                 }
               }
             }
@@ -2435,6 +2249,11 @@
         "summary": "Get Student",
         "description": "Get a student by ID",
         "operationId": "get_student_api_v1_school_audit_students__student_id__get",
+        "security": [
+          {
+            "HTTPBearer": []
+          }
+        ],
         "parameters": [
           {
             "name": "student_id",
@@ -2477,6 +2296,11 @@
         "summary": "Update Student",
         "description": "Update a student",
         "operationId": "update_student_api_v1_school_audit_students__student_id__put",
+        "security": [
+          {
+            "HTTPBearer": []
+          }
+        ],
         "parameters": [
           {
             "name": "student_id",
@@ -2529,6 +2353,11 @@
         "summary": "Delete Student",
         "description": "Delete a student",
         "operationId": "delete_student_api_v1_school_audit_students__student_id__delete",
+        "security": [
+          {
+            "HTTPBearer": []
+          }
+        ],
         "parameters": [
           {
             "name": "student_id",
@@ -2566,6 +2395,11 @@
         "summary": "Create Staff",
         "description": "Create a new staff member",
         "operationId": "create_staff_api_v1_school_audit_staff__post",
+        "security": [
+          {
+            "HTTPBearer": []
+          }
+        ],
         "requestBody": {
           "required": true,
           "content": {
@@ -2606,6 +2440,11 @@
         "summary": "Get Staff",
         "description": "Get all staff members",
         "operationId": "get_staff_api_v1_school_audit_staff__get",
+        "security": [
+          {
+            "HTTPBearer": []
+          }
+        ],
         "parameters": [
           {
             "name": "skip",
@@ -2634,11 +2473,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "type": "array",
-                  "items": {
-                    "$ref": "#/components/schemas/Staff"
-                  },
-                  "title": "Response Get Staff Api V1 School Audit Staff  Get"
+                  "$ref": "#/components/schemas/PaginatedStaff"
                 }
               }
             }
@@ -2795,6 +2630,11 @@
         "summary": "Create Examination",
         "description": "Create a new examination",
         "operationId": "create_examination_api_v1_school_audit_examinations__post",
+        "security": [
+          {
+            "HTTPBearer": []
+          }
+        ],
         "requestBody": {
           "required": true,
           "content": {
@@ -2835,6 +2675,11 @@
         "summary": "Get Examinations",
         "description": "Get all examinations",
         "operationId": "get_examinations_api_v1_school_audit_examinations__get",
+        "security": [
+          {
+            "HTTPBearer": []
+          }
+        ],
         "parameters": [
           {
             "name": "skip",
@@ -2863,11 +2708,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "type": "array",
-                  "items": {
-                    "$ref": "#/components/schemas/Examination"
-                  },
-                  "title": "Response Get Examinations Api V1 School Audit Examinations  Get"
+                  "$ref": "#/components/schemas/PaginatedExaminations"
                 }
               }
             }
@@ -3015,6 +2856,34 @@
           }
         }
       }
+    },
+    "/api/v1/statistics/statistics/live-load": {
+      "get": {
+        "tags": [
+          "statistics",
+          "statistics"
+        ],
+        "summary": "Get Live Load Stats",
+        "description": "Get live load statistics based on user role\n- school_manager: students, staffs count for their school\n- province_manager: schools, students, staffs count for their province\n- department_manager: provinces, schools, students, staffs count for their department",
+        "operationId": "get_live_load_stats_api_v1_statistics_statistics_live_load_get",
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/LiveLoadStats"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "HTTPBearer": []
+          }
+        ]
+      }
     }
   },
   "components": {
@@ -3041,7 +2910,7 @@
             "type": "string",
             "format": "uuid",
             "title": "Id",
-            "default": "1ad84ef5-4141-41e3-a20a-7b20b102850e"
+            "default": "e1ce50b6-43c3-46fc-9bbd-a5b9c028d849"
           }
         },
         "type": "object",
@@ -3189,20 +3058,6 @@
           "province_data"
         ],
         "title": "Body_update_province_provinces__province_id__put"
-      },
-      "Body_upload_document_documents_upload_post": {
-        "properties": {
-          "file": {
-            "type": "string",
-            "format": "binary",
-            "title": "File"
-          }
-        },
-        "type": "object",
-        "required": [
-          "file"
-        ],
-        "title": "Body_upload_document_documents_upload_post"
       },
       "Body_upload_examinations_document_documents_upload_examinations_post": {
         "properties": {
@@ -3533,7 +3388,7 @@
             "type": "string",
             "format": "uuid",
             "title": "Id",
-            "default": "228c7813-3ebe-4ab6-a0a0-aebd7344df06"
+            "default": "9b6f3e94-3494-45f7-9365-7c65c422cd28"
           }
         },
         "type": "object",
@@ -4184,6 +4039,26 @@
         ],
         "title": "LLMConfigResponse"
       },
+      "LiveLoadStats": {
+        "properties": {
+          "role": {
+            "type": "string",
+            "title": "Role"
+          },
+          "stats": {
+            "additionalProperties": true,
+            "type": "object",
+            "title": "Stats"
+          }
+        },
+        "type": "object",
+        "required": [
+          "role",
+          "stats"
+        ],
+        "title": "LiveLoadStats",
+        "description": "Live load statistics based on user role"
+      },
       "LoginRequest": {
         "properties": {
           "email": {
@@ -4201,6 +4076,129 @@
           "password"
         ],
         "title": "LoginRequest"
+      },
+      "PaginatedExaminations": {
+        "properties": {
+          "items": {
+            "items": {
+              "$ref": "#/components/schemas/Examination"
+            },
+            "type": "array",
+            "title": "Items"
+          },
+          "total": {
+            "type": "integer",
+            "title": "Total"
+          },
+          "skip": {
+            "type": "integer",
+            "title": "Skip"
+          },
+          "limit": {
+            "type": "integer",
+            "title": "Limit"
+          },
+          "has_next": {
+            "type": "boolean",
+            "title": "Has Next"
+          },
+          "has_prev": {
+            "type": "boolean",
+            "title": "Has Prev"
+          }
+        },
+        "type": "object",
+        "required": [
+          "items",
+          "total",
+          "skip",
+          "limit",
+          "has_next",
+          "has_prev"
+        ],
+        "title": "PaginatedExaminations"
+      },
+      "PaginatedStaff": {
+        "properties": {
+          "items": {
+            "items": {
+              "$ref": "#/components/schemas/Staff"
+            },
+            "type": "array",
+            "title": "Items"
+          },
+          "total": {
+            "type": "integer",
+            "title": "Total"
+          },
+          "skip": {
+            "type": "integer",
+            "title": "Skip"
+          },
+          "limit": {
+            "type": "integer",
+            "title": "Limit"
+          },
+          "has_next": {
+            "type": "boolean",
+            "title": "Has Next"
+          },
+          "has_prev": {
+            "type": "boolean",
+            "title": "Has Prev"
+          }
+        },
+        "type": "object",
+        "required": [
+          "items",
+          "total",
+          "skip",
+          "limit",
+          "has_next",
+          "has_prev"
+        ],
+        "title": "PaginatedStaff"
+      },
+      "PaginatedStudents": {
+        "properties": {
+          "items": {
+            "items": {
+              "$ref": "#/components/schemas/Student"
+            },
+            "type": "array",
+            "title": "Items"
+          },
+          "total": {
+            "type": "integer",
+            "title": "Total"
+          },
+          "skip": {
+            "type": "integer",
+            "title": "Skip"
+          },
+          "limit": {
+            "type": "integer",
+            "title": "Limit"
+          },
+          "has_next": {
+            "type": "boolean",
+            "title": "Has Next"
+          },
+          "has_prev": {
+            "type": "boolean",
+            "title": "Has Prev"
+          }
+        },
+        "type": "object",
+        "required": [
+          "items",
+          "total",
+          "skip",
+          "limit",
+          "has_next",
+          "has_prev"
+        ],
+        "title": "PaginatedStudents"
       },
       "ProvinceCreate": {
         "properties": {
@@ -4243,7 +4241,7 @@
             "type": "string",
             "format": "uuid",
             "title": "Id",
-            "default": "f845e0e4-777b-44c9-b66b-ed6841c00392"
+            "default": "ff01afa5-ae57-42dc-9fdd-79dc2909a0aa"
           }
         },
         "type": "object",
@@ -4491,7 +4489,7 @@
             "type": "string",
             "format": "uuid",
             "title": "Id",
-            "default": "c5ad53b9-e3fd-46d9-86be-2635c24bbaf5"
+            "default": "f95e8dbb-3b64-4a6f-996b-8fd596f739dd"
           },
           "email": {
             "anyOf": [
@@ -5361,7 +5359,7 @@
             "type": "string",
             "format": "uuid",
             "title": "Id",
-            "default": "a1cd6c34-545e-4e3f-a74f-10232ef22b6f"
+            "default": "8b433a42-cd0a-460e-9672-ce0fbb3bf2e8"
           },
           "password": {
             "type": "string",

@@ -753,7 +753,7 @@ export const ChatInterface: React.FC = () => {
                     <MessageCircle className="w-10 h-10 text-blue-600" />
                   </div>
                   <h3 className="text-lg font-semibold text-gray-900 mb-2">Bắt đầu cuộc trò chuyện</h3>
-                  <p className="text-gray-500 mb-6">Hỏi tôi bất cứ điều gì về tài liệu của bạn!</p>
+                  <p className="text-gray-500 mb-6">Hỏi tôi bất cứ điều gì về dữ liệu của bạn!</p>
                   <div className="bg-blue-50 border border-blue-200 rounded-lg p-4 max-w-md mx-auto">
                     <p className="text-sm text-blue-800 text-center">
                       Công nghệ trí tuệ nhân tạo được đội ngũ Viettechkey nghiên cứu và huấn luyện. AI có thể xảy ra sai sót, vui lòng kiểm tra lại thông tin. Xin chân thành cảm ơn.
@@ -948,13 +948,13 @@ export const ChatInterface: React.FC = () => {
                         ) : (
                           <div className="text-center py-8">
                             <FileText className="w-12 h-12 text-gray-300 mx-auto mb-3" />
-                            <p className="text-gray-500">Không có tài liệu nào</p>
+                            <p className="text-gray-500">Không có dữ liệu nào</p>
                           </div>
                         )}
                         
                         <div className="mt-4 pt-4 border-t border-gray-200">
                           <div className="text-sm text-gray-500 text-center">
-                            Nhấp vào tài liệu để chọn
+                            Nhấp vào dữ liệu để chọn
                           </div>
                         </div>
                       </div>
@@ -990,8 +990,8 @@ export const ChatInterface: React.FC = () => {
               </div>
               <h3 className="text-2xl font-bold text-gray-900 mb-3">Chào mừng đến với Thống kê giáo dục</h3>
               <p className="text-gray-600 mb-8 leading-relaxed">
-                Trợ lý AI của bạn để phân tích tài liệu giáo dục. 
-                Bắt đầu cuộc trò chuyện để có được thông tin chi tiết từ các tài liệu đã tải lên.
+                Trợ lý AI của bạn để phân tích dữ liệu giáo dục. 
+                Bắt đầu cuộc trò chuyện để có được thông tin chi tiết từ các dữ liệu đã tải lên.
               </p>
               <div className="bg-blue-50 border border-blue-200 rounded-lg p-4 mb-6">
                 <p className="text-sm text-blue-800 text-center">
