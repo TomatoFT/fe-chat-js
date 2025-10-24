@@ -134,8 +134,8 @@ export const ExaminationManagement: React.FC<ExaminationManagementProps> = ({ cl
       {/* Header */}
       <div className="p-4 flex justify-between items-center">
         <div>
-          <h2 className="text-2xl font-bold text-gray-900">Examination Management</h2>
-          <p className="text-gray-600">Manage examinations and assessments</p>
+          <h2 className="text-2xl font-bold text-gray-900">Quản lý thi cử</h2>
+          <p className="text-gray-600">Quản lý dữ liệu thi cử của trường học</p>
         </div>
         <motion.button
           whileHover={{ scale: 1.05 }}

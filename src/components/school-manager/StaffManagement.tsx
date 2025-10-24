@@ -136,8 +136,8 @@ export const StaffManagement: React.FC<StaffManagementProps> = ({ className = ''
       {/* Header */}
       <div className="p-4 flex justify-between items-center">
         <div>
-          <h2 className="text-2xl font-bold text-gray-900">Staff Management</h2>
-          <p className="text-gray-600">Manage staff records and information</p>
+          <h2 className="text-2xl font-bold text-gray-900">Quản lý cán bộ công nhân viên trường học</h2>
+          <p className="text-gray-600">Quản lý hồ sơ và thông tin cán bộ công nhân viên trường học</p>
         </div>
         <motion.button
           whileHover={{ scale: 1.05 }}
