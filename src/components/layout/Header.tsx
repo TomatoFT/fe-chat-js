@@ -49,7 +49,7 @@ const Header: React.FC<HeaderProps> = ({ onMenuClick }) => {
               {user?.role === 'province_manager' && 'Quản lý xã'}
               {user?.role === 'department_manager' && 'Quản lý sở'}
               {user?.role === 'admin' && 'Quản lý hệ thống'} */}
-              Sở Giáo Dục Và Đào Tạo Đắk Lắk
+              Sở GD & ĐT Đắk Lắk
             </p>
             {/* Live Load Statistics */}
             <div className="hidden lg:block">

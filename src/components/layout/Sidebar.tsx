@@ -41,7 +41,7 @@ const Sidebar: React.FC<SidebarProps> = ({ isOpen = true, onClose }) => {
         ];
       case 'school_manager':
         return [
-          { icon: Users, label: 'School Management', path: '/school-management' },
+          { icon: Users, label: 'Quản lý trường học', path: '/school-management' },
           { icon: FileText, label: t('nav.documents'), path: '/documents' },
           { icon: MessageSquare, label: t('nav.chat'), path: '/chat' },
         ];
