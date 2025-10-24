@@ -59,7 +59,7 @@ export const DocumentManagement: React.FC<DocumentManagementProps> = ({ classNam
     setNotification({
       show: true,
       type: 'success',
-      message: 'Tài liệu đã được tải lên thành công!'
+      message: 'Dữ liệu đã được tải lên thành công!'
     });
     
     // Auto-hide notification after 3 seconds
@@ -72,7 +72,7 @@ export const DocumentManagement: React.FC<DocumentManagementProps> = ({ classNam
     setNotification({
       show: true,
       type: 'error',
-      message: error.message || 'Có lỗi xảy ra khi tải lên tài liệu'
+      message: error.message || 'Có lỗi xảy ra khi tải lên dữ liệu'
     });
     
     // Auto-hide notification after 5 seconds
@@ -149,15 +149,15 @@ export const DocumentManagement: React.FC<DocumentManagementProps> = ({ classNam
       <div className="mb-8">
         <div className="flex items-center justify-between">
           <div>
-            <h1 className="text-3xl font-bold text-gray-900 mb-2">Quản lý tài liệu</h1>
-            <p className="text-gray-600">Tải lên tài liệu Excel cho hệ thống</p>
+            <h1 className="text-3xl font-bold text-gray-900 mb-2">Quản lý dữ liệu</h1>
+            <p className="text-gray-600">Tải lên dữ liệu Excel cho hệ thống</p>
           </div>
         </div>
       </div>
 
       {/* Upload Actions */}
       <div className="mb-8">
-        <h2 className="text-xl font-semibold text-gray-900 mb-4">Tải lên tài liệu</h2>
+        <h2 className="text-xl font-semibold text-gray-900 mb-4">Tải lên dữ liệu</h2>
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
           {canUploadStaff && (
             <motion.button
@@ -169,7 +169,7 @@ export const DocumentManagement: React.FC<DocumentManagementProps> = ({ classNam
             >
               <Users className="w-8 h-8 text-green-600" />
               <div className="text-center">
-                <h3 className="font-semibold text-green-900">Tài liệu nhân viên</h3>
+                <h3 className="font-semibold text-green-900">Dữ liệu nhân viên</h3>
                 <p className="text-sm text-green-700">Tải lên danh sách nhân viên</p>
               </div>
             </motion.button>
@@ -185,7 +185,7 @@ export const DocumentManagement: React.FC<DocumentManagementProps> = ({ classNam
             >
               <GraduationCap className="w-8 h-8 text-purple-600" />
               <div className="text-center">
-                <h3 className="font-semibold text-purple-900">Tài liệu học sinh</h3>
+                <h3 className="font-semibold text-purple-900">Dữ liệu học sinh</h3>
                 <p className="text-sm text-purple-700">Tải lên danh sách học sinh</p>
               </div>
             </motion.button>
@@ -201,7 +201,7 @@ export const DocumentManagement: React.FC<DocumentManagementProps> = ({ classNam
             >
               <BookOpen className="w-8 h-8 text-orange-600" />
               <div className="text-center">
-                <h3 className="font-semibold text-orange-900">Tài liệu thi cử</h3>
+                <h3 className="font-semibold text-orange-900">Dữ liệu thi cử</h3>
                 <p className="text-sm text-orange-700">Tải lên kết quả thi cử</p>
               </div>
             </motion.button>
@@ -214,7 +214,7 @@ export const DocumentManagement: React.FC<DocumentManagementProps> = ({ classNam
         <div className="bg-gray-50 rounded-lg p-6">
           <h3 className="text-lg font-semibold text-gray-900 mb-3 flex items-center gap-2">
             <File className="w-5 h-5 text-gray-600" />
-            Tải xuống mẫu tài liệu
+            Tải xuống mẫu dữ liệu
           </h3>
           <p className="text-sm text-gray-600 mb-4">
             Tải xuống các tệp mẫu để tham khảo định dạng dữ liệu
@@ -259,9 +259,9 @@ export const DocumentManagement: React.FC<DocumentManagementProps> = ({ classNam
       {/* Status Message */}
       <div className="bg-blue-50 border border-blue-200 rounded-lg p-6 text-center">
         <FileText className="w-12 h-12 text-blue-500 mx-auto mb-3" />
-        <h3 className="text-lg font-medium text-blue-900 mb-2">Hệ thống tài liệu</h3>
+        <h3 className="text-lg font-medium text-blue-900 mb-2">Hệ thống dữ liệu</h3>
         <p className="text-blue-700">
-          Tài liệu của bạn sẽ được xử lý và lưu trữ an toàn. 
+          Dữ liệu của bạn sẽ được xử lý và lưu trữ an toàn. 
           Bạn có thể sử dụng chúng để tương tác với AI Assistant.
         </p>
       </div>

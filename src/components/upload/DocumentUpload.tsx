@@ -105,26 +105,26 @@ export const DocumentUpload: React.FC<DocumentUploadProps> = ({
   const getUploadTitle = () => {
     switch (uploadType) {
       case 'staff':
-        return 'Tải lên tài liệu nhân viên';
+        return 'Tải lên dữ liệu nhân viên';
       case 'students':
-        return 'Tải lên tài liệu học sinh';
+        return 'Tải lên dữ liệu học sinh';
       case 'examinations':
-        return 'Tải lên tài liệu thi cử';
+        return 'Tải lên dữ liệu thi cử';
       default:
-        return 'Tải lên tài liệu';
+        return 'Tải lên dữ liệu';
     }
   };
 
   const getUploadDescription = () => {
     switch (uploadType) {
       case 'staff':
-        return 'Tải lên tài liệu liên quan đến nhân viên';
+        return 'Tải lên dữ liệu liên quan đến nhân viên';
       case 'students':
-        return 'Tải lên tài liệu liên quan đến học sinh';
+        return 'Tải lên dữ liệu liên quan đến học sinh';
       case 'examinations':
-        return 'Tải lên tài liệu liên quan đến thi cử';
+        return 'Tải lên dữ liệu liên quan đến thi cử';
       default:
-        return 'Tải lên bất kỳ tài liệu nào';
+        return 'Tải lên bất kỳ dữ liệu nào';
     }
   };
 
@@ -208,7 +208,7 @@ export const DocumentUpload: React.FC<DocumentUploadProps> = ({
               type="text"
               id="title"
               className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
-              placeholder="Nhập tiêu đề tài liệu"
+              placeholder="Nhập tiêu đề dữ liệu"
             />
             {errors.title && (
               <p className="mt-1 text-sm text-red-600">{errors.title.message}</p>
@@ -225,7 +225,7 @@ export const DocumentUpload: React.FC<DocumentUploadProps> = ({
               id="description"
               rows={3}
               className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
-              placeholder="Nhập mô tả tài liệu"
+              placeholder="Nhập mô tả dữ liệu"
             />
             {errors.description && (
               <p className="mt-1 text-sm text-red-600">{errors.description.message}</p>
@@ -239,7 +239,7 @@ export const DocumentUpload: React.FC<DocumentUploadProps> = ({
               disabled={!selectedFile || isUploading}
               className="bg-indigo-600 text-white px-6 py-2 rounded-md hover:bg-indigo-700 disabled:opacity-50 disabled:cursor-not-allowed"
             >
-              {isUploading ? 'Đang tải lên...' : 'Tải lên tài liệu'}
+              {isUploading ? 'Đang tải lên...' : 'Tải lên dữ liệu'}
             </button>
           </div>
         </form>

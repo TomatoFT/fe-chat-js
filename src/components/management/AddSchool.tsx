@@ -169,7 +169,7 @@ const AddSchool: React.FC = () => {
           <h3 className="font-semibold text-blue-900 mb-2">Lưu ý quan trọng:</h3>
           <ul className="space-y-1 text-blue-700 text-sm">
             <li>• Trường học sẽ nhận thông tin đăng nhập qua email</li>
-            <li>• Trường học có thể tải lên tài liệu và sử dụng tính năng trò chuyện AI</li>
+            <li>• Trường học có thể tải lên dữ liệu và sử dụng tính năng trò chuyện AI</li>
             <li>• Bạn có thể theo dõi hoạt động của họ từ bảng điều khiển tỉnh</li>
             <li>• Trường học có thể thay đổi mật khẩu sau lần đăng nhập đầu tiên</li>
           </ul>
