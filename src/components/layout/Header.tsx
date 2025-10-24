@@ -45,10 +45,11 @@ const Header: React.FC<HeaderProps> = ({ onMenuClick }) => {
           </h2>
           <div className="flex items-center gap-4">
             <p className="text-sm lg:text-base text-gray-600 hidden sm:block">
-              {user?.role === 'school_manager' && 'Quản lý trường học'}
+              {/* {user?.role === 'school_manager' && 'Quản lý trường học'}
               {user?.role === 'province_manager' && 'Quản lý xã'}
               {user?.role === 'department_manager' && 'Quản lý sở'}
-              {user?.role === 'admin' && 'Quản lý hệ thống'}
+              {user?.role === 'admin' && 'Quản lý hệ thống'} */}
+              Sở Giáo Dục Và Đào Tạo Đắk Lắk
             </p>
             {/* Live Load Statistics */}
             <div className="hidden lg:block">
