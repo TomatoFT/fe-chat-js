@@ -154,7 +154,7 @@ const translations: { [key: string]: string } = {
   'users.warning': 'Cảnh báo',
   
   // Schools Management
-  'schools.management': 'Quản lý trường học',
+  'schools.management': 'Sở Giáo Dục Và Đào Tạo Đắk Lắk',
   'schools.manageInProvince': 'Quản lý trường học trong tỉnh của bạn',
   'schools.addNewSchool': 'Thêm trường học mới',
   'schools.addNew': 'Thêm trường học mới',
@@ -177,7 +177,7 @@ const translations: { [key: string]: string } = {
   'schools.deleteWarningSchool': 'Bạn có chắc chắn muốn xóa trường học này? Hành động này không thể hoàn tác.',
   
   // Provinces Management
-  'provinces.management': 'Quản lý tỉnh thành',
+  'provinces.management': 'Sở Giáo Dục Và Đào Tạo Đắk Lắk',
   'provinces.manageAll': 'Quản lý tất cả tỉnh thành và các cơ sở giáo dục',
   'provinces.addNewProvince': 'Thêm tỉnh mới',
   'provinces.addNew': 'Thêm tỉnh mới',
