@@ -22,7 +22,7 @@ const ProvincesList: React.FC = () => {
   const deleteProvince = useDeleteProvince();
 
   const filteredProvinces = (provinces || []).filter((province: any) =>
-    province.name.toLowerCase().includes(searchTerm.toLowerCase())
+    (province.name?.toLowerCase() || '').includes(searchTerm.toLowerCase())
   );
 
   const handleEdit = (province: Province) => {
@@ -274,7 +274,7 @@ const ProvincesList: React.FC = () => {
                   Số trường học
                 </th>
                 <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                  Số tài liệu
+                  Số dữ liệu
                 </th>
                 <th className="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">
                   Thao tác
