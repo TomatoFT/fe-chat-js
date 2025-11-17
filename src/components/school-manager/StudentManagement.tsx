@@ -28,6 +28,7 @@ import {
   useDeleteStudent 
 } from '../../hooks/useSchoolManagement';
 import { Student } from '../../types';
+import { JsonFieldRenderer } from './JsonFieldRenderer';
 
 interface StudentManagementProps {
   className?: string;
@@ -40,7 +41,7 @@ export const StudentManagement: React.FC<StudentManagementProps> = ({ className 
   const [showForm, setShowForm] = useState(false);
   const [editingStudent, setEditingStudent] = useState<Student | null>(null);
   const [currentPage, setCurrentPage] = useState(1);
-  const itemsPerPage = 10;
+  const itemsPerPage = 10000; // Show all items
 
   const { data: students, isLoading, error } = useStudents();
   
@@ -76,9 +77,9 @@ export const StudentManagement: React.FC<StudentManagementProps> = ({ className 
   const studentsArray = Array.isArray(students?.items) ? students.items : [];
   const filteredStudents = studentsArray.filter(student => {
     const matchesSearch = 
-      student.full_name?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      student.fullname?.toLowerCase().includes(searchTerm.toLowerCase()) ||
       student.class_name?.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      student.academic_year?.toLowerCase().includes(searchTerm.toLowerCase());
+      student.starting_date?.toLowerCase().includes(searchTerm.toLowerCase());
     
     return matchesSearch;
   });
@@ -166,25 +167,70 @@ export const StudentManagement: React.FC<StudentManagementProps> = ({ className 
       {/* Students Table */}
       <div className="bg-white rounded-lg border border-gray-200 overflow-hidden">
         <div className="overflow-x-auto">
-          <table className="w-full">
+          <table className="w-full min-w-max">
             <thead className="bg-gray-50">
               <tr>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                  Học sinh
+                <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                  Họ và tên
                 </th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                  Lớp & Năm học
+                <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                  Ngày sinh
                 </th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                  Ngày sinh & Giới tính
+                <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                  Giới tính
                 </th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                  Dân tộc & Trạng thái
+                <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                  Lớp
                 </th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                  Ngày nhập học
+                </th>
+                <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                  Quốc tịch
+                </th>
+                <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                  Dân tộc
+                </th>
+                <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                  Tôn giáo
+                </th>
+                <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                  Đối tượng chính sách
+                </th>
+                <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                  Cận nghèo
+                </th>
+                <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                  Đoàn viên
+                </th>
+                <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                  Đội viên
+                </th>
+                <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                  Khuyết tật
+                </th>
+                <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                  Tình trạng cư trú
+                </th>
+                <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                  Địa chỉ hiện tại
+                </th>
+                <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                  Địa chỉ thường trú
+                </th>
+                <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                  Nơi sinh
+                </th>
+                <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                  Quê quán
+                </th>
+                <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                  Nơi đăng ký khai sinh
+                </th>
+                <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                   Ghi chú
                 </th>
-                <th className="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">
+                <th className="px-4 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider sticky right-0 bg-gray-50 z-10">
                   Thao tác
                 </th>
               </tr>
@@ -195,46 +241,69 @@ export const StudentManagement: React.FC<StudentManagementProps> = ({ className 
                   key={student.id}
                   initial={{ opacity: 0 }}
                   animate={{ opacity: 1 }}
-                  className="hover:bg-gray-50"
+                  className="group hover:bg-gray-50"
                 >
-                  <td className="px-6 py-4 whitespace-nowrap">
-                    <div className="flex items-center">
-                      <div className="flex-shrink-0 h-10 w-10">
-                        <div className="h-10 w-10 rounded-full bg-blue-100 flex items-center justify-center">
-                          <Users className="w-5 h-5 text-blue-600" />
-                        </div>
-                      </div>
-                      <div className="ml-4">
-                        <div className="text-sm font-medium text-gray-900">{student.full_name}</div>
-                        <div className="text-sm text-gray-500">Mã: {student.id}</div>
-                      </div>
-                    </div>
+                  <td className="px-4 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
+                    {student.fullname || 'N/A'}
                   </td>
-                  <td className="px-6 py-4 whitespace-nowrap">
-                    <div className="space-y-1">
-                      <div className="text-sm text-gray-900">{student.class_name}</div>
-                      <div className="text-sm text-gray-500">{student.academic_year}</div>
-                    </div>
+                  <td className="px-4 py-4 whitespace-nowrap text-sm text-gray-900">
+                    {student.birthday ? new Date(student.birthday).toLocaleDateString() : 'N/A'}
                   </td>
-                  <td className="px-6 py-4 whitespace-nowrap">
-                    <div className="space-y-1">
-                      <div className="text-sm text-gray-900">{new Date(student.birth_date).toLocaleDateString()}</div>
-                      <div className="text-sm text-gray-500">{student.gender}</div>
-                    </div>
+                  <td className="px-4 py-4 whitespace-nowrap text-sm text-gray-900">
+                    {student.gender || 'N/A'}
                   </td>
-                  <td className="px-6 py-4 whitespace-nowrap">
-                    <div className="space-y-1">
-                      <div className="text-sm text-gray-900">{student.ethnic}</div>
-                      <span className={`inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-xs font-medium ${getStatusColor(student.is_poor)}`}>
-                        {getStatusIcon(student.is_poor)}
-                        {student.is_poor ? 'Nghèo' : 'Bình thường'}
-                      </span>
-                    </div>
+                  <td className="px-4 py-4 whitespace-nowrap text-sm text-gray-900">
+                    {student.class_name || 'N/A'}
                   </td>
-                  <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
-                    {student.notes || 'Không có ghi chú'}
+                  <td className="px-4 py-4 whitespace-nowrap text-sm text-gray-900">
+                    {student.starting_date ? new Date(student.starting_date).toLocaleDateString() : 'N/A'}
                   </td>
-                  <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
+                  <td className="px-4 py-4 whitespace-nowrap text-sm text-gray-900">
+                    {student.nation || 'N/A'}
+                  </td>
+                  <td className="px-4 py-4 whitespace-nowrap text-sm text-gray-900">
+                    {student.ethnicity || 'N/A'}
+                  </td>
+                  <td className="px-4 py-4 whitespace-nowrap text-sm text-gray-900">
+                    {student.religion || 'N/A'}
+                  </td>
+                  <td className="px-4 py-4 whitespace-nowrap text-sm text-gray-900">
+                    {student.policy_beneficiary || 'N/A'}
+                  </td>
+                  <td className="px-4 py-4 whitespace-nowrap text-sm text-gray-900">
+                    {student.near_poor || 'N/A'}
+                  </td>
+                  <td className="px-4 py-4 whitespace-nowrap text-sm text-gray-900">
+                    {student.union_member || 'N/A'}
+                  </td>
+                  <td className="px-4 py-4 whitespace-nowrap text-sm text-gray-900">
+                    {student.team_member || 'N/A'}
+                  </td>
+                  <td className="px-4 py-4 whitespace-nowrap text-sm text-gray-900">
+                    {student.disability || 'N/A'}
+                  </td>
+                  <td className="px-4 py-4 whitespace-nowrap text-sm text-gray-900">
+                    {student.residence_status || 'N/A'}
+                  </td>
+                  <td className="px-4 py-4 text-sm text-gray-900">
+                    <JsonFieldRenderer data={student.current_address} label="Địa chỉ hiện tại" />
+                  </td>
+                  <td className="px-4 py-4 text-sm text-gray-900">
+                    <JsonFieldRenderer data={student.household_registration_address} label="Địa chỉ thường trú" />
+                  </td>
+                  <td className="px-4 py-4 text-sm text-gray-900">
+                    <JsonFieldRenderer data={student.place_of_birth} label="Nơi sinh" />
+                  </td>
+                  <td className="px-4 py-4 text-sm text-gray-900">
+                    <JsonFieldRenderer data={student.hometown} label="Quê quán" />
+                  </td>
+                  <td className="px-4 py-4 text-sm text-gray-900">
+                    <JsonFieldRenderer data={student.birth_registration_place} label="Nơi đăng ký khai sinh" />
+                  </td>
+                  <td className="px-4 py-4 text-sm text-gray-900 max-w-xs">
+                    {student.notes || 'N/A'}
+                  </td>
+                  <td className="px-4 py-4 whitespace-nowrap text-right text-sm font-medium sticky right-0 bg-white group-hover:bg-gray-50 z-10">
                     <div className="flex justify-end gap-2">
                       <motion.button
                         whileHover={{ scale: 1.1 }}
@@ -358,13 +427,13 @@ interface StudentFormProps {
 
 const StudentForm: React.FC<StudentFormProps> = ({ student, onSuccess, onCancel, schoolId }) => {
   const [formData, setFormData] = useState({
-    full_name: student?.full_name || '',
-    birth_date: student?.birth_date || '',
+    fullname: student?.fullname || '',
+    birthday: student?.birthday || '',
     gender: student?.gender || '',
     class_name: student?.class_name || '',
-    academic_year: student?.academic_year || '',
-    ethnic: student?.ethnic || '',
-    is_poor: student?.is_poor || false,
+    starting_date: student?.starting_date || '',
+    ethnicity: student?.ethnicity || '',
+    near_poor: student?.near_poor || '',
     notes: student?.notes || '',
   });
 
@@ -412,8 +481,8 @@ const StudentForm: React.FC<StudentFormProps> = ({ student, onSuccess, onCancel,
               </label>
               <input
                 type="text"
-                name="full_name"
-                value={formData.full_name}
+                name="fullname"
+                value={formData.fullname}
                 onChange={handleChange}
                 required
                 className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
@@ -425,8 +494,8 @@ const StudentForm: React.FC<StudentFormProps> = ({ student, onSuccess, onCancel,
               </label>
               <input
                 type="date"
-                name="birth_date"
-                value={formData.birth_date}
+                name="birthday"
+                value={formData.birthday}
                 onChange={handleChange}
                 required
                 className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
@@ -466,14 +535,14 @@ const StudentForm: React.FC<StudentFormProps> = ({ student, onSuccess, onCancel,
           <div className="grid grid-cols-2 gap-4">
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-1">
-                Năm học
+                Ngày nhập học
               </label>
               <input
-                type="text"
-                name="academic_year"
-                value={formData.academic_year}
+                type="date"
+                name="starting_date"
+                value={formData.starting_date}
                 onChange={handleChange}
-                placeholder="ví dụ: 2024-2025"
+                placeholder="ví dụ: 2024-09-01"
                 className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
               />
             </div>
@@ -483,8 +552,8 @@ const StudentForm: React.FC<StudentFormProps> = ({ student, onSuccess, onCancel,
               </label>
               <input
                 type="text"
-                name="ethnic"
-                value={formData.ethnic}
+                name="ethnicity"
+                value={formData.ethnicity}
                 onChange={handleChange}
                 placeholder="ví dụ: Kinh"
                 className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
@@ -493,16 +562,19 @@ const StudentForm: React.FC<StudentFormProps> = ({ student, onSuccess, onCancel,
           </div>
 
           <div className="flex items-center gap-4">
-            <label className="flex items-center">
-              <input
-                type="checkbox"
-                name="is_poor"
-                checked={formData.is_poor}
-                onChange={(e) => setFormData(prev => ({ ...prev, is_poor: e.target.checked }))}
-                className="mr-2"
-              />
-              <span className="text-sm font-medium text-gray-700">Học sinh nghèo</span>
+            <label className="block text-sm font-medium text-gray-700 mb-1">
+              Học sinh nghèo
             </label>
+            <select
+              name="near_poor"
+              value={formData.near_poor}
+              onChange={handleChange}
+              className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+            >
+              <option value="">Chọn</option>
+              <option value="yes">Có</option>
+              <option value="no">Không</option>
+            </select>
           </div>
 
           <div>

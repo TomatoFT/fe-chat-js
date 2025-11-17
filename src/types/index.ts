@@ -63,43 +63,66 @@ export interface ChatSession {
 
 export interface Student {
   id: string;
-  full_name: string;
-  birth_date: string;
-  gender: string;
-  class_name: string;
-  academic_year: string;
-  ethnic: string;
-  is_poor: boolean;
-  notes?: string;
-  school_id: string;
-  created_at?: string;
-  updated_at?: string;
+  fullname?: string | null;
+  birthday?: string | null;
+  class_name?: string | null;
+  starting_date?: string | null;
+  gender?: string | null;
+  nation?: string | null;
+  current_address?: Record<string, any> | null;
+  household_registration_address?: Record<string, any> | null;
+  place_of_birth?: Record<string, any> | null;
+  hometown?: Record<string, any> | null;
+  birth_registration_place?: Record<string, any> | null;
+  ethnicity?: string | null;
+  religion?: string | null;
+  policy_beneficiary?: string | null;
+  near_poor?: string | null;
+  union_member?: string | null;
+  team_member?: string | null;
+  disability?: string | null;
+  residence_status?: string | null;
+  notes?: string | null;
+  school_id?: string | null;
+  created_at?: string | null;
+  updated_at?: string | null;
 }
 
 export interface Staff {
   id: string;
-  full_name?: string;
-  birth_date: string;
-  gender?: string;
-  subject?: string;
-  position?: string;
-  ethnic?: string;
-  notes?: string;
-  school_id?: string;
-  created_at?: string;
-  updated_at?: string;
+  fullname: string;
+  gender?: string | null;
+  birthday?: string | null;
+  ethnicity?: string | null;
+  religion?: string | null;
+  nationality?: string | null;
+  province_city?: string | null;
+  ward?: string | null;
+  hamlet?: string | null;
+  hometown_province?: string | null;
+  hometown_ward?: string | null;
+  hometown_hamlet?: string | null;
+  is_union_member?: string | null;
+  is_party_member?: string | null;
+  teaching_subject?: string | null;
+  school_id?: string | null;
+  created_at?: string | null;
+  updated_at?: string | null;
 }
 
 export interface Examination {
   id: string;
-  exam_name?: string;
-  date: string;
-  student_name?: string;
-  student_class?: string;
-  subject?: string;
-  point?: number;
-  notes?: string;
-  school_id?: string;
-  created_at?: string;
-  updated_at?: string;
+  full_name?: string | null;
+  birthday?: string | null;
+  gender?: string | null;
+  class_name?: string | null;
+  semester?: string | null;
+  academic_year?: string | null;
+  subject?: string | null;
+  point_score?: number | null;
+  category_score?: string | null;
+  notes?: string | null;
+  school_id?: string | null;
+  created_at?: string | null;
+  updated_at?: string | null;
 }

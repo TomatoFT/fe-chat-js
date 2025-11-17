@@ -59,7 +59,7 @@ export const DocumentIndexing: React.FC<DocumentIndexingProps> = ({ className = 
 
       // Make API call to reindex all documents
       const token = localStorage.getItem('token');
-      const response = await fetch(`${import.meta.env.VITE_API_BASE_URL || 'http://157.10.52.80:8000'}/documents/indexing/reindex-all`, {
+      const response = await fetch(`${import.meta.env.VITE_API_BASE_URL || 'http://103.167.88.66:8000'}/documents/indexing/reindex-all`, {
         method: 'POST',
         headers: {
           'Authorization': `Bearer ${token}`,

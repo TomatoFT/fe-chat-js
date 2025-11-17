@@ -43,7 +43,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     
     try {
       // Make real API call to backend
-      const response = await fetch(`${import.meta.env.VITE_API_BASE_URL || 'http://157.10.52.80:8000'}/auth/login`, {
+      const response = await fetch(`${import.meta.env.VITE_API_BASE_URL || 'http://103.167.88.66:8000'}/auth/login`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -61,7 +61,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       localStorage.setItem('token', tokenData.access_token);
       
       // Get user info
-      const userResponse = await fetch(`${import.meta.env.VITE_API_BASE_URL || 'http://157.10.52.80:8000'}/auth/me`, {
+      const userResponse = await fetch(`${import.meta.env.VITE_API_BASE_URL || 'http://103.167.88.66:8000'}/auth/me`, {
         headers: {
           'Authorization': `Bearer ${tokenData.access_token}`,
         },
@@ -115,7 +115,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     
     try {
       // Make real API call to backend
-      const response = await fetch(`${import.meta.env.VITE_API_BASE_URL || 'http://157.10.52.80:8000'}/auth/register`, {
+      const response = await fetch(`${import.meta.env.VITE_API_BASE_URL || 'http://103.167.88.66:8000'}/auth/register`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

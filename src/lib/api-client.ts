@@ -1,5 +1,5 @@
 // Configure the OpenAPI client before importing
-const apiBaseUrl = import.meta.env.VITE_API_BASE_URL || 'http://157.10.52.80:8000';
+const apiBaseUrl = import.meta.env.VITE_API_BASE_URL || 'http://103.167.88.66:8000';
 
 // Debug logging
 console.log('Environment VITE_API_BASE_URL:', import.meta.env.VITE_API_BASE_URL);

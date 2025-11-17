@@ -28,6 +28,7 @@ import {
   useDeleteExamination 
 } from '../../hooks/useSchoolManagement';
 import { Examination } from '../../types';
+import { JsonFieldRenderer } from './JsonFieldRenderer';
 
 interface ExaminationManagementProps {
   className?: string;
@@ -76,10 +77,10 @@ export const ExaminationManagement: React.FC<ExaminationManagementProps> = ({ cl
   const examinationsArray = Array.isArray(examinations?.items) ? examinations.items : [];
   const filteredExaminations = examinationsArray.filter(examination => {
     const matchesSearch = 
-      examination.exam_name?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      examination.full_name?.toLowerCase().includes(searchTerm.toLowerCase()) ||
       examination.subject?.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      examination.student_class?.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      examination.student_name?.toLowerCase().includes(searchTerm.toLowerCase());
+      examination.class_name?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      examination.academic_year?.toLowerCase().includes(searchTerm.toLowerCase());
     
     return matchesSearch;
   });
@@ -116,7 +117,7 @@ export const ExaminationManagement: React.FC<ExaminationManagementProps> = ({ cl
   if (isLoading) {
     return (
       <div className="flex justify-center items-center h-64">
-        <div className="text-lg text-gray-600">Loading examinations...</div>
+        <div className="text-lg text-gray-600">Đang tải danh sách kỳ thi...</div>
       </div>
     );
   }
@@ -124,7 +125,7 @@ export const ExaminationManagement: React.FC<ExaminationManagementProps> = ({ cl
   if (error) {
     return (
       <div className="flex justify-center items-center h-64">
-        <div className="text-lg text-red-600">Error loading examinations: {error.message}</div>
+        <div className="text-lg text-red-600">Lỗi khi tải danh sách kỳ thi: {error.message}</div>
       </div>
     );
   }
@@ -144,7 +145,7 @@ export const ExaminationManagement: React.FC<ExaminationManagementProps> = ({ cl
           className="flex items-center gap-2 bg-orange-600 text-white px-4 py-2 rounded-lg hover:bg-orange-700 transition-colors"
         >
           <Plus className="w-5 h-5" />
-          Add Examination
+          Thêm kỳ thi
         </motion.button>
       </div>
 
@@ -155,7 +156,7 @@ export const ExaminationManagement: React.FC<ExaminationManagementProps> = ({ cl
             <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-5 h-5" />
             <input
               type="text"
-              placeholder="Search examinations by name, subject, class, or student..."
+              placeholder="Tìm kiếm kỳ thi theo tên, môn học, lớp hoặc học sinh..."
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
               className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-transparent"
@@ -167,23 +168,41 @@ export const ExaminationManagement: React.FC<ExaminationManagementProps> = ({ cl
       {/* Examinations Table */}
       <div className="bg-white rounded-lg border border-gray-200 overflow-hidden">
         <div className="overflow-x-auto">
-          <table className="w-full">
+          <table className="w-full min-w-max">
             <thead className="bg-gray-50">
               <tr>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                  Examination
+                <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                  Họ và tên
                 </th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                  Student & Class
+                <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                  Ngày sinh
                 </th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                  Subject & Point
+                <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                  Giới tính
                 </th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                  Date & Notes
+                <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                  Lớp
                 </th>
-                <th className="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">
-                  Actions
+                <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                  Học kỳ
+                </th>
+                <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                  Năm học
+                </th>
+                <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                  Môn học
+                </th>
+                <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                  Điểm số
+                </th>
+                <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                  Loại điểm
+                </th>
+                <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                  Ghi chú
+                </th>
+                <th className="px-4 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider sticky right-0 bg-gray-50 z-10">
+                  Thao tác
                 </th>
               </tr>
             </thead>
@@ -193,46 +212,39 @@ export const ExaminationManagement: React.FC<ExaminationManagementProps> = ({ cl
                   key={examination.id}
                   initial={{ opacity: 0 }}
                   animate={{ opacity: 1 }}
-                  className="hover:bg-gray-50"
+                  className="group hover:bg-gray-50"
                 >
-                  <td className="px-6 py-4 whitespace-nowrap">
-                    <div className="flex items-center">
-                      <div className="flex-shrink-0 h-10 w-10">
-                        <div className="h-10 w-10 rounded-full bg-orange-100 flex items-center justify-center">
-                          <BookOpen className="w-5 h-5 text-orange-600" />
-                        </div>
-                      </div>
-                      <div className="ml-4">
-                        <div className="text-sm font-medium text-gray-900">{examination.exam_name}</div>
-                        <div className="text-sm text-gray-500">ID: {examination.id}</div>
-                      </div>
-                    </div>
+                  <td className="px-4 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
+                    {examination.full_name || 'N/A'}
                   </td>
-                  <td className="px-6 py-4 whitespace-nowrap">
-                    <div className="space-y-1">
-                      <div className="text-sm text-gray-900">{examination.student_name || 'No student'}</div>
-                      <div className="text-sm text-gray-500">{examination.student_class || 'No class'}</div>
-                    </div>
+                  <td className="px-4 py-4 whitespace-nowrap text-sm text-gray-900">
+                    {examination.birthday ? new Date(examination.birthday).toLocaleDateString() : 'N/A'}
                   </td>
-                  <td className="px-6 py-4 whitespace-nowrap">
-                    <div className="space-y-1">
-                      <div className="text-sm text-gray-900">{examination.subject || 'No subject'}</div>
-                      <div className="flex items-center text-sm text-gray-500">
-                        <Award className="w-4 h-4 mr-1" />
-                        {examination.point || 'No points'} points
-                      </div>
-                    </div>
+                  <td className="px-4 py-4 whitespace-nowrap text-sm text-gray-900">
+                    {examination.gender || 'N/A'}
                   </td>
-                  <td className="px-6 py-4 whitespace-nowrap">
-                    <div className="space-y-1">
-                      <div className="text-sm text-gray-900">{new Date(examination.date).toLocaleDateString()}</div>
-                      <span className={`inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-xs font-medium ${getStatusColor(!!examination.notes)}`}>
-                        {getStatusIcon(!!examination.notes)}
-                        {examination.notes ? 'Has Notes' : 'No Notes'}
-                      </span>
-                    </div>
+                  <td className="px-4 py-4 whitespace-nowrap text-sm text-gray-900">
+                    {examination.class_name || 'N/A'}
                   </td>
-                  <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
+                  <td className="px-4 py-4 whitespace-nowrap text-sm text-gray-900">
+                    {examination.semester || 'N/A'}
+                  </td>
+                  <td className="px-4 py-4 whitespace-nowrap text-sm text-gray-900">
+                    {examination.academic_year || 'N/A'}
+                  </td>
+                  <td className="px-4 py-4 whitespace-nowrap text-sm text-gray-900">
+                    {examination.subject || 'N/A'}
+                  </td>
+                  <td className="px-4 py-4 whitespace-nowrap text-sm text-gray-900">
+                    {examination.point_score !== null && examination.point_score !== undefined ? examination.point_score : 'N/A'}
+                  </td>
+                  <td className="px-4 py-4 whitespace-nowrap text-sm text-gray-900">
+                    {examination.category_score || 'N/A'}
+                  </td>
+                  <td className="px-4 py-4 text-sm text-gray-900 max-w-xs">
+                    {examination.notes || 'N/A'}
+                  </td>
+                  <td className="px-4 py-4 whitespace-nowrap text-right text-sm font-medium sticky right-0 bg-white group-hover:bg-gray-50 z-10">
                     <div className="flex justify-end gap-2">
                       <motion.button
                         whileHover={{ scale: 1.1 }}
@@ -261,9 +273,9 @@ export const ExaminationManagement: React.FC<ExaminationManagementProps> = ({ cl
         {filteredExaminations.length === 0 && (
           <div className="text-center py-12">
             <BookOpen className="mx-auto h-12 w-12 text-gray-400" />
-            <h3 className="mt-2 text-sm font-medium text-gray-900">No examinations found</h3>
+            <h3 className="mt-2 text-sm font-medium text-gray-900">Không tìm thấy kỳ thi</h3>
             <p className="mt-1 text-sm text-gray-500">
-              {searchTerm ? 'Try adjusting your search criteria.' : 'Get started by adding a new examination.'}
+              {searchTerm ? 'Thử điều chỉnh tiêu chí tìm kiếm.' : 'Bắt đầu bằng cách thêm kỳ thi mới.'}
             </p>
           </div>
         )}
@@ -285,15 +297,15 @@ export const ExaminationManagement: React.FC<ExaminationManagementProps> = ({ cl
               disabled={currentPage === totalPages}
               className="ml-3 relative inline-flex items-center px-4 py-2 border border-gray-300 text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed"
             >
-              Next
+              Tiếp
             </button>
           </div>
           <div className="hidden sm:flex-1 sm:flex sm:items-center sm:justify-between">
             <div>
               <p className="text-sm text-gray-700">
-                Showing <span className="font-medium">{startIndex + 1}</span> to{' '}
-                <span className="font-medium">{Math.min(endIndex, filteredExaminations.length)}</span> of{' '}
-                <span className="font-medium">{filteredExaminations.length}</span> results
+                Hiển thị <span className="font-medium">{startIndex + 1}</span> đến{' '}
+                <span className="font-medium">{Math.min(endIndex, filteredExaminations.length)}</span> trong{' '}
+                <span className="font-medium">{filteredExaminations.length}</span> kết quả
               </p>
             </div>
             <div>
@@ -356,12 +368,15 @@ interface ExaminationFormProps {
 
 const ExaminationForm: React.FC<ExaminationFormProps> = ({ examination, onSuccess, onCancel, schoolId }) => {
   const [formData, setFormData] = useState({
-    exam_name: examination?.exam_name || '',
-    date: examination?.date || '',
-    student_name: examination?.student_name || '',
-    student_class: examination?.student_class || '',
+    full_name: examination?.full_name || '',
+    birthday: examination?.birthday || '',
+    gender: examination?.gender || '',
+    class_name: examination?.class_name || '',
+    semester: examination?.semester || '',
+    academic_year: examination?.academic_year || '',
     subject: examination?.subject || '',
-    point: examination?.point || 0,
+    point_score: examination?.point_score || 0,
+    category_score: examination?.category_score || '',
     notes: examination?.notes || '',
   });
 
@@ -387,7 +402,7 @@ const ExaminationForm: React.FC<ExaminationFormProps> = ({ examination, onSucces
     const { name, value } = e.target;
     setFormData(prev => ({
       ...prev,
-      [name]: name === 'point' ? parseFloat(value) || 0 : value
+      [name]: name === 'point_score' ? parseFloat(value) || 0 : value
     }));
   };
 
@@ -406,26 +421,26 @@ const ExaminationForm: React.FC<ExaminationFormProps> = ({ examination, onSucces
           <div className="grid grid-cols-2 gap-4">
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-1">
-                Examination Name
+                Full Name *
               </label>
               <input
                 type="text"
-                name="exam_name"
-                value={formData.exam_name}
+                name="full_name"
+                value={formData.full_name}
                 onChange={handleChange}
+                required
                 className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-transparent"
               />
             </div>
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-1">
-                Date *
+                Birthday
               </label>
               <input
                 type="date"
-                name="date"
-                value={formData.date}
+                name="birthday"
+                value={formData.birthday}
                 onChange={handleChange}
-                required
                 className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-transparent"
               />
             </div>
@@ -434,27 +449,56 @@ const ExaminationForm: React.FC<ExaminationFormProps> = ({ examination, onSucces
           <div className="grid grid-cols-2 gap-4">
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-1">
-                Student Name
+                Gender
               </label>
               <input
                 type="text"
-                name="student_name"
-                value={formData.student_name}
+                name="gender"
+                value={formData.gender}
                 onChange={handleChange}
-                placeholder="Student's name"
+                placeholder="e.g., Nam, Nữ"
                 className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-transparent"
               />
             </div>
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-1">
-                Student Class
+                Class Name
               </label>
               <input
                 type="text"
-                name="student_class"
-                value={formData.student_class}
+                name="class_name"
+                value={formData.class_name}
                 onChange={handleChange}
                 placeholder="e.g., 10A1"
+                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-transparent"
+              />
+            </div>
+          </div>
+
+          <div className="grid grid-cols-2 gap-4">
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">
+                Semester
+              </label>
+              <input
+                type="text"
+                name="semester"
+                value={formData.semester}
+                onChange={handleChange}
+                placeholder="e.g., 1, 2"
+                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-transparent"
+              />
+            </div>
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">
+                Academic Year
+              </label>
+              <input
+                type="text"
+                name="academic_year"
+                value={formData.academic_year}
+                onChange={handleChange}
+                placeholder="e.g., 2024-2025"
                 className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-transparent"
               />
             </div>
@@ -476,18 +520,32 @@ const ExaminationForm: React.FC<ExaminationFormProps> = ({ examination, onSucces
             </div>
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-1">
-                Points
+                Point Score
               </label>
               <input
                 type="number"
-                name="point"
-                value={formData.point}
+                name="point_score"
+                value={formData.point_score}
                 onChange={handleChange}
                 min="0"
                 step="0.1"
                 className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-transparent"
               />
             </div>
+          </div>
+
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-1">
+              Category Score
+            </label>
+            <input
+              type="text"
+              name="category_score"
+              value={formData.category_score}
+              onChange={handleChange}
+              placeholder="e.g., Excellent, Good, Fair"
+              className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-transparent"
+            />
           </div>
 
           <div>

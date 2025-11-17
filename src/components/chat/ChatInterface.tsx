@@ -259,7 +259,7 @@ export const ChatInterface: React.FC = () => {
 
         // Fetch latest session data to check for new AI response
         const token = localStorage.getItem('token');
-        const response = await fetch(`${import.meta.env.VITE_API_BASE_URL || 'http://157.10.52.80:8000'}/chat/sessions/${selectedSessionId}`, {
+        const response = await fetch(`${import.meta.env.VITE_API_BASE_URL || 'http://103.167.88.66:8000'}/chat/sessions/${selectedSessionId}`, {
           headers: {
             'Authorization': `Bearer ${token}`,
           },

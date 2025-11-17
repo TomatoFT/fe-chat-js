@@ -1434,7 +1434,7 @@
           "documents"
         ],
         "summary": "Upload Staff Document",
-        "description": "Upload a document for staff",
+        "description": "Upload and process staff Excel file (.xls or .xlsx) - returns processor results for debugging",
         "operationId": "upload_staff_document_documents_upload_staff_post",
         "requestBody": {
           "content": {
@@ -1452,7 +1452,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/DocumentResponse"
+
                 }
               }
             }
@@ -1481,7 +1481,7 @@
           "documents"
         ],
         "summary": "Upload Students Document",
-        "description": "Upload a document for students",
+        "description": "Upload and process students Excel file (.xls or .xlsx) - returns processor results for debugging",
         "operationId": "upload_students_document_documents_upload_students_post",
         "requestBody": {
           "content": {
@@ -1499,7 +1499,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/DocumentResponse"
+
                 }
               }
             }
@@ -1528,7 +1528,7 @@
           "documents"
         ],
         "summary": "Upload Examinations Document",
-        "description": "Upload a document for examinations",
+        "description": "Upload and process examinations Excel file (.xls or .xlsx) - returns processor results for debugging",
         "operationId": "upload_examinations_document_documents_upload_examinations_post",
         "requestBody": {
           "content": {
@@ -1546,7 +1546,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/DocumentResponse"
+
                 }
               }
             }
@@ -2387,6 +2387,53 @@
         }
       }
     },
+    "/api/v1/school-audit/students/upload": {
+      "post": {
+        "tags": [
+          "school-audit"
+        ],
+        "summary": "Upload Students File",
+        "description": "Upload and process students Excel file (.xls or .xlsx)",
+        "operationId": "upload_students_file_api_v1_school_audit_students_upload_post",
+        "requestBody": {
+          "content": {
+            "multipart/form-data": {
+              "schema": {
+                "$ref": "#/components/schemas/Body_upload_students_file_api_v1_school_audit_students_upload_post"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "201": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "HTTPBearer": []
+          }
+        ]
+      }
+    },
     "/api/v1/school-audit/staff/": {
       "post": {
         "tags": [
@@ -2620,6 +2667,53 @@
             }
           }
         }
+      }
+    },
+    "/api/v1/school-audit/staff/upload": {
+      "post": {
+        "tags": [
+          "school-audit"
+        ],
+        "summary": "Upload Staff File",
+        "description": "Upload and process staff Excel file (.xls or .xlsx)",
+        "operationId": "upload_staff_file_api_v1_school_audit_staff_upload_post",
+        "requestBody": {
+          "content": {
+            "multipart/form-data": {
+              "schema": {
+                "$ref": "#/components/schemas/Body_upload_staff_file_api_v1_school_audit_staff_upload_post"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "201": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "HTTPBearer": []
+          }
+        ]
       }
     },
     "/api/v1/school-audit/examinations/": {
@@ -2857,6 +2951,53 @@
         }
       }
     },
+    "/api/v1/school-audit/examinations/upload": {
+      "post": {
+        "tags": [
+          "school-audit"
+        ],
+        "summary": "Upload Examinations File",
+        "description": "Upload and process examinations Excel file (.xls or .xlsx)",
+        "operationId": "upload_examinations_file_api_v1_school_audit_examinations_upload_post",
+        "requestBody": {
+          "content": {
+            "multipart/form-data": {
+              "schema": {
+                "$ref": "#/components/schemas/Body_upload_examinations_file_api_v1_school_audit_examinations_upload_post"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "201": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "HTTPBearer": []
+          }
+        ]
+      }
+    },
     "/api/v1/statistics/statistics/live-load": {
       "get": {
         "tags": [
@@ -2910,7 +3051,7 @@
             "type": "string",
             "format": "uuid",
             "title": "Id",
-            "default": "e1ce50b6-43c3-46fc-9bbd-a5b9c028d849"
+            "default": "61a4d995-de98-48b5-aff3-5b1dae251d1e"
           }
         },
         "type": "object",
@@ -3073,6 +3214,20 @@
         ],
         "title": "Body_upload_examinations_document_documents_upload_examinations_post"
       },
+      "Body_upload_examinations_file_api_v1_school_audit_examinations_upload_post": {
+        "properties": {
+          "file": {
+            "type": "string",
+            "format": "binary",
+            "title": "File"
+          }
+        },
+        "type": "object",
+        "required": [
+          "file"
+        ],
+        "title": "Body_upload_examinations_file_api_v1_school_audit_examinations_upload_post"
+      },
       "Body_upload_staff_document_documents_upload_staff_post": {
         "properties": {
           "file": {
@@ -3087,6 +3242,20 @@
         ],
         "title": "Body_upload_staff_document_documents_upload_staff_post"
       },
+      "Body_upload_staff_file_api_v1_school_audit_staff_upload_post": {
+        "properties": {
+          "file": {
+            "type": "string",
+            "format": "binary",
+            "title": "File"
+          }
+        },
+        "type": "object",
+        "required": [
+          "file"
+        ],
+        "title": "Body_upload_staff_file_api_v1_school_audit_staff_upload_post"
+      },
       "Body_upload_students_document_documents_upload_students_post": {
         "properties": {
           "file": {
@@ -3100,6 +3269,20 @@
           "file"
         ],
         "title": "Body_upload_students_document_documents_upload_students_post"
+      },
+      "Body_upload_students_file_api_v1_school_audit_students_upload_post": {
+        "properties": {
+          "file": {
+            "type": "string",
+            "format": "binary",
+            "title": "File"
+          }
+        },
+        "type": "object",
+        "required": [
+          "file"
+        ],
+        "title": "Body_upload_students_file_api_v1_school_audit_students_upload_post"
       },
       "ChatMessageResponse": {
         "properties": {
@@ -3388,7 +3571,7 @@
             "type": "string",
             "format": "uuid",
             "title": "Id",
-            "default": "9b6f3e94-3494-45f7-9365-7c65c422cd28"
+            "default": "a3c94d88-9ce5-4e95-b508-a51a9d77af49"
           }
         },
         "type": "object",
@@ -3581,7 +3764,7 @@
       },
       "Examination": {
         "properties": {
-          "exam_name": {
+          "full_name": {
             "anyOf": [
               {
                 "type": "string"
@@ -3590,9 +3773,9 @@
                 "type": "null"
               }
             ],
-            "title": "Exam Name"
+            "title": "Full Name"
           },
-          "date": {
+          "birthday": {
             "anyOf": [
               {
                 "type": "string",
@@ -3602,9 +3785,9 @@
                 "type": "null"
               }
             ],
-            "title": "Date"
+            "title": "Birthday"
           },
-          "student_name": {
+          "gender": {
             "anyOf": [
               {
                 "type": "string"
@@ -3613,9 +3796,9 @@
                 "type": "null"
               }
             ],
-            "title": "Student Name"
+            "title": "Gender"
           },
-          "student_class": {
+          "class_name": {
             "anyOf": [
               {
                 "type": "string"
@@ -3624,7 +3807,29 @@
                 "type": "null"
               }
             ],
-            "title": "Student Class"
+            "title": "Class Name"
+          },
+          "semester": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Semester"
+          },
+          "academic_year": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Academic Year"
           },
           "subject": {
             "anyOf": [
@@ -3637,7 +3842,7 @@
             ],
             "title": "Subject"
           },
-          "point": {
+          "point_score": {
             "anyOf": [
               {
                 "type": "number"
@@ -3646,7 +3851,18 @@
                 "type": "null"
               }
             ],
-            "title": "Point"
+            "title": "Point Score"
+          },
+          "category_score": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Category Score"
           },
           "notes": {
             "anyOf": [
@@ -3675,18 +3891,41 @@
             "type": "string",
             "format": "uuid",
             "title": "Id"
+          },
+          "created_at": {
+            "anyOf": [
+              {
+                "type": "string",
+                "format": "date-time"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Created At"
+          },
+          "updated_at": {
+            "anyOf": [
+              {
+                "type": "string",
+                "format": "date-time"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Updated At"
           }
         },
         "type": "object",
         "required": [
-          "date",
           "id"
         ],
         "title": "Examination"
       },
       "ExaminationCreate": {
         "properties": {
-          "exam_name": {
+          "full_name": {
             "anyOf": [
               {
                 "type": "string"
@@ -3695,9 +3934,9 @@
                 "type": "null"
               }
             ],
-            "title": "Exam Name"
+            "title": "Full Name"
           },
-          "date": {
+          "birthday": {
             "anyOf": [
               {
                 "type": "string",
@@ -3707,9 +3946,9 @@
                 "type": "null"
               }
             ],
-            "title": "Date"
+            "title": "Birthday"
           },
-          "student_name": {
+          "gender": {
             "anyOf": [
               {
                 "type": "string"
@@ -3718,9 +3957,9 @@
                 "type": "null"
               }
             ],
-            "title": "Student Name"
+            "title": "Gender"
           },
-          "student_class": {
+          "class_name": {
             "anyOf": [
               {
                 "type": "string"
@@ -3729,7 +3968,29 @@
                 "type": "null"
               }
             ],
-            "title": "Student Class"
+            "title": "Class Name"
+          },
+          "semester": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Semester"
+          },
+          "academic_year": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Academic Year"
           },
           "subject": {
             "anyOf": [
@@ -3742,7 +4003,7 @@
             ],
             "title": "Subject"
           },
-          "point": {
+          "point_score": {
             "anyOf": [
               {
                 "type": "number"
@@ -3751,7 +4012,18 @@
                 "type": "null"
               }
             ],
-            "title": "Point"
+            "title": "Point Score"
+          },
+          "category_score": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Category Score"
           },
           "notes": {
             "anyOf": [
@@ -3778,14 +4050,11 @@
           }
         },
         "type": "object",
-        "required": [
-          "date"
-        ],
         "title": "ExaminationCreate"
       },
       "ExaminationUpdate": {
         "properties": {
-          "exam_name": {
+          "full_name": {
             "anyOf": [
               {
                 "type": "string"
@@ -3794,9 +4063,9 @@
                 "type": "null"
               }
             ],
-            "title": "Exam Name"
+            "title": "Full Name"
           },
-          "date": {
+          "birthday": {
             "anyOf": [
               {
                 "type": "string",
@@ -3806,9 +4075,9 @@
                 "type": "null"
               }
             ],
-            "title": "Date"
+            "title": "Birthday"
           },
-          "student_name": {
+          "gender": {
             "anyOf": [
               {
                 "type": "string"
@@ -3817,9 +4086,9 @@
                 "type": "null"
               }
             ],
-            "title": "Student Name"
+            "title": "Gender"
           },
-          "student_class": {
+          "class_name": {
             "anyOf": [
               {
                 "type": "string"
@@ -3828,7 +4097,29 @@
                 "type": "null"
               }
             ],
-            "title": "Student Class"
+            "title": "Class Name"
+          },
+          "semester": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Semester"
+          },
+          "academic_year": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Academic Year"
           },
           "subject": {
             "anyOf": [
@@ -3841,7 +4132,7 @@
             ],
             "title": "Subject"
           },
-          "point": {
+          "point_score": {
             "anyOf": [
               {
                 "type": "number"
@@ -3850,7 +4141,18 @@
                 "type": "null"
               }
             ],
-            "title": "Point"
+            "title": "Point Score"
+          },
+          "category_score": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Category Score"
           },
           "notes": {
             "anyOf": [
@@ -3877,9 +4179,6 @@
           }
         },
         "type": "object",
-        "required": [
-          "date"
-        ],
         "title": "ExaminationUpdate"
       },
       "HTTPValidationError": {
@@ -4241,7 +4540,7 @@
             "type": "string",
             "format": "uuid",
             "title": "Id",
-            "default": "ff01afa5-ae57-42dc-9fdd-79dc2909a0aa"
+            "default": "9d1d6b34-f3a3-4d36-94e2-0680225d3a9b"
           }
         },
         "type": "object",
@@ -4489,7 +4788,7 @@
             "type": "string",
             "format": "uuid",
             "title": "Id",
-            "default": "f95e8dbb-3b64-4a6f-996b-8fd596f739dd"
+            "default": "f6e129cb-93cd-4cbb-9f3c-10b0572150a8"
           },
           "email": {
             "anyOf": [
@@ -4664,28 +4963,9 @@
       },
       "Staff": {
         "properties": {
-          "full_name": {
-            "anyOf": [
-              {
-                "type": "string"
-              },
-              {
-                "type": "null"
-              }
-            ],
-            "title": "Full Name"
-          },
-          "birth_date": {
-            "anyOf": [
-              {
-                "type": "string",
-                "format": "date"
-              },
-              {
-                "type": "null"
-              }
-            ],
-            "title": "Birth Date"
+          "fullname": {
+            "type": "string",
+            "title": "Fullname"
           },
           "gender": {
             "anyOf": [
@@ -4698,18 +4978,19 @@
             ],
             "title": "Gender"
           },
-          "subject": {
+          "birthday": {
             "anyOf": [
               {
-                "type": "string"
+                "type": "string",
+                "format": "date"
               },
               {
                 "type": "null"
               }
             ],
-            "title": "Subject"
+            "title": "Birthday"
           },
-          "position": {
+          "ethnicity": {
             "anyOf": [
               {
                 "type": "string"
@@ -4718,9 +4999,9 @@
                 "type": "null"
               }
             ],
-            "title": "Position"
+            "title": "Ethnicity"
           },
-          "ethnic": {
+          "religion": {
             "anyOf": [
               {
                 "type": "string"
@@ -4729,9 +5010,9 @@
                 "type": "null"
               }
             ],
-            "title": "Ethnic"
+            "title": "Religion"
           },
-          "notes": {
+          "nationality": {
             "anyOf": [
               {
                 "type": "string"
@@ -4740,7 +5021,106 @@
                 "type": "null"
               }
             ],
-            "title": "Notes"
+            "title": "Nationality"
+          },
+          "province_city": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Province City"
+          },
+          "ward": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Ward"
+          },
+          "hamlet": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Hamlet"
+          },
+          "hometown_province": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Hometown Province"
+          },
+          "hometown_ward": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Hometown Ward"
+          },
+          "hometown_hamlet": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Hometown Hamlet"
+          },
+          "is_union_member": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Is Union Member"
+          },
+          "is_party_member": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Is Party Member"
+          },
+          "teaching_subject": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Teaching Subject"
           },
           "school_id": {
             "anyOf": [
@@ -4758,39 +5138,44 @@
             "type": "string",
             "format": "uuid",
             "title": "Id"
+          },
+          "created_at": {
+            "anyOf": [
+              {
+                "type": "string",
+                "format": "date-time"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Created At"
+          },
+          "updated_at": {
+            "anyOf": [
+              {
+                "type": "string",
+                "format": "date-time"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Updated At"
           }
         },
         "type": "object",
         "required": [
-          "birth_date",
+          "fullname",
           "id"
         ],
         "title": "Staff"
       },
       "StaffCreate": {
         "properties": {
-          "full_name": {
-            "anyOf": [
-              {
-                "type": "string"
-              },
-              {
-                "type": "null"
-              }
-            ],
-            "title": "Full Name"
-          },
-          "birth_date": {
-            "anyOf": [
-              {
-                "type": "string",
-                "format": "date"
-              },
-              {
-                "type": "null"
-              }
-            ],
-            "title": "Birth Date"
+          "fullname": {
+            "type": "string",
+            "title": "Fullname"
           },
           "gender": {
             "anyOf": [
@@ -4803,18 +5188,19 @@
             ],
             "title": "Gender"
           },
-          "subject": {
+          "birthday": {
             "anyOf": [
               {
-                "type": "string"
+                "type": "string",
+                "format": "date"
               },
               {
                 "type": "null"
               }
             ],
-            "title": "Subject"
+            "title": "Birthday"
           },
-          "position": {
+          "ethnicity": {
             "anyOf": [
               {
                 "type": "string"
@@ -4823,9 +5209,9 @@
                 "type": "null"
               }
             ],
-            "title": "Position"
+            "title": "Ethnicity"
           },
-          "ethnic": {
+          "religion": {
             "anyOf": [
               {
                 "type": "string"
@@ -4834,9 +5220,9 @@
                 "type": "null"
               }
             ],
-            "title": "Ethnic"
+            "title": "Religion"
           },
-          "notes": {
+          "nationality": {
             "anyOf": [
               {
                 "type": "string"
@@ -4845,7 +5231,106 @@
                 "type": "null"
               }
             ],
-            "title": "Notes"
+            "title": "Nationality"
+          },
+          "province_city": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Province City"
+          },
+          "ward": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Ward"
+          },
+          "hamlet": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Hamlet"
+          },
+          "hometown_province": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Hometown Province"
+          },
+          "hometown_ward": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Hometown Ward"
+          },
+          "hometown_hamlet": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Hometown Hamlet"
+          },
+          "is_union_member": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Is Union Member"
+          },
+          "is_party_member": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Is Party Member"
+          },
+          "teaching_subject": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Teaching Subject"
           },
           "school_id": {
             "anyOf": [
@@ -4862,13 +5347,13 @@
         },
         "type": "object",
         "required": [
-          "birth_date"
+          "fullname"
         ],
         "title": "StaffCreate"
       },
       "StaffUpdate": {
         "properties": {
-          "full_name": {
+          "fullname": {
             "anyOf": [
               {
                 "type": "string"
@@ -4877,19 +5362,7 @@
                 "type": "null"
               }
             ],
-            "title": "Full Name"
-          },
-          "birth_date": {
-            "anyOf": [
-              {
-                "type": "string",
-                "format": "date"
-              },
-              {
-                "type": "null"
-              }
-            ],
-            "title": "Birth Date"
+            "title": "Fullname"
           },
           "gender": {
             "anyOf": [
@@ -4902,18 +5375,19 @@
             ],
             "title": "Gender"
           },
-          "subject": {
+          "birthday": {
             "anyOf": [
               {
-                "type": "string"
+                "type": "string",
+                "format": "date"
               },
               {
                 "type": "null"
               }
             ],
-            "title": "Subject"
+            "title": "Birthday"
           },
-          "position": {
+          "ethnicity": {
             "anyOf": [
               {
                 "type": "string"
@@ -4922,9 +5396,9 @@
                 "type": "null"
               }
             ],
-            "title": "Position"
+            "title": "Ethnicity"
           },
-          "ethnic": {
+          "religion": {
             "anyOf": [
               {
                 "type": "string"
@@ -4933,9 +5407,9 @@
                 "type": "null"
               }
             ],
-            "title": "Ethnic"
+            "title": "Religion"
           },
-          "notes": {
+          "nationality": {
             "anyOf": [
               {
                 "type": "string"
@@ -4944,7 +5418,106 @@
                 "type": "null"
               }
             ],
-            "title": "Notes"
+            "title": "Nationality"
+          },
+          "province_city": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Province City"
+          },
+          "ward": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Ward"
+          },
+          "hamlet": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Hamlet"
+          },
+          "hometown_province": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Hometown Province"
+          },
+          "hometown_ward": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Hometown Ward"
+          },
+          "hometown_hamlet": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Hometown Hamlet"
+          },
+          "is_union_member": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Is Union Member"
+          },
+          "is_party_member": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Is Party Member"
+          },
+          "teaching_subject": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Teaching Subject"
           },
           "school_id": {
             "anyOf": [
@@ -4960,47 +5533,10 @@
           }
         },
         "type": "object",
-        "required": [
-          "birth_date"
-        ],
         "title": "StaffUpdate"
       },
       "Student": {
         "properties": {
-          "full_name": {
-            "anyOf": [
-              {
-                "type": "string"
-              },
-              {
-                "type": "null"
-              }
-            ],
-            "title": "Full Name"
-          },
-          "birth_date": {
-            "anyOf": [
-              {
-                "type": "string",
-                "format": "date"
-              },
-              {
-                "type": "null"
-              }
-            ],
-            "title": "Birth Date"
-          },
-          "gender": {
-            "anyOf": [
-              {
-                "type": "string"
-              },
-              {
-                "type": "null"
-              }
-            ],
-            "title": "Gender"
-          },
           "class_name": {
             "anyOf": [
               {
@@ -5012,7 +5548,7 @@
             ],
             "title": "Class Name"
           },
-          "academic_year": {
+          "fullname": {
             "anyOf": [
               {
                 "type": "string"
@@ -5021,9 +5557,33 @@
                 "type": "null"
               }
             ],
-            "title": "Academic Year"
+            "title": "Fullname"
           },
-          "ethnic": {
+          "birthday": {
+            "anyOf": [
+              {
+                "type": "string",
+                "format": "date"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Birthday"
+          },
+          "starting_date": {
+            "anyOf": [
+              {
+                "type": "string",
+                "format": "date"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Starting Date"
+          },
+          "gender": {
             "anyOf": [
               {
                 "type": "string"
@@ -5032,18 +5592,166 @@
                 "type": "null"
               }
             ],
-            "title": "Ethnic"
+            "title": "Gender"
           },
-          "is_poor": {
+          "nation": {
             "anyOf": [
               {
-                "type": "boolean"
+                "type": "string"
               },
               {
                 "type": "null"
               }
             ],
-            "title": "Is Poor"
+            "title": "Nation"
+          },
+          "current_address": {
+            "anyOf": [
+              {
+                "additionalProperties": true,
+                "type": "object"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Current Address"
+          },
+          "household_registration_address": {
+            "anyOf": [
+              {
+                "additionalProperties": true,
+                "type": "object"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Household Registration Address"
+          },
+          "place_of_birth": {
+            "anyOf": [
+              {
+                "additionalProperties": true,
+                "type": "object"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Place Of Birth"
+          },
+          "hometown": {
+            "anyOf": [
+              {
+                "additionalProperties": true,
+                "type": "object"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Hometown"
+          },
+          "birth_registration_place": {
+            "anyOf": [
+              {
+                "additionalProperties": true,
+                "type": "object"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Birth Registration Place"
+          },
+          "ethnicity": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Ethnicity"
+          },
+          "religion": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Religion"
+          },
+          "policy_beneficiary": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Policy Beneficiary"
+          },
+          "near_poor": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Near Poor"
+          },
+          "union_member": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Union Member"
+          },
+          "team_member": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Team Member"
+          },
+          "disability": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Disability"
+          },
+          "residence_status": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Residence Status"
           },
           "notes": {
             "anyOf": [
@@ -5072,18 +5780,41 @@
             "type": "string",
             "format": "uuid",
             "title": "Id"
+          },
+          "created_at": {
+            "anyOf": [
+              {
+                "type": "string",
+                "format": "date-time"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Created At"
+          },
+          "updated_at": {
+            "anyOf": [
+              {
+                "type": "string",
+                "format": "date-time"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Updated At"
           }
         },
         "type": "object",
         "required": [
-          "birth_date",
           "id"
         ],
         "title": "Student"
       },
       "StudentCreate": {
         "properties": {
-          "full_name": {
+          "class_name": {
             "anyOf": [
               {
                 "type": "string"
@@ -5092,9 +5823,20 @@
                 "type": "null"
               }
             ],
-            "title": "Full Name"
+            "title": "Class Name"
           },
-          "birth_date": {
+          "fullname": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Fullname"
+          },
+          "birthday": {
             "anyOf": [
               {
                 "type": "string",
@@ -5104,7 +5846,19 @@
                 "type": "null"
               }
             ],
-            "title": "Birth Date"
+            "title": "Birthday"
+          },
+          "starting_date": {
+            "anyOf": [
+              {
+                "type": "string",
+                "format": "date"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Starting Date"
           },
           "gender": {
             "anyOf": [
@@ -5117,7 +5871,7 @@
             ],
             "title": "Gender"
           },
-          "class_name": {
+          "nation": {
             "anyOf": [
               {
                 "type": "string"
@@ -5126,9 +5880,69 @@
                 "type": "null"
               }
             ],
-            "title": "Class Name"
+            "title": "Nation"
           },
-          "academic_year": {
+          "current_address": {
+            "anyOf": [
+              {
+                "additionalProperties": true,
+                "type": "object"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Current Address"
+          },
+          "household_registration_address": {
+            "anyOf": [
+              {
+                "additionalProperties": true,
+                "type": "object"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Household Registration Address"
+          },
+          "place_of_birth": {
+            "anyOf": [
+              {
+                "additionalProperties": true,
+                "type": "object"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Place Of Birth"
+          },
+          "hometown": {
+            "anyOf": [
+              {
+                "additionalProperties": true,
+                "type": "object"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Hometown"
+          },
+          "birth_registration_place": {
+            "anyOf": [
+              {
+                "additionalProperties": true,
+                "type": "object"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Birth Registration Place"
+          },
+          "ethnicity": {
             "anyOf": [
               {
                 "type": "string"
@@ -5137,9 +5951,9 @@
                 "type": "null"
               }
             ],
-            "title": "Academic Year"
+            "title": "Ethnicity"
           },
-          "ethnic": {
+          "religion": {
             "anyOf": [
               {
                 "type": "string"
@@ -5148,18 +5962,73 @@
                 "type": "null"
               }
             ],
-            "title": "Ethnic"
+            "title": "Religion"
           },
-          "is_poor": {
+          "policy_beneficiary": {
             "anyOf": [
               {
-                "type": "boolean"
+                "type": "string"
               },
               {
                 "type": "null"
               }
             ],
-            "title": "Is Poor"
+            "title": "Policy Beneficiary"
+          },
+          "near_poor": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Near Poor"
+          },
+          "union_member": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Union Member"
+          },
+          "team_member": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Team Member"
+          },
+          "disability": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Disability"
+          },
+          "residence_status": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Residence Status"
           },
           "notes": {
             "anyOf": [
@@ -5186,14 +6055,11 @@
           }
         },
         "type": "object",
-        "required": [
-          "birth_date"
-        ],
         "title": "StudentCreate"
       },
       "StudentUpdate": {
         "properties": {
-          "full_name": {
+          "class_name": {
             "anyOf": [
               {
                 "type": "string"
@@ -5202,9 +6068,20 @@
                 "type": "null"
               }
             ],
-            "title": "Full Name"
+            "title": "Class Name"
           },
-          "birth_date": {
+          "fullname": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Fullname"
+          },
+          "birthday": {
             "anyOf": [
               {
                 "type": "string",
@@ -5214,7 +6091,19 @@
                 "type": "null"
               }
             ],
-            "title": "Birth Date"
+            "title": "Birthday"
+          },
+          "starting_date": {
+            "anyOf": [
+              {
+                "type": "string",
+                "format": "date"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Starting Date"
           },
           "gender": {
             "anyOf": [
@@ -5227,7 +6116,7 @@
             ],
             "title": "Gender"
           },
-          "class_name": {
+          "nation": {
             "anyOf": [
               {
                 "type": "string"
@@ -5236,9 +6125,69 @@
                 "type": "null"
               }
             ],
-            "title": "Class Name"
+            "title": "Nation"
           },
-          "academic_year": {
+          "current_address": {
+            "anyOf": [
+              {
+                "additionalProperties": true,
+                "type": "object"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Current Address"
+          },
+          "household_registration_address": {
+            "anyOf": [
+              {
+                "additionalProperties": true,
+                "type": "object"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Household Registration Address"
+          },
+          "place_of_birth": {
+            "anyOf": [
+              {
+                "additionalProperties": true,
+                "type": "object"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Place Of Birth"
+          },
+          "hometown": {
+            "anyOf": [
+              {
+                "additionalProperties": true,
+                "type": "object"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Hometown"
+          },
+          "birth_registration_place": {
+            "anyOf": [
+              {
+                "additionalProperties": true,
+                "type": "object"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Birth Registration Place"
+          },
+          "ethnicity": {
             "anyOf": [
               {
                 "type": "string"
@@ -5247,9 +6196,9 @@
                 "type": "null"
               }
             ],
-            "title": "Academic Year"
+            "title": "Ethnicity"
           },
-          "ethnic": {
+          "religion": {
             "anyOf": [
               {
                 "type": "string"
@@ -5258,18 +6207,73 @@
                 "type": "null"
               }
             ],
-            "title": "Ethnic"
+            "title": "Religion"
           },
-          "is_poor": {
+          "policy_beneficiary": {
             "anyOf": [
               {
-                "type": "boolean"
+                "type": "string"
               },
               {
                 "type": "null"
               }
             ],
-            "title": "Is Poor"
+            "title": "Policy Beneficiary"
+          },
+          "near_poor": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Near Poor"
+          },
+          "union_member": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Union Member"
+          },
+          "team_member": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Team Member"
+          },
+          "disability": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Disability"
+          },
+          "residence_status": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Residence Status"
           },
           "notes": {
             "anyOf": [
@@ -5296,9 +6300,6 @@
           }
         },
         "type": "object",
-        "required": [
-          "birth_date"
-        ],
         "title": "StudentUpdate"
       },
       "Token": {
@@ -5359,7 +6360,7 @@
             "type": "string",
             "format": "uuid",
             "title": "Id",
-            "default": "8b433a42-cd0a-460e-9672-ce0fbb3bf2e8"
+            "default": "684db58e-87a0-49b7-96e8-db9ecd636a22"
           },
           "password": {
             "type": "string",

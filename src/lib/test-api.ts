@@ -1,6 +1,6 @@
 // Test API connection
 export const testApiConnection = async () => {
-  const apiBaseUrl = import.meta.env.VITE_API_BASE_URL || 'http://157.10.52.80:8000';
+  const apiBaseUrl = import.meta.env.VITE_API_BASE_URL || 'http://103.167.88.66:8000';
   
   console.log('Testing API connection to:', apiBaseUrl);
   

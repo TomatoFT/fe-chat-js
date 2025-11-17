@@ -30,6 +30,7 @@ import {
   useDeleteStaff 
 } from '../../hooks/useSchoolManagement';
 import { Staff } from '../../types';
+import { JsonFieldRenderer } from './JsonFieldRenderer';
 
 interface StaffManagementProps {
   className?: string;
@@ -78,10 +79,9 @@ export const StaffManagement: React.FC<StaffManagementProps> = ({ className = ''
   const staffArray = Array.isArray(staff?.items) ? staff.items : [];
   const filteredStaff = staffArray.filter(staffMember => {
     const matchesSearch = 
-      staffMember.full_name?.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      staffMember.position?.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      staffMember.subject?.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      staffMember.ethnic?.toLowerCase().includes(searchTerm.toLowerCase());
+      staffMember.fullname?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      staffMember.teaching_subject?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      staffMember.ethnicity?.toLowerCase().includes(searchTerm.toLowerCase());
     
     return matchesSearch;
   });
@@ -118,7 +118,7 @@ export const StaffManagement: React.FC<StaffManagementProps> = ({ className = ''
   if (isLoading) {
     return (
       <div className="flex justify-center items-center h-64">
-        <div className="text-lg text-gray-600">{t('common.loading')} {t('common.staff')}...</div>
+        <div className="text-lg text-gray-600">Đang tải danh sách cán bộ...</div>
       </div>
     );
   }
@@ -126,7 +126,7 @@ export const StaffManagement: React.FC<StaffManagementProps> = ({ className = ''
   if (error) {
     return (
       <div className="flex justify-center items-center h-64">
-        <div className="text-lg text-red-600">Error loading staff: {error.message}</div>
+        <div className="text-lg text-red-600">Lỗi khi tải danh sách cán bộ: {error.message}</div>
       </div>
     );
   }
@@ -146,7 +146,7 @@ export const StaffManagement: React.FC<StaffManagementProps> = ({ className = ''
           className="flex items-center gap-2 bg-green-600 text-white px-4 py-2 rounded-lg hover:bg-green-700 transition-colors"
         >
           <Plus className="w-5 h-5" />
-          Add Staff Member
+          Thêm cán bộ
         </motion.button>
       </div>
 
@@ -157,7 +157,7 @@ export const StaffManagement: React.FC<StaffManagementProps> = ({ className = ''
             <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-5 h-5" />
             <input
               type="text"
-              placeholder="Search staff by name, position, subject, or ethnic..."
+              placeholder="Tìm kiếm cán bộ theo tên, chức vụ, môn học hoặc dân tộc..."
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
               className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent"
@@ -169,23 +169,56 @@ export const StaffManagement: React.FC<StaffManagementProps> = ({ className = ''
       {/* Staff Table */}
       <div className="bg-white rounded-lg border border-gray-200 overflow-hidden">
         <div className="overflow-x-auto">
-          <table className="w-full">
+          <table className="w-full min-w-max">
             <thead className="bg-gray-50">
               <tr>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                  Staff Member
+                <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                  Họ và tên
                 </th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                  Position & Subject
+                <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                  Giới tính
                 </th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                  Birth Date & Gender
+                <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                  Ngày sinh
                 </th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                  Ethnic & Notes
+                <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                  Dân tộc
                 </th>
-                <th className="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">
-                  Actions
+                <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                  Tôn giáo
+                </th>
+                <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                  Quốc tịch
+                </th>
+                <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                  Tỉnh/Thành phố
+                </th>
+                <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                  Phường/Xã
+                </th>
+                <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                  Thôn/Xóm
+                </th>
+                <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                  Tỉnh quê quán
+                </th>
+                <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                  Phường/Xã quê quán
+                </th>
+                <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                  Thôn/Xóm quê quán
+                </th>
+                <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                  Đoàn viên
+                </th>
+                <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                  Đảng viên
+                </th>
+                <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                  Môn giảng dạy
+                </th>
+                <th className="px-4 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider sticky right-0 bg-gray-50 z-10">
+                  Thao tác
                 </th>
               </tr>
             </thead>
@@ -195,46 +228,54 @@ export const StaffManagement: React.FC<StaffManagementProps> = ({ className = ''
                   key={staffMember.id}
                   initial={{ opacity: 0 }}
                   animate={{ opacity: 1 }}
-                  className="hover:bg-gray-50"
+                  className="group hover:bg-gray-50"
                 >
-                  <td className="px-6 py-4 whitespace-nowrap">
-                    <div className="flex items-center">
-                      <div className="flex-shrink-0 h-10 w-10">
-                        <div className="h-10 w-10 rounded-full bg-green-100 flex items-center justify-center">
-                          <UserCheck className="w-5 h-5 text-green-600" />
-                        </div>
-                      </div>
-                      <div className="ml-4">
-                        <div className="text-sm font-medium text-gray-900">{staffMember.full_name}</div>
-                        <div className="text-sm text-gray-500">ID: {staffMember.id}</div>
-                      </div>
-                    </div>
+                  <td className="px-4 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
+                    {staffMember.fullname || 'N/A'}
                   </td>
-                  <td className="px-6 py-4 whitespace-nowrap">
-                    <div className="space-y-1">
-                      <div className="flex items-center text-sm text-gray-900">
-                        <Briefcase className="w-4 h-4 mr-1" />
-                        {staffMember.position || 'No position'}
-                      </div>
-                      <div className="text-sm text-gray-500">{staffMember.subject || 'No subject'}</div>
-                    </div>
+                  <td className="px-4 py-4 whitespace-nowrap text-sm text-gray-900">
+                    {staffMember.gender || 'N/A'}
                   </td>
-                  <td className="px-6 py-4 whitespace-nowrap">
-                    <div className="space-y-1">
-                      <div className="text-sm text-gray-900">{new Date(staffMember.birth_date).toLocaleDateString()}</div>
-                      <div className="text-sm text-gray-500">{staffMember.gender || 'No gender'}</div>
-                    </div>
+                  <td className="px-4 py-4 whitespace-nowrap text-sm text-gray-900">
+                    {staffMember.birthday ? new Date(staffMember.birthday).toLocaleDateString() : 'N/A'}
                   </td>
-                  <td className="px-6 py-4 whitespace-nowrap">
-                    <div className="space-y-1">
-                      <div className="text-sm text-gray-900">{staffMember.ethnic || 'No ethnic'}</div>
-                      <span className={`inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-xs font-medium ${getStatusColor(!!staffMember.notes)}`}>
-                        {getStatusIcon(!!staffMember.notes)}
-                        {staffMember.notes ? 'Has Notes' : 'No Notes'}
-                      </span>
-                    </div>
+                  <td className="px-4 py-4 whitespace-nowrap text-sm text-gray-900">
+                    {staffMember.ethnicity || 'N/A'}
                   </td>
-                  <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
+                  <td className="px-4 py-4 whitespace-nowrap text-sm text-gray-900">
+                    {staffMember.religion || 'N/A'}
+                  </td>
+                  <td className="px-4 py-4 whitespace-nowrap text-sm text-gray-900">
+                    {staffMember.nationality || 'N/A'}
+                  </td>
+                  <td className="px-4 py-4 whitespace-nowrap text-sm text-gray-900">
+                    {staffMember.province_city || 'N/A'}
+                  </td>
+                  <td className="px-4 py-4 whitespace-nowrap text-sm text-gray-900">
+                    {staffMember.ward || 'N/A'}
+                  </td>
+                  <td className="px-4 py-4 whitespace-nowrap text-sm text-gray-900">
+                    {staffMember.hamlet || 'N/A'}
+                  </td>
+                  <td className="px-4 py-4 whitespace-nowrap text-sm text-gray-900">
+                    {staffMember.hometown_province || 'N/A'}
+                  </td>
+                  <td className="px-4 py-4 whitespace-nowrap text-sm text-gray-900">
+                    {staffMember.hometown_ward || 'N/A'}
+                  </td>
+                  <td className="px-4 py-4 whitespace-nowrap text-sm text-gray-900">
+                    {staffMember.hometown_hamlet || 'N/A'}
+                  </td>
+                  <td className="px-4 py-4 whitespace-nowrap text-sm text-gray-900">
+                    {staffMember.is_union_member || 'N/A'}
+                  </td>
+                  <td className="px-4 py-4 whitespace-nowrap text-sm text-gray-900">
+                    {staffMember.is_party_member || 'N/A'}
+                  </td>
+                  <td className="px-4 py-4 whitespace-nowrap text-sm text-gray-900">
+                    {staffMember.teaching_subject || 'N/A'}
+                  </td>
+                  <td className="px-4 py-4 whitespace-nowrap text-right text-sm font-medium sticky right-0 bg-white group-hover:bg-gray-50 z-10">
                     <div className="flex justify-end gap-2">
                       <motion.button
                         whileHover={{ scale: 1.1 }}
@@ -263,9 +304,9 @@ export const StaffManagement: React.FC<StaffManagementProps> = ({ className = ''
         {filteredStaff.length === 0 && (
           <div className="text-center py-12">
             <UserCheck className="mx-auto h-12 w-12 text-gray-400" />
-            <h3 className="mt-2 text-sm font-medium text-gray-900">No staff members found</h3>
+            <h3 className="mt-2 text-sm font-medium text-gray-900">Không tìm thấy cán bộ</h3>
             <p className="mt-1 text-sm text-gray-500">
-              {searchTerm ? 'Try adjusting your search criteria.' : 'Get started by adding a new staff member.'}
+              {searchTerm ? 'Thử điều chỉnh tiêu chí tìm kiếm.' : 'Bắt đầu bằng cách thêm cán bộ mới.'}
             </p>
           </div>
         )}
@@ -280,22 +321,22 @@ export const StaffManagement: React.FC<StaffManagementProps> = ({ className = ''
               disabled={currentPage === 1}
               className="relative inline-flex items-center px-4 py-2 border border-gray-300 text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed"
             >
-              Previous
+              Trước
             </button>
             <button
               onClick={handleNextPage}
               disabled={currentPage === totalPages}
               className="ml-3 relative inline-flex items-center px-4 py-2 border border-gray-300 text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed"
             >
-              Next
+              Tiếp
             </button>
           </div>
           <div className="hidden sm:flex-1 sm:flex sm:items-center sm:justify-between">
             <div>
               <p className="text-sm text-gray-700">
-                Showing <span className="font-medium">{startIndex + 1}</span> to{' '}
-                <span className="font-medium">{Math.min(endIndex, filteredStaff.length)}</span> of{' '}
-                <span className="font-medium">{filteredStaff.length}</span> results
+                Hiển thị <span className="font-medium">{startIndex + 1}</span> đến{' '}
+                <span className="font-medium">{Math.min(endIndex, filteredStaff.length)}</span> trong{' '}
+                <span className="font-medium">{filteredStaff.length}</span> kết quả
               </p>
             </div>
             <div>
@@ -358,12 +399,13 @@ interface StaffFormProps {
 
 const StaffForm: React.FC<StaffFormProps> = ({ staff, onSuccess, onCancel, schoolId }) => {
   const [formData, setFormData] = useState({
-    full_name: staff?.full_name || '',
-    birth_date: staff?.birth_date || '',
+    fullname: staff?.fullname || '',
+    birthday: staff?.birthday || '',
     gender: staff?.gender || '',
-    subject: staff?.subject || '',
-    position: staff?.position || '',
-    ethnic: staff?.ethnic || '',
+    teaching_subject: staff?.teaching_subject || '',
+    ethnicity: staff?.ethnicity || '',
+    nationality: staff?.nationality || '',
+    religion: staff?.religion || '',
     notes: staff?.notes || '',
   });
 
@@ -408,26 +450,26 @@ const StaffForm: React.FC<StaffFormProps> = ({ staff, onSuccess, onCancel, schoo
           <div className="grid grid-cols-2 gap-4">
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-1">
-                Full Name
+                Full Name *
               </label>
               <input
                 type="text"
-                name="full_name"
-                value={formData.full_name}
+                name="fullname"
+                value={formData.fullname}
                 onChange={handleChange}
+                required
                 className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent"
               />
             </div>
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-1">
-                Birth Date *
+                Birth Date
               </label>
               <input
                 type="date"
-                name="birth_date"
-                value={formData.birth_date}
+                name="birthday"
+                value={formData.birthday}
                 onChange={handleChange}
-                required
                 className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent"
               />
             </div>
@@ -449,14 +491,14 @@ const StaffForm: React.FC<StaffFormProps> = ({ staff, onSuccess, onCancel, schoo
             </div>
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-1">
-                Position
+                Teaching Subject
               </label>
               <input
                 type="text"
-                name="position"
-                value={formData.position}
+                name="teaching_subject"
+                value={formData.teaching_subject}
                 onChange={handleChange}
-                placeholder="e.g., Teacher, Principal"
+                placeholder="e.g., Mathematics, English"
                 className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent"
               />
             </div>
@@ -465,30 +507,44 @@ const StaffForm: React.FC<StaffFormProps> = ({ staff, onSuccess, onCancel, schoo
           <div className="grid grid-cols-2 gap-4">
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-1">
-                Subject
+                Ethnicity
               </label>
               <input
                 type="text"
-                name="subject"
-                value={formData.subject}
-                onChange={handleChange}
-                placeholder="e.g., Mathematics, English"
-                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent"
-              />
-            </div>
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">
-                Ethnic
-              </label>
-              <input
-                type="text"
-                name="ethnic"
-                value={formData.ethnic}
+                name="ethnicity"
+                value={formData.ethnicity}
                 onChange={handleChange}
                 placeholder="e.g., Kinh"
                 className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent"
               />
             </div>
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">
+                Nationality
+              </label>
+              <input
+                type="text"
+                name="nationality"
+                value={formData.nationality}
+                onChange={handleChange}
+                placeholder="e.g., Vietnamese"
+                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent"
+              />
+            </div>
+          </div>
+
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-1">
+              Religion
+            </label>
+            <input
+              type="text"
+              name="religion"
+              value={formData.religion}
+              onChange={handleChange}
+              placeholder="e.g., None, Buddhist"
+              className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent"
+            />
           </div>
 
           <div>

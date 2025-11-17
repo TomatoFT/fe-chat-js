@@ -9,7 +9,7 @@ interface LiveLoadStats {
 
 const fetchLiveLoadStats = async (): Promise<LiveLoadStats> => {
   const token = localStorage.getItem('token');
-  const response = await fetch(`${import.meta.env.VITE_API_BASE_URL || 'http://157.10.52.80:8000'}/api/v1/statistics/statistics/live-load`, {
+  const response = await fetch(`${import.meta.env.VITE_API_BASE_URL || 'http://103.167.88.66:8000'}/api/v1/statistics/statistics/live-load`, {
     headers: {
       'Authorization': `Bearer ${token}`,
       'Content-Type': 'application/json',

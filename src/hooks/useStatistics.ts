@@ -1,6 +1,6 @@
 import { useQuery } from '@tanstack/react-query';
 
-const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || 'http://157.10.52.80:8000';
+const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || 'http://103.167.88.66:8000';
 
 // Statistics query keys
 export const statisticsKeys = {

@@ -30,7 +30,7 @@ A modern React TypeScript frontend for the EduStats educational management syste
 
 - Node.js 18+ (recommended: 20+)
 - npm 9+
-- Backend API running on `http://157.10.52.80:8000`
+- Backend API running on `http://103.167.88.66:8000`
 
 ## 🚀 Quick Start
 
@@ -51,7 +51,7 @@ cp .env.example .env
 Update `.env` with your configuration:
 
 ```env
-REACT_APP_API_BASE_URL=http://157.10.52.80:8000
+REACT_APP_API_BASE_URL=http://103.167.88.66:8000
 REACT_APP_API_TIMEOUT=30000
 NODE_ENV=development
 ```

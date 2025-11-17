@@ -1,7 +1,7 @@
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { Student, Staff, Examination } from '../types';
 
-const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || 'http://157.10.52.80:8000';
+const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || 'http://103.167.88.66:8000';
 
 // Query keys
 export const schoolManagementKeys = {
@@ -86,20 +86,7 @@ export const useCreateStudent = () => {
   const queryClient = useQueryClient();
 
   return useMutation({
-    mutationFn: async (data: {
-      name: string;
-      student_id: string;
-      class_name: string;
-      date_of_birth: string;
-      gender: 'male' | 'female';
-      address: string;
-      phone_number?: string;
-      email?: string;
-      parent_name?: string;
-      parent_phone?: string;
-      enrollment_date: string;
-      school_id: string;
-    }) => {
+    mutationFn: async (data: Partial<Student> & { school_id: string }) => {
       const token = localStorage.getItem('token');
       const response = await fetch(`${API_BASE_URL}/api/v1/school-audit/students/`, {
         method: 'POST',
@@ -238,20 +225,7 @@ export const useCreateStaff = () => {
   const queryClient = useQueryClient();
 
   return useMutation({
-    mutationFn: async (data: {
-      name: string;
-      staff_id: string;
-      position: string;
-      department: string;
-      date_of_birth: string;
-      gender: 'male' | 'female';
-      address: string;
-      phone_number?: string;
-      email?: string;
-      hire_date: string;
-      salary?: number;
-      school_id: string;
-    }) => {
+    mutationFn: async (data: Partial<Staff> & { school_id: string }) => {
       const token = localStorage.getItem('token');
       const response = await fetch(`${API_BASE_URL}/api/v1/school-audit/staff/`, {
         method: 'POST',
@@ -390,18 +364,7 @@ export const useCreateExamination = () => {
   const queryClient = useQueryClient();
 
   return useMutation({
-    mutationFn: async (data: {
-      name: string;
-      exam_type: 'midterm' | 'final' | 'quiz' | 'assignment';
-      subject: string;
-      class_name: string;
-      exam_date: string;
-      duration_minutes: number;
-      total_marks: number;
-      passing_marks: number;
-      description?: string;
-      school_id: string;
-    }) => {
+    mutationFn: async (data: Partial<Examination> & { school_id: string }) => {
       const token = localStorage.getItem('token');
       const response = await fetch(`${API_BASE_URL}/api/v1/school-audit/examinations/`, {
         method: 'POST',
