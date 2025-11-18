@@ -267,7 +267,7 @@ const translations: { [key: string]: string } = {
   'documents.dropFileHere': 'Thả tệp vào đây',
   'documents.fileSelected': 'Tệp đã chọn',
   'documents.clickToBrowse': 'hoặc nhấp để duyệt tệp',
-  'documents.supportsExcel': 'Hỗ trợ XLSX lên đến 10MB',
+  'documents.supportsExcel': 'Hỗ trợ XLS và XLSX lên đến 10MB',
   'documents.documentTitleOptional': 'Tiêu đề dữ liệu (Tùy chọn)',
   'documents.descriptionOptional': 'Mô tả (Tùy chọn)',
   'documents.uploadSuccess': 'Tải lên thành công!',

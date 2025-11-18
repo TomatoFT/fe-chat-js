@@ -99,15 +99,24 @@ export const SimpleDocumentUploadModal: React.FC<SimpleDocumentUploadModalProps>
   const validateFile = (file: File): string | null => {
     const maxSize = 10 * 1024 * 1024; // 10MB
     const allowedTypes = [
-      'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
+      'application/vnd.ms-excel', // XLS
+      'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet', // XLSX
+      'application/excel', // Alternative XLS MIME type
+      'application/x-excel', // Another alternative XLS MIME type
+      'application/x-msexcel' // Another alternative XLS MIME type
     ];
+    
+    // Also check by file extension as some browsers don't report correct MIME types
+    const fileExtension = file.name.toLowerCase().split('.').pop();
+    const allowedExtensions = ['xls', 'xlsx'];
 
     if (file.size > maxSize) {
       return 'Kích thước tệp phải nhỏ hơn 10MB';
     }
 
-    if (!allowedTypes.includes(file.type)) {
-      return 'Chỉ hỗ trợ tệp Excel XLSX';
+    // Check by MIME type or file extension
+    if (!allowedTypes.includes(file.type) && !allowedExtensions.includes(fileExtension || '')) {
+      return 'Chỉ hỗ trợ tệp Excel XLS hoặc XLSX';
     }
 
     return null;
@@ -244,7 +253,7 @@ export const SimpleDocumentUploadModal: React.FC<SimpleDocumentUploadModalProps>
                 type="file"
                 onChange={handleFileInput}
                 className="absolute inset-0 w-full h-full opacity-0 cursor-pointer"
-                accept=".xlsx"
+                accept=".xls,.xlsx"
               />
               
               <div className="space-y-4">
