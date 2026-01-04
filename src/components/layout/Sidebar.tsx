@@ -8,6 +8,7 @@ import {
   Building2,
   BookOpen,
   X,
+  BarChart3,
 } from 'lucide-react';
 import { useAuth } from '../../context/AuthContext';
 import { useLanguage } from '../../context/LanguageContext';
@@ -24,30 +25,41 @@ const Sidebar: React.FC<SidebarProps> = ({ isOpen = true, onClose }) => {
   // const { name: displayName, isLoading: nameLoading } = useUserDisplayName();
 
   const getNavItems = () => {
+    const baseItems: Array<{ icon: any; label: string; path: string }> = [];
+    
     switch (user?.role) {
       case 'admin':
-        return [
-          { icon: Building2, label: 'Department Management', path: '/admin/departments' },
-        ];
+        baseItems.push(
+          { icon: Building2, label: 'Department Management', path: '/admin/departments' }
+        );
+        break;
       case 'department_manager':
-        return [
+        baseItems.push(
           { icon: MessageSquare, label: t('nav.chat'), path: '/chat' },
-          { icon: Building2, label: t('nav.provinces'), path: '/provinces' },
-        ];
+          { icon: Building2, label: t('nav.provinces'), path: '/provinces' }
+        );
+        break;
       case 'province_manager':
-        return [
+        baseItems.push(
           { icon: Users, label: t('nav.schools'), path: '/schools' },
-          { icon: MessageSquare, label: t('nav.chat'), path: '/chat' },
-        ];
+          { icon: MessageSquare, label: t('nav.chat'), path: '/chat' }
+        );
+        break;
       case 'school_manager':
-        return [
+        baseItems.push(
           { icon: Users, label: 'Quản lý trường học', path: '/school-management' },
           { icon: FileText, label: t('nav.documents'), path: '/documents' },
-          { icon: MessageSquare, label: t('nav.chat'), path: '/chat' },
-        ];
+          { icon: MessageSquare, label: t('nav.chat'), path: '/chat' }
+        );
+        break;
       default:
         return [];
     }
+    
+    // Add charts menu item for all roles
+    baseItems.push({ icon: BarChart3, label: 'Biểu đồ', path: '/charts' });
+    
+    return baseItems;
   };
 
   const navItems = getNavItems();

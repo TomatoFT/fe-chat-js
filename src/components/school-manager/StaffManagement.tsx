@@ -406,7 +406,15 @@ const StaffForm: React.FC<StaffFormProps> = ({ staff, onSuccess, onCancel, schoo
     ethnicity: staff?.ethnicity || '',
     nationality: staff?.nationality || '',
     religion: staff?.religion || '',
-    notes: staff?.notes || '',
+    province_city: staff?.province_city || '',
+    ward: staff?.ward || '',
+    hamlet: staff?.hamlet || '',
+    hometown_province: staff?.hometown_province || '',
+    hometown_ward: staff?.hometown_ward || '',
+    hometown_hamlet: staff?.hometown_hamlet || '',
+    is_union_member: staff?.is_union_member || '',
+    is_party_member: staff?.is_party_member || '',
+    notes: (staff as any)?.notes || '',
   });
 
   const createStaff = useCreateStaff();
@@ -545,6 +553,129 @@ const StaffForm: React.FC<StaffFormProps> = ({ staff, onSuccess, onCancel, schoo
               placeholder="e.g., None, Buddhist"
               className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent"
             />
+          </div>
+
+          <div className="border-t pt-4 mt-4">
+            <h4 className="text-sm font-semibold text-gray-700 mb-3">Địa chỉ hiện tại</h4>
+            <div className="grid grid-cols-3 gap-4">
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-1">
+                  Tỉnh/Thành phố
+                </label>
+                <input
+                  type="text"
+                  name="province_city"
+                  value={formData.province_city}
+                  onChange={handleChange}
+                  placeholder="Tỉnh/Thành phố"
+                  className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent"
+                />
+              </div>
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-1">
+                  Phường/Xã
+                </label>
+                <input
+                  type="text"
+                  name="ward"
+                  value={formData.ward}
+                  onChange={handleChange}
+                  placeholder="Phường/Xã"
+                  className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent"
+                />
+              </div>
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-1">
+                  Thôn/Xóm
+                </label>
+                <input
+                  type="text"
+                  name="hamlet"
+                  value={formData.hamlet}
+                  onChange={handleChange}
+                  placeholder="Thôn/Xóm"
+                  className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent"
+                />
+              </div>
+            </div>
+          </div>
+
+          <div className="border-t pt-4 mt-4">
+            <h4 className="text-sm font-semibold text-gray-700 mb-3">Quê quán</h4>
+            <div className="grid grid-cols-3 gap-4">
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-1">
+                  Tỉnh/Thành phố
+                </label>
+                <input
+                  type="text"
+                  name="hometown_province"
+                  value={formData.hometown_province}
+                  onChange={handleChange}
+                  placeholder="Tỉnh/Thành phố"
+                  className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent"
+                />
+              </div>
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-1">
+                  Phường/Xã
+                </label>
+                <input
+                  type="text"
+                  name="hometown_ward"
+                  value={formData.hometown_ward}
+                  onChange={handleChange}
+                  placeholder="Phường/Xã"
+                  className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent"
+                />
+              </div>
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-1">
+                  Thôn/Xóm
+                </label>
+                <input
+                  type="text"
+                  name="hometown_hamlet"
+                  value={formData.hometown_hamlet}
+                  onChange={handleChange}
+                  placeholder="Thôn/Xóm"
+                  className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent"
+                />
+              </div>
+            </div>
+          </div>
+
+          <div className="grid grid-cols-2 gap-4">
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">
+                Đoàn viên
+              </label>
+              <select
+                name="is_union_member"
+                value={formData.is_union_member}
+                onChange={handleChange}
+                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent"
+              >
+                <option value="">Chọn</option>
+                <option value="yes">Có</option>
+                <option value="no">Không</option>
+              </select>
+            </div>
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">
+                Đảng viên
+              </label>
+              <select
+                name="is_party_member"
+                value={formData.is_party_member}
+                onChange={handleChange}
+                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent"
+              >
+                <option value="">Chọn</option>
+                <option value="yes">Có</option>
+                <option value="no">Không</option>
+              </select>
+            </div>
           </div>
 
           <div>

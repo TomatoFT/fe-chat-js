@@ -15,6 +15,7 @@ import SchoolsList from './components/management/SchoolsList';
 import ProvincesList from './components/management/ProvincesList';
 import DepartmentManagement from './components/admin/DepartmentManagement';
 import { SchoolManagerDashboard } from './components/school-manager/SchoolManagerDashboard';
+import { ChartsPage } from './components/charts/ChartsPage';
 
 function App() {
   return (
@@ -96,6 +97,14 @@ function App() {
                     element={
                       <ProtectedRoute allowedRoles={['admin']}>
                         <DepartmentManagement />
+                      </ProtectedRoute>
+                    } 
+                  />
+                  <Route 
+                    path="charts" 
+                    element={
+                      <ProtectedRoute allowedRoles={['school_manager', 'province_manager', 'department_manager', 'admin']}>
+                        <ChartsPage />
                       </ProtectedRoute>
                     } 
                   />

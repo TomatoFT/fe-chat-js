@@ -3025,6 +3025,131 @@
           }
         ]
       }
+    },
+    "/api/v1/charts/data": {
+      "get": {
+        "tags": [
+          "charts",
+          "charts"
+        ],
+        "summary": "Get Chart Data",
+        "description": "Get chart data for visualization.\nSupports 15 different chart types at both school and province levels.\n\nThe endpoint automatically uses the authenticated user's role to determine data scope:\n- school_manager: Only their school (school level only)\n- province_manager: All schools in their province (school or province level)\n- department_manager: All schools in their department (school, province, or department level)\n- admin: All data (any level)\n\nAvailable chart types:\n- Students: students_by_gender, students_by_ethnicity, students_by_religion, \n           students_by_disability, students_by_policy, students_by_class, students_by_age_group\n- Staff: staff_by_gender, staff_by_ethnicity, staff_by_religion, \n         staff_by_subject, staff_by_membership\n- Examinations: scores_by_subject, scores_by_semester, pass_fail_by_subject",
+        "operationId": "get_chart_data_api_v1_charts_data_get",
+        "security": [
+          {
+            "HTTPBearer": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "chart_type",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "description": "Type of chart to generate",
+              "title": "Chart Type"
+            },
+            "description": "Type of chart to generate"
+          },
+          {
+            "name": "level",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "enum": [
+                "school",
+                "province"
+              ],
+              "type": "string",
+              "description": "Aggregation level",
+              "title": "Level"
+            },
+            "description": "Aggregation level"
+          },
+          {
+            "name": "academic_year",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "description": "Filter by academic year (for examination charts)",
+              "title": "Academic Year"
+            },
+            "description": "Filter by academic year (for examination charts)"
+          },
+          {
+            "name": "semester",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "description": "Filter by semester (for examination charts)",
+              "title": "Semester"
+            },
+            "description": "Filter by semester (for examination charts)"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/charts/types": {
+      "get": {
+        "tags": [
+          "charts",
+          "charts"
+        ],
+        "summary": "Get Chart Types",
+        "description": "Get list of available chart types and their categories.",
+        "operationId": "get_chart_types_api_v1_charts_types_get",
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+
+                }
+              }
+            }
+          }
+        }
+      }
     }
   },
   "components": {
@@ -3051,7 +3176,7 @@
             "type": "string",
             "format": "uuid",
             "title": "Id",
-            "default": "61a4d995-de98-48b5-aff3-5b1dae251d1e"
+            "default": "d88c8828-be1b-4a53-84c4-76d5c0d43fa3"
           }
         },
         "type": "object",
@@ -3307,6 +3432,17 @@
               }
             ],
             "title": "Sender"
+          },
+          "llm_provider": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Llm Provider"
           },
           "id": {
             "type": "string",
@@ -3571,7 +3707,7 @@
             "type": "string",
             "format": "uuid",
             "title": "Id",
-            "default": "a3c94d88-9ce5-4e95-b508-a51a9d77af49"
+            "default": "d68af994-5aed-4679-a521-6b467c70e3a4"
           }
         },
         "type": "object",
@@ -4540,7 +4676,7 @@
             "type": "string",
             "format": "uuid",
             "title": "Id",
-            "default": "9d1d6b34-f3a3-4d36-94e2-0680225d3a9b"
+            "default": "9a80af6d-7ec7-4ed4-816b-b6cf11bc181e"
           }
         },
         "type": "object",
@@ -4788,7 +4924,7 @@
             "type": "string",
             "format": "uuid",
             "title": "Id",
-            "default": "f6e129cb-93cd-4cbb-9f3c-10b0572150a8"
+            "default": "2a09b39b-a03d-42e6-801c-6e08e68fdb8f"
           },
           "email": {
             "anyOf": [
@@ -6360,7 +6496,7 @@
             "type": "string",
             "format": "uuid",
             "title": "Id",
-            "default": "684db58e-87a0-49b7-96e8-db9ecd636a22"
+            "default": "598577b7-1a21-43f5-8efc-171f36752942"
           },
           "password": {
             "type": "string",

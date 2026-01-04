@@ -433,7 +433,14 @@ const StudentForm: React.FC<StudentFormProps> = ({ student, onSuccess, onCancel,
     class_name: student?.class_name || '',
     starting_date: student?.starting_date || '',
     ethnicity: student?.ethnicity || '',
+    nation: student?.nation || '',
+    religion: student?.religion || '',
     near_poor: student?.near_poor || '',
+    policy_beneficiary: student?.policy_beneficiary || '',
+    union_member: student?.union_member || '',
+    team_member: student?.team_member || '',
+    disability: student?.disability || '',
+    residence_status: student?.residence_status || '',
     notes: student?.notes || '',
   });
 
@@ -455,7 +462,7 @@ const StudentForm: React.FC<StudentFormProps> = ({ student, onSuccess, onCancel,
     }
   };
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>) => {
     setFormData(prev => ({
       ...prev,
       [e.target.name]: e.target.value
@@ -561,20 +568,126 @@ const StudentForm: React.FC<StudentFormProps> = ({ student, onSuccess, onCancel,
             </div>
           </div>
 
-          <div className="flex items-center gap-4">
-            <label className="block text-sm font-medium text-gray-700 mb-1">
-              Học sinh nghèo
-            </label>
-            <select
-              name="near_poor"
-              value={formData.near_poor}
-              onChange={handleChange}
-              className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-            >
-              <option value="">Chọn</option>
-              <option value="yes">Có</option>
-              <option value="no">Không</option>
-            </select>
+          <div className="grid grid-cols-2 gap-4">
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">
+                Quốc tịch
+              </label>
+              <input
+                type="text"
+                name="nation"
+                value={formData.nation}
+                onChange={handleChange}
+                placeholder="ví dụ: Việt Nam"
+                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+              />
+            </div>
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">
+                Tôn giáo
+              </label>
+              <input
+                type="text"
+                name="religion"
+                value={formData.religion}
+                onChange={handleChange}
+                placeholder="ví dụ: Không, Phật giáo"
+                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+              />
+            </div>
+          </div>
+
+          <div className="grid grid-cols-2 gap-4">
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">
+                Học sinh nghèo
+              </label>
+              <select
+                name="near_poor"
+                value={formData.near_poor}
+                onChange={handleChange}
+                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+              >
+                <option value="">Chọn</option>
+                <option value="yes">Có</option>
+                <option value="no">Không</option>
+              </select>
+            </div>
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">
+                Đối tượng chính sách
+              </label>
+              <input
+                type="text"
+                name="policy_beneficiary"
+                value={formData.policy_beneficiary}
+                onChange={handleChange}
+                placeholder="ví dụ: Con liệt sĩ, Con thương binh"
+                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+              />
+            </div>
+          </div>
+
+          <div className="grid grid-cols-2 gap-4">
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">
+                Khuyết tật
+              </label>
+              <input
+                type="text"
+                name="disability"
+                value={formData.disability}
+                onChange={handleChange}
+                placeholder="ví dụ: Không, Có"
+                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+              />
+            </div>
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">
+                Tình trạng cư trú
+              </label>
+              <input
+                type="text"
+                name="residence_status"
+                value={formData.residence_status}
+                onChange={handleChange}
+                placeholder="ví dụ: Thường trú, Tạm trú"
+                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+              />
+            </div>
+          </div>
+
+          <div className="grid grid-cols-2 gap-4">
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">
+                Đoàn viên
+              </label>
+              <select
+                name="union_member"
+                value={formData.union_member}
+                onChange={handleChange}
+                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+              >
+                <option value="">Chọn</option>
+                <option value="yes">Có</option>
+                <option value="no">Không</option>
+              </select>
+            </div>
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">
+                Đội viên
+              </label>
+              <select
+                name="team_member"
+                value={formData.team_member}
+                onChange={handleChange}
+                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+              >
+                <option value="">Chọn</option>
+                <option value="yes">Có</option>
+                <option value="no">Không</option>
+              </select>
+            </div>
           </div>
 
           <div>
