@@ -19,7 +19,7 @@ export const ChartCard: React.FC<ChartCardProps> = ({
   defaultLevel = 'school',
 }) => {
   const { user } = useAuth();
-  // School managers can only see school level, so always use 'school' for them
+  // Quản lý trường chỉ xem cấp trường nên luôn dùng 'school'
   const isSchoolManager = user?.role === 'school_manager';
   const [selectedLevel, setSelectedLevel] = useState<'school' | 'province'>(
     isSchoolManager ? 'school' : defaultLevel
@@ -44,13 +44,13 @@ export const ChartCard: React.FC<ChartCardProps> = ({
       animate={{ opacity: 1, y: 0 }}
       className="bg-white rounded-xl border border-gray-200 p-6 shadow-sm hover:shadow-md transition-shadow duration-200"
     >
-      {/* Header */}
+      {/* Tiêu đề */}
       <div className="mb-4">
         <h3 className="text-lg font-semibold text-gray-900 mb-1">{name}</h3>
         <p className="text-sm text-gray-500">{category}</p>
       </div>
 
-      {/* Controls */}
+      {/* Điều khiển */}
       <div className="mb-4 space-y-3">
         {!isSchoolManager && (
           <div>
@@ -100,7 +100,7 @@ export const ChartCard: React.FC<ChartCardProps> = ({
         )}
       </div>
 
-      {/* Chart */}
+      {/* Biểu đồ */}
       <div className="mt-4">
         {dataLoading ? (
           <div className="flex items-center justify-center h-64">

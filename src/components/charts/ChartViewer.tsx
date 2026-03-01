@@ -40,7 +40,7 @@ const COLORS = [
   '#00D2D3',
 ];
 
-// Helper to group small values in pie charts
+// Gộp các giá trị nhỏ trong biểu đồ tròn
 const groupSmallValues = (data: Array<{ name: string; value: number }>, threshold: number = 0.02) => {
   const total = data.reduce((sum, item) => sum + item.value, 0);
   const thresholdValue = total * threshold;
@@ -68,7 +68,7 @@ const groupSmallValues = (data: Array<{ name: string; value: number }>, threshol
   return mainData;
 };
 
-// Custom label component for pie chart - cleaner labels
+// Nhãn tùy chỉnh cho biểu đồ tròn
 const CustomPieLabel = (props: any) => {
   const { cx, cy, midAngle, innerRadius, outerRadius, percent } = props;
   const RADIAN = Math.PI / 180;
@@ -77,7 +77,7 @@ const CustomPieLabel = (props: any) => {
   const y = cy + radius * Math.sin(-midAngle * RADIAN);
   const percentValue = (percent * 100).toFixed(0);
 
-  // Only show label if slice is >= 8% to keep it clean
+  // Chỉ hiện nhãn nếu phần >= 8%
   if (percent < 0.08) {
     return null;
   }
@@ -110,7 +110,7 @@ export const ChartViewer: React.FC<ChartViewerProps> = ({ chartType, data, heigh
     );
   }
 
-  // Format data for recharts and filter out zero values
+  // Định dạng dữ liệu và lọc giá trị bằng không
   const processedData = useMemo(() => {
     return data
       .map((item) => {
@@ -125,7 +125,7 @@ export const ChartViewer: React.FC<ChartViewerProps> = ({ chartType, data, heigh
       .filter((item) => item.value > 0); // Remove zero values
   }, [data]);
 
-  // Determine chart type based on the chart_type string
+  // Xác định loại biểu đồ theo chuỗi chart_type
   const isPieChart = chartType.includes('by_gender') ||
                      chartType.includes('by_ethnicity') ||
                      chartType.includes('by_religion') ||
@@ -136,11 +136,11 @@ export const ChartViewer: React.FC<ChartViewerProps> = ({ chartType, data, heigh
                       chartType.includes('scores_by_semester') ||
                       chartType.includes('trend');
 
-  // For pie charts with many categories, group small values
+  // Với biểu đồ tròn nhiều hạng mục, gộp giá trị nhỏ
   const pieChartData = useMemo(() => {
     if (isPieChart && processedData.length > 8) {
       const grouped = groupSmallValues(processedData, 0.02);
-      // Preserve originalName for grouped items
+      // Giữ originalName cho mục đã gộp
       return grouped.map((item) => {
         if (item.name.startsWith('Khác')) {
           return { ...item, originalName: item.name };
@@ -152,13 +152,13 @@ export const ChartViewer: React.FC<ChartViewerProps> = ({ chartType, data, heigh
     return processedData;
   }, [isPieChart, processedData]);
 
-  // Sort pie chart data by value for better label display
+  // Sắp xếp dữ liệu biểu đồ tròn theo giá trị để hiển thị nhãn rõ hơn
   const sortedPieData = useMemo(() => {
     if (!isPieChart) return pieChartData;
     return [...pieChartData].sort((a, b) => b.value - a.value);
   }, [isPieChart, pieChartData]);
 
-  // Custom tooltip for better formatting
+  // Tooltip tùy chỉnh cho biểu đồ tròn
   const CustomTooltip = ({ active, payload }: any) => {
     if (active && payload && payload.length) {
       const data = payload[0];
@@ -181,7 +181,24 @@ export const ChartViewer: React.FC<ChartViewerProps> = ({ chartType, data, heigh
     return null;
   };
 
-  // Custom legend with "view more" option
+  // Tooltip cho biểu đồ cột/đường (nhãn tiếng Việt)
+  const BarLineTooltip = ({ active, payload, label }: any) => {
+    if (active && payload && payload.length) {
+      const data = payload[0];
+      const displayLabel = label || data.name || 'Không có';
+      return (
+        <div className="bg-white p-3 border border-gray-200 rounded-lg shadow-lg">
+          <p className="font-semibold text-gray-900 mb-1">{displayLabel}</p>
+          <p className="text-sm text-gray-600">
+            Giá trị: <span className="font-medium">{data.value?.toLocaleString() ?? data.value}</span>
+          </p>
+        </div>
+      );
+    }
+    return null;
+  };
+
+  // Chú thích tùy chỉnh với tùy chọn xem thêm
   const renderCustomLegend = (props: any) => {
     const { payload } = props;
     if (!payload || payload.length === 0) return null;
@@ -227,10 +244,10 @@ export const ChartViewer: React.FC<ChartViewerProps> = ({ chartType, data, heigh
     );
   };
 
-  // Render chart
+  // Vẽ biểu đồ
   const renderChart = (chartHeight: number = 400) => {
     if (isPieChart) {
-      // Show labels for top slices (>= 8%) to keep it clean
+      // Hiện nhãn cho các phần đủ lớn (>= 8%)
       const showLabels = sortedPieData.length <= 12;
 
       return (
@@ -276,6 +293,7 @@ export const ChartViewer: React.FC<ChartViewerProps> = ({ chartType, data, heigh
             />
             <YAxis />
             <Tooltip 
+              content={<BarLineTooltip />}
               contentStyle={{
                 backgroundColor: 'white',
                 border: '1px solid #e5e7eb',
@@ -287,13 +305,13 @@ export const ChartViewer: React.FC<ChartViewerProps> = ({ chartType, data, heigh
               wrapperStyle={{ paddingTop: '20px' }}
               content={renderCustomLegend}
             />
-            <Line type="monotone" dataKey="value" stroke="#8884d8" strokeWidth={2} />
+            <Line type="monotone" dataKey="value" name="Giá trị" stroke="#8884d8" strokeWidth={2} />
           </LineChart>
         </ResponsiveContainer>
       );
     }
 
-    // Default bar chart
+    // Biểu đồ cột mặc định
     return (
       <ResponsiveContainer width="100%" height={chartHeight}>
         <BarChart data={processedData}>
@@ -308,19 +326,19 @@ export const ChartViewer: React.FC<ChartViewerProps> = ({ chartType, data, heigh
           />
           <YAxis />
           <Tooltip 
+            content={<BarLineTooltip />}
             contentStyle={{
               backgroundColor: 'white',
               border: '1px solid #e5e7eb',
               borderRadius: '8px',
               padding: '8px',
             }}
-            formatter={(value: any) => value.toLocaleString()}
           />
           <Legend 
             wrapperStyle={{ paddingTop: '20px' }}
             content={renderCustomLegend}
           />
-          <Bar dataKey="value" fill="#8884d8" />
+          <Bar dataKey="value" name="Giá trị" fill="#8884d8" />
         </BarChart>
       </ResponsiveContainer>
     );
