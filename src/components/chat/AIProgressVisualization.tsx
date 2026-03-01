@@ -13,7 +13,7 @@ import './AIProgressVisualization.css';
 interface AIProgressVisualizationProps {
   isVisible: boolean;
   onComplete?: () => void;
-  expectedDuration?: number; // in seconds, default 240 (4 minutes)
+  expectedDuration?: number; // in seconds, default 12 (4 stages × 3s)
   actualDuration?: number; // actual response time, if known
 }
 
@@ -33,35 +33,35 @@ const STAGES: StageConfig[] = [
     label: 'SUY NGHĨ',
     icon: <Brain className="w-6 h-6" />,
     color: 'bg-blue-500',
-    duration: 60
+    duration: 3
   },
   {
     id: 'query',
     label: 'TÌM KIẾM',
     icon: <Search className="w-6 h-6" />,
     color: 'bg-purple-500',
-    duration: 60
+    duration: 3
   },
   {
     id: 'combine',
     label: 'KẾT HỢP DỮ LIỆU',
     icon: <Puzzle className="w-6 h-6" />,
     color: 'bg-green-500',
-    duration: 60
+    duration: 3
   },
   {
     id: 'generate',
     label: 'TẠO CÂU TRẢ LỜI',
     icon: <Sparkles className="w-6 h-6" />,
     color: 'bg-orange-500',
-    duration: 60
+    duration: 3
   }
 ];
 
 export const AIProgressVisualization: React.FC<AIProgressVisualizationProps> = ({
   isVisible,
   onComplete,
-  expectedDuration = 240,
+  expectedDuration = 12,
   actualDuration
 }) => {
   const [currentStage, setCurrentStage] = useState<ProgressStage | null>(null);
@@ -142,9 +142,9 @@ export const AIProgressVisualization: React.FC<AIProgressVisualizationProps> = (
       case 'completed':
         return `${stage?.color} text-white shadow-lg`;
       case 'active':
-        return `${stage?.color} text-white shadow-lg ring-4 ring-opacity-50`;
+        return `${stage?.color} text-white shadow-lg ring-4 ring-blue-200 ring-opacity-60`;
       default:
-        return 'bg-gray-200 text-gray-400 opacity-50';
+        return 'bg-gray-200 text-gray-400 opacity-60';
     }
   };
 
@@ -157,25 +157,29 @@ export const AIProgressVisualization: React.FC<AIProgressVisualizationProps> = (
         animate={{ opacity: 1, y: 0 }}
         exit={{ opacity: 0, y: -20 }}
         transition={{ duration: 0.5 }}
-        className="bg-white rounded-lg border border-gray-200 p-4 shadow-sm mb-4 max-w-md mx-auto"
+        className="ai-progress-card bg-white rounded-xl border border-gray-200 p-5 shadow-sm mb-4 max-w-md mx-auto"
       >
-        {/* INFO HUB Indicator */}
-        <div className="flex items-center justify-center mb-6">
+        {/* QUY TRÌNH LÝ LUẬN - Header */}
+        <div className="reasoning-header flex items-center justify-center gap-3 mb-6 py-3 px-4 rounded-xl bg-gray-50 border border-gray-200">
           <motion.div
-            animate={{ 
-              scale: [1, 1.1, 1],
-              rotate: [0, 5, -5, 0]
+            className="reasoning-icon-wrap flex items-center justify-center w-11 h-11 rounded-xl bg-gradient-to-r from-blue-500 to-purple-500 text-white shadow-md"
+            animate={{
+              boxShadow: [
+                '0 4px 14px rgba(59, 130, 246, 0.4)',
+                '0 4px 20px rgba(147, 51, 234, 0.4)',
+                '0 4px 14px rgba(59, 130, 246, 0.4)'
+              ],
+              scale: [1, 1.05, 1]
             }}
-            transition={{ 
-              duration: 2,
+            transition={{
+              duration: 2.5,
               repeat: Infinity,
-              ease: "easeInOut"
+              ease: 'easeInOut'
             }}
-            className="bg-gradient-to-r from-blue-500 to-purple-500 text-white p-3 rounded-lg shadow-lg"
           >
             <Info className="w-6 h-6" />
           </motion.div>
-          <span className="ml-3 text-sm font-medium text-gray-700">QUY TRÌNH LÝ LUẬN</span>
+          <span className="text-lg font-bold tracking-wider text-gray-800">QUY TRÌNH LÝ LUẬN</span>
         </div>
 
         {/* Progress Stages */}
@@ -195,11 +199,11 @@ export const AIProgressVisualization: React.FC<AIProgressVisualizationProps> = (
                     ${getStageClasses(stage.id)}
                   `}
                   animate={isActive ? {
-                    scale: [1, 1.1, 1],
+                    scale: [1, 1.08, 1],
                     boxShadow: [
-                      '0 0 0 0 rgba(59, 130, 246, 0.7)',
+                      '0 0 0 0 rgba(59, 130, 246, 0.5)',
                       '0 0 0 10px rgba(59, 130, 246, 0)',
-                      '0 0 0 0 rgba(59, 130, 246, 0)'
+                      '0 0 0 0 rgba(59, 130, 246, 0.5)'
                     ]
                   } : {}}
                   transition={{
@@ -211,7 +215,7 @@ export const AIProgressVisualization: React.FC<AIProgressVisualizationProps> = (
                   {/* Working Animation Ring */}
                   {isActive && (
                     <motion.div
-                      className="absolute inset-0 rounded-full border-2 border-white border-opacity-30"
+                      className="absolute inset-0 rounded-full border-2 border-white border-opacity-40"
                       animate={{ rotate: 360 }}
                       transition={{
                         duration: 2,
@@ -242,7 +246,7 @@ export const AIProgressVisualization: React.FC<AIProgressVisualizationProps> = (
                   {/* Shimmer Effect for Active Stage */}
                   {isActive && (
                     <motion.div
-                      className="absolute inset-0 rounded-full bg-gradient-to-r from-transparent via-white to-transparent opacity-30"
+                      className="absolute inset-0 rounded-full bg-gradient-to-r from-transparent via-white/30 to-transparent"
                       animate={{
                         x: ['-100%', '100%']
                       }}
@@ -259,7 +263,7 @@ export const AIProgressVisualization: React.FC<AIProgressVisualizationProps> = (
                 <motion.div
                   className="mt-3 text-center"
                   animate={isActive ? {
-                    color: ['#6B7280', '#3B82F6', '#6B7280']
+                    color: ['#6b7280', '#3b82f6', '#6b7280']
                   } : {}}
                   transition={{
                     duration: 1,
@@ -277,7 +281,7 @@ export const AIProgressVisualization: React.FC<AIProgressVisualizationProps> = (
 
                 {/* Connection Line */}
                 {index < STAGES.length - 1 && (
-                  <div className="absolute left-full top-1/2 w-8 h-0.5 bg-gray-200 transform -translate-y-1/2 connection-line">
+                  <div className="absolute left-full top-1/2 w-8 h-0.5 bg-gray-200 transform -translate-y-1/2 connection-line rounded-full overflow-hidden">
                     <motion.div
                       className="h-full bg-gradient-to-r from-blue-500 to-purple-500"
                       initial={{ width: 0 }}
@@ -296,7 +300,7 @@ export const AIProgressVisualization: React.FC<AIProgressVisualizationProps> = (
         {/* Progress Status Text */}
         <motion.div
           className="text-center mt-6"
-          animate={{ opacity: [0.5, 1, 0.5] }}
+          animate={{ opacity: [0.6, 1, 0.6] }}
           transition={{
             duration: 2,
             repeat: Infinity,
