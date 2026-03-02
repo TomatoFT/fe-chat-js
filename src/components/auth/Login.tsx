@@ -226,13 +226,23 @@ const Login: React.FC = () => {
           transition={{ duration: 0.8 }}
           className="flex justify-center lg:justify-end order-first lg:order-last"
         >
-          <div className="w-full max-w-md">
-      <motion.div
-        initial={{ opacity: 0, y: 20 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.5 }}
-              className="bg-white rounded-2xl shadow-xl p-6 md:p-8 border border-gray-200"
-      >
+          <div className="w-full max-w-md relative">
+            {/* Neon border - rotating gradient moving around the login card */}
+            <div
+              className="absolute inset-0 rounded-2xl animate-neon-rotate"
+              style={{
+                background: 'conic-gradient(from 0deg, #06b6d4, #8b5cf6, #ec4899, #f59e0b, #10b981, #06b6d4)',
+                boxShadow: '0 0 20px rgba(139, 92, 246, 0.4), 0 0 40px rgba(6, 182, 212, 0.3)',
+              }}
+            >
+              <div className="absolute inset-[3px] rounded-[14px] bg-gradient-to-br from-purple-50 via-blue-50 to-indigo-100" />
+            </div>
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.5 }}
+              className="relative bg-white rounded-2xl shadow-xl p-6 md:p-8 border border-gray-200"
+            >
           <div className="text-center mb-8">
                 <motion.div
                   animate={{ 

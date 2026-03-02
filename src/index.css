@@ -355,6 +355,11 @@ input:focus {
   100% { transform: rotate(360deg); }
 }
 
+@keyframes neon-rotate {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
 /* Mobile responsiveness */
 @media (max-width: 768px) {
   .chat-sidebar {
