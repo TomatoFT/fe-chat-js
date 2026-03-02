@@ -70,9 +70,6 @@ export const EnhancedDocumentUpload: React.FC<EnhancedDocumentUploadProps> = ({
     resolver: zodResolver(documentUploadSchema),
   });
 
-  const title = watch('title');
-  const description = watch('description');
-
   // Role-based access control
   const canUploadGeneral = hasPermission(user, 'upload_general_documents');
   const canUploadStaff = hasPermission(user, 'upload_staff_documents');
@@ -218,8 +215,6 @@ export const EnhancedDocumentUpload: React.FC<EnhancedDocumentUploadProps> = ({
         const uploadHook = getUploadHook(uploadFile.file);
         const formData = new FormData();
         formData.append('file', uploadFile.file);
-        if (title) formData.append('title', title);
-        if (description) formData.append('description', description);
 
         // Simulate progress
         const progressInterval = setInterval(() => {

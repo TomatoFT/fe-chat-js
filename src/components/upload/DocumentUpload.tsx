@@ -89,9 +89,6 @@ export const DocumentUpload: React.FC<DocumentUploadProps> = ({
     try {
       const formData = new FormData();
       formData.append('file', data.file);
-      if (data.title) formData.append('title', data.title);
-      if (data.description) formData.append('description', data.description);
-      
       await uploadFunction.mutateAsync(formData);
       reset();
       setSelectedFile(null);
@@ -197,40 +194,6 @@ export const DocumentUpload: React.FC<DocumentUploadProps> = ({
           {errors.file && (
             <p className="text-sm text-red-600">{errors.file.message}</p>
           )}
-
-          {/* Title */}
-          <div>
-            <label htmlFor="title" className="block text-sm font-medium text-gray-700">
-              Tiêu đề (Tùy chọn)
-            </label>
-            <input
-              {...register('title')}
-              type="text"
-              id="title"
-              className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
-              placeholder="Nhập tiêu đề dữ liệu"
-            />
-            {errors.title && (
-              <p className="mt-1 text-sm text-red-600">{errors.title.message}</p>
-            )}
-          </div>
-
-          {/* Description */}
-          <div>
-            <label htmlFor="description" className="block text-sm font-medium text-gray-700">
-              Mô tả (Tùy chọn)
-            </label>
-            <textarea
-              {...register('description')}
-              id="description"
-              rows={3}
-              className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
-              placeholder="Nhập mô tả dữ liệu"
-            />
-            {errors.description && (
-              <p className="mt-1 text-sm text-red-600">{errors.description.message}</p>
-            )}
-          </div>
 
           {/* Submit Button */}
           <div className="flex justify-end">

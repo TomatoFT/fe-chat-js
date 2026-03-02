@@ -50,7 +50,6 @@ export const DocumentUploadModal: React.FC<DocumentUploadModalProps> = ({
   const uploadExaminationsDocument = useUploadExaminationsDocument();
 
   const {
-    register,
     handleSubmit,
     formState: { errors },
     setValue,
@@ -218,7 +217,7 @@ export const DocumentUploadModal: React.FC<DocumentUploadModalProps> = ({
     fileInputRef.current?.click();
   };
 
-  const onSubmit = async (data: DocumentUploadInput) => {
+  const onSubmit = async (_data: DocumentUploadInput) => {
     setUploadError(null);
     setIsUploading(true);
     setUploadProgress(0);
@@ -229,9 +228,6 @@ export const DocumentUploadModal: React.FC<DocumentUploadModalProps> = ({
         const file = selectedFiles[i];
         const formData = new FormData();
         formData.append('file', file);
-        if (data.title) formData.append('title', data.title);
-        if (data.description) formData.append('description', data.description);
-        
         // Simulate progress
         setUploadProgress((i / selectedFiles.length) * 100);
         
@@ -405,40 +401,6 @@ export const DocumentUploadModal: React.FC<DocumentUploadModalProps> = ({
                 </div>
               </motion.div>
             )}
-
-            {/* Document Title */}
-            <div>
-              <label htmlFor="title" className="block text-sm font-medium text-gray-700 mb-2">
-                Document Title (Optional)
-              </label>
-              <input
-                {...register('title')}
-                type="text"
-                id="title"
-                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                placeholder="Enter title"
-              />
-              {errors.title && (
-                <p className="mt-1 text-sm text-red-600">{errors.title.message}</p>
-              )}
-            </div>
-
-            {/* Document Description */}
-            <div>
-              <label htmlFor="description" className="block text-sm font-medium text-gray-700 mb-2">
-                Description (Optional)
-              </label>
-              <textarea
-                {...register('description')}
-                id="description"
-                rows={3}
-                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                placeholder={t('documents.enterDescription')}
-              />
-              {errors.description && (
-                <p className="mt-1 text-sm text-red-600">{errors.description.message}</p>
-              )}
-            </div>
 
             {/* Error Message */}
             {uploadError && (

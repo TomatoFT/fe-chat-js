@@ -383,7 +383,7 @@ export const ChatInterface: React.FC = () => {
 
 
   return (
-    <div className="flex h-screen bg-gradient-to-br from-blue-50 to-indigo-100">
+    <div className="flex h-full min-h-0 bg-gradient-to-br from-blue-50 to-indigo-100">
       {/* Sidebar */}
       <div className={`${sidebarVisible ? 'w-80 lg:w-80 md:w-64 sm:w-64' : 'w-0'} bg-white shadow-xl border-r border-gray-200 flex flex-col hidden md:flex transition-all duration-300 ease-in-out overflow-hidden`}>
         {/* Sidebar Content - Only render when visible */}
@@ -724,12 +724,12 @@ export const ChatInterface: React.FC = () => {
         </div>
       )}
 
-      {/* Chat Area */}
-      <div className="flex-1 flex flex-col">
+      {/* Chat Area - flex column so header/input stay visible, only messages scroll */}
+      <div className="flex-1 flex flex-col min-h-0 overflow-hidden">
         {selectedSessionId ? (
           <>
-            {/* Chat Header */}
-            <div className="bg-white shadow-sm border-b border-gray-200 p-4">
+            {/* Chat Header - flex-shrink-0 keeps it fixed at top */}
+            <div className="flex-shrink-0 bg-white shadow-sm border-b border-gray-200 p-4">
               <div className="flex items-center space-x-3">
                 <div className="w-10 h-10 bg-gradient-to-r from-blue-500 to-indigo-500 rounded-full flex items-center justify-center">
                   <Bot className="w-6 h-6 text-white" />
@@ -741,8 +741,8 @@ export const ChatInterface: React.FC = () => {
               </div>
             </div>
 
-            {/* Messages */}
-            <div className="flex-1 overflow-y-auto p-3 md:p-6 space-y-4 bg-gradient-to-b from-gray-50 to-white chat-messages">
+            {/* Messages - flex-1 min-h-0 overflow-y-auto: only this scrolls */}
+            <div className="flex-1 min-h-0 overflow-y-auto p-3 md:p-6 space-y-4 bg-gradient-to-b from-gray-50 to-white chat-messages">
               {sessionLoading ? (
                 <div className="flex justify-center">
                   <div className="animate-spin w-8 h-8 border-2 border-blue-600 border-t-transparent rounded-full"></div>
@@ -823,8 +823,8 @@ export const ChatInterface: React.FC = () => {
               <div ref={messagesEndRef} />
             </div>
 
-            {/* Message Input */}
-            <div className="bg-white border-t border-gray-200 p-3 md:p-4 relative">
+            {/* Message Input - flex-shrink-0 keeps it fixed at bottom */}
+            <div className="flex-shrink-0 bg-white border-t border-gray-200 p-3 md:p-4">
               <form onSubmit={handleSendMessage} className="flex items-center space-x-2 md:space-x-3">
                 <div className="flex-1 relative">
                   <input
