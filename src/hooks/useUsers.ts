@@ -276,27 +276,29 @@ export const useUpdateSchool = () => {
     mutationFn: async ({ id, data }: { 
       id: string; 
       data: Partial<{
+        name: string;
         email: string;
         password: string;
       }>;
     }) => {
       const token = localStorage.getItem('token');
       
-      // Set the authorization header and base URL for the API client
       const { OpenAPI } = await import('../api-client');
       OpenAPI.BASE = API_BASE_URL;
       if (token) {
         OpenAPI.TOKEN = token;
       }
       
-      console.log('Updating school with ID:', id);
-      console.log('Update data:', data);
-      console.log('API Base URL:', API_BASE_URL);
-      
       const { SchoolsService } = await import('../api-client');
-      
-      const result = await SchoolsService.updateSchoolSchoolsSchoolIdPut(id, data);
-      console.log('Update result:', result);
+      // API expects email?, password (required). Send name if backend supports it. Use empty password when not changing.
+      const body: Record<string, unknown> = {
+        email: data.email ?? undefined,
+        password: data.password ?? '',
+      };
+      if (data.name !== undefined && data.name !== '') {
+        body.name = data.name;
+      }
+      const result = await SchoolsService.updateSchoolSchoolsSchoolIdPut(id, body as { email?: string | null; password: string });
       return result;
     },
     onSuccess: (data, variables) => {

@@ -66,12 +66,18 @@ export const provinceUpdateSchema = z.object({
 });
 
 // School schemas
-export const schoolCreateSchema = z.object({
-  name: z.string().min(2, 'Name must be at least 2 characters'),
-  email: z.string().email('Invalid email address'),
-  password: z.string().min(6, 'Password must be at least 6 characters'),
-  province_id: z.string().optional(),
-});
+export const schoolCreateSchema = z
+  .object({
+    name: z.string().min(2, 'Tên trường phải có ít nhất 2 ký tự'),
+    email: z.string().email('Email không hợp lệ'),
+    password: z.string().min(6, 'Mật khẩu phải có ít nhất 6 ký tự'),
+    confirmPassword: z.string().min(1, 'Vui lòng xác nhận mật khẩu'),
+    province_id: z.string().optional(),
+  })
+  .refine((data) => data.password === data.confirmPassword, {
+    message: 'Mật khẩu xác nhận không khớp',
+    path: ['confirmPassword'],
+  });
 
 export const schoolUpdateSchema = z.object({
   email: z.string().email('Invalid email address').optional(),

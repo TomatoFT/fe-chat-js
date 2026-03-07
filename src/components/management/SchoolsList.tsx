@@ -4,17 +4,12 @@ import { Link } from 'react-router-dom';
 import { Plus, Search, School, Users, Eye, Edit, Trash2 } from 'lucide-react';
 import { School as SchoolType } from '../../types';
 import { useSchools, useUpdateSchool, useDeleteSchool } from '../../hooks/useUsers';
-import { useAuth } from '../../context/AuthContext';
-import { hasPermission } from '../../utils/userUtils';
 
 const SchoolsList: React.FC = () => {
   const [searchTerm, setSearchTerm] = useState('');
   const [editingSchool, setEditingSchool] = useState<SchoolType | null>(null);
   const [showDeleteModal, setShowDeleteModal] = useState<string | null>(null);
   const [showViewModal, setShowViewModal] = useState<SchoolType | null>(null);
-  
-  // Auth context
-  const { user } = useAuth();
   
   // Fetch schools from API
   const { data: schools, isLoading, error } = useSchools();
@@ -102,21 +97,37 @@ const SchoolsList: React.FC = () => {
 
   const EditModal = ({ school }: { school: SchoolType }) => {
     const [formData, setFormData] = useState({
+      name: school.name || '',
       email: school.email || '',
       password: '',
-      province_id: school.provinceId || '',
+      confirmPassword: '',
     });
+    const [fieldError, setFieldError] = useState<string | null>(null);
 
     const handleSubmit = async (e: React.FormEvent) => {
       e.preventDefault();
+      setFieldError(null);
+      if (formData.password !== formData.confirmPassword) {
+        setFieldError('Mật khẩu xác nhận không khớp.');
+        return;
+      }
+      if (formData.password && formData.password.length < 6) {
+        setFieldError('Mật khẩu mới phải có ít nhất 6 ký tự.');
+        return;
+      }
       try {
         await updateSchool.mutateAsync({
           id: school.id,
-          data: formData,
+          data: {
+            name: formData.name,
+            email: formData.email || undefined,
+            password: formData.password || undefined,
+          },
         });
         setEditingSchool(null);
       } catch (error) {
         console.error('Error updating school:', error);
+        setFieldError(error instanceof Error ? error.message : 'Có lỗi xảy ra.');
       }
     };
 
@@ -125,50 +136,72 @@ const SchoolsList: React.FC = () => {
         <motion.div
           initial={{ opacity: 0, scale: 0.95 }}
           animate={{ opacity: 1, scale: 1 }}
-          className="bg-white rounded-lg p-6 w-full max-w-md mx-4"
+          className="bg-white rounded-lg p-6 w-full max-w-md mx-4 max-h-[90vh] overflow-y-auto"
         >
           <h3 className="text-lg font-semibold text-gray-900 mb-4">Chỉnh sửa trường học</h3>
-          <form onSubmit={handleSubmit} className="space-y-4">
-            {/* Province ID - only editable by admin */}
+          <form onSubmit={handleSubmit} className="space-y-5">
+            {/* Tên trường */}
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">
-                Mã tỉnh
-                {!hasPermission(user, 'manage_users') && (
-                  <span className="text-xs text-gray-500 ml-1">(Chỉ đọc)</span>
-                )}
-              </label>
+              <label className="block text-sm font-medium text-gray-700 mb-1">Tên trường</label>
               <input
                 type="text"
-                value={formData.province_id}
-                onChange={(e) => setFormData(prev => ({ ...prev, province_id: e.target.value }))}
-                className={`input-field ${!hasPermission(user, 'manage_users') ? 'bg-gray-100 cursor-not-allowed' : ''}`}
-                placeholder="Nhập mã tỉnh"
-                disabled={!hasPermission(user, 'manage_users')}
+                value={formData.name}
+                onChange={(e) => setFormData(prev => ({ ...prev, name: e.target.value }))}
+                className="input-field"
+                placeholder="Nhập tên trường"
               />
             </div>
-            
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">Email</label>
+
+            {/* Email: hiện tại + mới */}
+            <div className="rounded-lg border border-gray-200 bg-gray-50/50 p-4 space-y-3">
+              <h4 className="text-sm font-medium text-gray-700">Email</h4>
+              <p className="text-sm text-gray-500">Email hiện tại</p>
+              <p className="text-gray-900 font-medium">{school.email || '—'}</p>
+              <label className="block text-sm font-medium text-gray-700 mt-2">Email mới</label>
               <input
                 type="email"
                 value={formData.email}
                 onChange={(e) => setFormData(prev => ({ ...prev, email: e.target.value }))}
-                className="input-field"
-                placeholder="Nhập email mới"
+                className="input-field bg-white"
+                placeholder="Nhập email mới (để trống nếu giữ nguyên)"
               />
             </div>
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">Mật khẩu mới</label>
-              <input
-                type="password"
-                value={formData.password}
-                onChange={(e) => setFormData(prev => ({ ...prev, password: e.target.value }))}
-                className="input-field"
-                placeholder="Nhập mật khẩu"
-                required
-              />
+
+            {/* Đổi mật khẩu */}
+            <div className="rounded-lg border border-gray-200 bg-gray-50/50 p-4 space-y-3">
+              <h4 className="text-sm font-medium text-gray-700">Đổi mật khẩu</h4>
+              <p className="text-xs text-gray-500">Để trống nếu không đổi mật khẩu</p>
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-1">Mật khẩu mới</label>
+                <input
+                  type="password"
+                  value={formData.password}
+                  onChange={(e) => setFormData(prev => ({ ...prev, password: e.target.value }))}
+                  className="input-field bg-white"
+                  placeholder="Nhập mật khẩu mới"
+                  autoComplete="new-password"
+                />
+              </div>
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-1">Xác nhận mật khẩu mới</label>
+                <input
+                  type="password"
+                  value={formData.confirmPassword}
+                  onChange={(e) => setFormData(prev => ({ ...prev, confirmPassword: e.target.value }))}
+                  className="input-field bg-white"
+                  placeholder="Nhập lại mật khẩu mới"
+                  autoComplete="new-password"
+                />
+              </div>
             </div>
-            <div className="flex gap-3 pt-4">
+
+            {fieldError && (
+              <p className="text-sm text-red-600 bg-red-50 border border-red-200 rounded-lg px-3 py-2">
+                {fieldError}
+              </p>
+            )}
+
+            <div className="flex gap-3 pt-2">
               <button
                 type="button"
                 onClick={() => setEditingSchool(null)}
@@ -176,8 +209,8 @@ const SchoolsList: React.FC = () => {
               >
                 Hủy
               </button>
-              <button type="submit" className="flex-1 btn-primary">
-                Lưu thay đổi
+              <button type="submit" className="flex-1 btn-primary" disabled={updateSchool.isPending}>
+                {updateSchool.isPending ? 'Đang lưu...' : 'Lưu thay đổi'}
               </button>
             </div>
           </form>

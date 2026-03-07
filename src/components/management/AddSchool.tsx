@@ -29,9 +29,10 @@ const AddSchool: React.FC = () => {
     setSuccess(false);
 
     try {
+      const { confirmPassword: _cp, ...payload } = data;
       await createSchool.mutateAsync({
-        ...data,
-        province_id: user?.provinceId,
+        ...payload,
+        province_id: user?.provinceId ?? payload.province_id,
       });
       setSuccess(true);
       reset();
@@ -72,33 +73,62 @@ const AddSchool: React.FC = () => {
 
         <div className="card">
           <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-              <div>
-                <label htmlFor="name" className="block text-sm font-medium text-gray-700 mb-2">
-                  Tên trường học *
-                </label>
-                <input
-                  {...register('name')}
-                  type="text"
-                  id="name"
-                  className="input-field"
-                  placeholder="Nhập tên trường học"
-                />
-                {errors.name && (
-                  <p className="mt-1 text-sm text-red-600">{errors.name.message}</p>
-                )}
+            {/* Thông tin trường */}
+            <div className="rounded-lg border border-gray-200 bg-gray-50/50 p-4 space-y-4">
+              <h4 className="text-sm font-semibold text-gray-800">Thông tin trường</h4>
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div>
+                  <label htmlFor="name" className="block text-sm font-medium text-gray-700 mb-1">
+                    Tên trường học *
+                  </label>
+                  <input
+                    {...register('name')}
+                    type="text"
+                    id="name"
+                    className="input-field bg-white"
+                    placeholder="Nhập tên trường học"
+                  />
+                  {errors.name && (
+                    <p className="mt-1 text-sm text-red-600">{errors.name.message}</p>
+                  )}
+                </div>
+                <div>
+                  <label htmlFor="province_id" className="block text-sm font-medium text-gray-700 mb-1">
+                    Tỉnh
+                  </label>
+                  <select
+                    {...register('province_id')}
+                    id="province_id"
+                    className="input-field bg-white"
+                  >
+                    <option value="">Chọn tỉnh</option>
+                    {provinces?.map((province: any) => (
+                      <option key={province.id} value={province.id}>
+                        {province.name}
+                      </option>
+                    ))}
+                  </select>
+                  {errors.province_id && (
+                    <p className="mt-1 text-sm text-red-600">{errors.province_id.message}</p>
+                  )}
+                </div>
               </div>
+            </div>
 
+            {/* Email đăng nhập */}
+            <div className="rounded-lg border border-gray-200 bg-gray-50/50 p-4 space-y-3">
+              <h4 className="text-sm font-semibold text-gray-800">Email đăng nhập</h4>
+              <p className="text-xs text-gray-500">Trường học sẽ dùng email này để đăng nhập hệ thống.</p>
               <div>
-                <label htmlFor="email" className="block text-sm font-medium text-gray-700 mb-2">
-                  Địa chỉ Email *
+                <label htmlFor="email" className="block text-sm font-medium text-gray-700 mb-1">
+                  Địa chỉ email *
                 </label>
                 <input
                   {...register('email')}
                   type="email"
                   id="email"
-                  className="input-field"
-                  placeholder="Nhập email trường học"
+                  className="input-field bg-white w-full"
+                  placeholder="vd: truong@school.edu.vn"
                 />
                 {errors.email && (
                   <p className="mt-1 text-sm text-red-600">{errors.email.message}</p>
@@ -106,49 +136,48 @@ const AddSchool: React.FC = () => {
               </div>
             </div>
 
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-              <div>
-                <label htmlFor="password" className="block text-sm font-medium text-gray-700 mb-2">
-                  Mật khẩu *
-                </label>
-                <input
-                  {...register('password')}
-                  type="password"
-                  id="password"
-                  className="input-field"
-                  placeholder="Nhập mật khẩu cho tài khoản trường học"
-                />
-                {errors.password && (
-                  <p className="mt-1 text-sm text-red-600">{errors.password.message}</p>
-                )}
-              </div>
-
-              <div>
-                <label htmlFor="province_id" className="block text-sm font-medium text-gray-700 mb-2">
-                  Tỉnh
-                </label>
-                <select
-                  {...register('province_id')}
-                  id="province_id"
-                  className="input-field"
-                >
-                  <option value="">Chọn tỉnh</option>
-                  {provinces?.map((province: any) => (
-                    <option key={province.id} value={province.id}>
-                      {province.name}
-                    </option>
-                  ))}
-                </select>
-                {errors.province_id && (
-                  <p className="mt-1 text-sm text-red-600">{errors.province_id.message}</p>
-                )}
+            {/* Mật khẩu */}
+            <div className="rounded-lg border border-gray-200 bg-gray-50/50 p-4 space-y-4">
+              <h4 className="text-sm font-semibold text-gray-800">Mật khẩu</h4>
+              <p className="text-xs text-gray-500">Trường học có thể đổi mật khẩu sau lần đăng nhập đầu tiên.</p>
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div>
+                  <label htmlFor="password" className="block text-sm font-medium text-gray-700 mb-1">
+                    Mật khẩu *
+                  </label>
+                  <input
+                    {...register('password')}
+                    type="password"
+                    id="password"
+                    className="input-field bg-white"
+                    placeholder="Ít nhất 6 ký tự"
+                    autoComplete="new-password"
+                  />
+                  {errors.password && (
+                    <p className="mt-1 text-sm text-red-600">{errors.password.message}</p>
+                  )}
+                </div>
+                <div>
+                  <label htmlFor="confirmPassword" className="block text-sm font-medium text-gray-700 mb-1">
+                    Xác nhận mật khẩu *
+                  </label>
+                  <input
+                    {...register('confirmPassword')}
+                    type="password"
+                    id="confirmPassword"
+                    className="input-field bg-white"
+                    placeholder="Nhập lại mật khẩu"
+                    autoComplete="new-password"
+                  />
+                  {errors.confirmPassword && (
+                    <p className="mt-1 text-sm text-red-600">{errors.confirmPassword.message}</p>
+                  )}
+                </div>
               </div>
             </div>
 
-            <div className="flex items-center justify-between pt-6 border-t border-gray-200">
-              <p className="text-sm text-gray-600">
-                * Các trường bắt buộc
-              </p>
+            <div className="flex items-center justify-between pt-4 border-t border-gray-200">
+              <p className="text-sm text-gray-500">* Các trường bắt buộc</p>
               <button
                 type="submit"
                 disabled={createSchool.isPending}

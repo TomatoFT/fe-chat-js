@@ -19,17 +19,19 @@ export const ChartCard: React.FC<ChartCardProps> = ({
   defaultLevel = 'school',
 }) => {
   const { user } = useAuth();
-  // Quản lý trường chỉ xem cấp trường nên luôn dùng 'school'
   const isSchoolManager = user?.role === 'school_manager';
+  const isProvinceManager = user?.role === 'province_manager';
+  // School => always school; Province => always province; others choose
   const [selectedLevel, setSelectedLevel] = useState<'school' | 'province'>(
-    isSchoolManager ? 'school' : defaultLevel
+    isSchoolManager ? 'school' : isProvinceManager ? 'province' : defaultLevel
   );
+  const effectiveLevel = isProvinceManager ? 'province' : selectedLevel;
   const [academicYear, setAcademicYear] = useState<string>('');
   const [semester, setSemester] = useState<string>('');
 
   const { data: chartData, isLoading: dataLoading, error: dataError } = useChartData(
     chartType,
-    selectedLevel,
+    effectiveLevel,
     academicYear || undefined,
     semester || undefined
   );
@@ -52,7 +54,8 @@ export const ChartCard: React.FC<ChartCardProps> = ({
 
       {/* Điều khiển */}
       <div className="mb-4 space-y-3">
-        {!isSchoolManager && (
+        {/* Aggregation level: only for department_manager and admin (province always province, school always school) */}
+        {!isSchoolManager && !isProvinceManager && (
           <div>
             <label className="block text-xs font-medium text-gray-700 mb-1">
               Cấp độ
@@ -108,8 +111,16 @@ export const ChartCard: React.FC<ChartCardProps> = ({
             <span className="ml-2 text-sm text-gray-600">Đang tải...</span>
           </div>
         ) : dataError ? (
-          <div className="flex items-center justify-center h-64 bg-red-50 rounded-lg">
-            <p className="text-sm text-red-600">Lỗi khi tải dữ liệu</p>
+          <div className="flex flex-col items-center justify-center h-64 bg-red-50 rounded-lg px-4">
+            <p className="text-sm font-medium text-red-600">Lỗi khi tải dữ liệu</p>
+            <p className="text-xs text-red-500 mt-1 text-center max-w-xs">
+              {dataError.message}
+            </p>
+            {effectiveLevel === 'province' && (
+              <p className="text-xs text-gray-500 mt-2 text-center">
+                Thử chọn cấp độ &quot;Trường học&quot; nếu dữ liệu cấp tỉnh chưa có.
+              </p>
+            )}
           </div>
         ) : chartData ? (
           <div className="min-h-[400px]">

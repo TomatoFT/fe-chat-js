@@ -80,11 +80,17 @@ export const useChartData = (
         },
       });
 
+      const data = await response.json().catch(() => ({}));
+
       if (!response.ok) {
-        throw new Error('Failed to fetch chart data');
+        const message =
+          (data.detail && (typeof data.detail === 'string' ? data.detail : data.detail?.msg || data.detail?.[0]?.msg))
+          || data.message
+          || `Failed to fetch chart data (${response.status})`;
+        throw new Error(message);
       }
 
-      return response.json();
+      return data as ChartDataResponse;
     },
     enabled: !!chartType && !!level,
   });
