@@ -426,8 +426,8 @@ export const ChatInterface: React.FC = () => {
             </a>
           ),
           table: ({ children }) => (
-            <div className="my-2 overflow-x-auto">
-              <table className="w-full min-w-[320px] border border-gray-200 rounded-md text-xs">{children}</table>
+            <div className="my-2 w-full overflow-x-auto">
+              <table className="w-full min-w-[360px] border border-gray-200 rounded-md text-sm">{children}</table>
             </div>
           ),
           thead: ({ children }) => <thead className="bg-gray-50">{children}</thead>,
@@ -828,7 +828,7 @@ export const ChatInterface: React.FC = () => {
                     className={`flex ${msg.sender === 'user' ? 'justify-end' : 'justify-start'} animate-fade-in`}
                     style={{ animationDelay: `${index * 0.1}s` }}
                   >
-                    <div className={`flex items-end space-x-2 max-w-xs sm:max-w-sm md:max-w-md lg:max-w-lg ${
+                    <div className={`flex items-end space-x-2 ${
                       msg.sender === 'user' ? 'flex-row-reverse space-x-reverse' : ''
                     }`}>
                       {/* Avatar */}
@@ -847,8 +847,8 @@ export const ChatInterface: React.FC = () => {
                       {/* Message Bubble */}
                       <div className={`px-4 py-3 rounded-2xl shadow-sm message-bubble ${
                         msg.sender === 'user'
-                          ? 'bg-gradient-to-r from-blue-500 to-indigo-500 text-white rounded-br-md'
-                          : 'bg-white text-gray-900 border border-gray-200 rounded-bl-md'
+                          ? 'bg-gradient-to-r from-blue-500 to-indigo-500 text-white rounded-br-md max-w-xs sm:max-w-sm md:max-w-md lg:max-w-lg'
+                          : 'bg-white text-gray-900 border border-gray-200 rounded-bl-md max-w-[calc(100vw-4.5rem)] md:max-w-[min(80vw,56rem)]'
                       }`}>
                         <div className="text-sm leading-relaxed break-words">
                           {renderMessageContent(msg)}

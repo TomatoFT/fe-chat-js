@@ -4,12 +4,16 @@ import { Link } from 'react-router-dom';
 import { Plus, Search, School, Users, Eye, Edit, Trash2 } from 'lucide-react';
 import { School as SchoolType } from '../../types';
 import { useSchools, useUpdateSchool, useDeleteSchool } from '../../hooks/useUsers';
+import { useAuth } from '../../context/AuthContext';
 
 const SchoolsList: React.FC = () => {
   const [searchTerm, setSearchTerm] = useState('');
   const [editingSchool, setEditingSchool] = useState<SchoolType | null>(null);
   const [showDeleteModal, setShowDeleteModal] = useState<string | null>(null);
   const [showViewModal, setShowViewModal] = useState<SchoolType | null>(null);
+
+  const { user } = useAuth();
+  const hideEmailAndDataColumns = user?.role === 'province_manager';
   
   // Fetch schools from API
   const { data: schools, isLoading, error } = useSchools();
@@ -292,12 +296,16 @@ const SchoolsList: React.FC = () => {
                 <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                   Trường học
                 </th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                  Email
-                </th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                  Số dữ liệu
-                </th>
+                {!hideEmailAndDataColumns && (
+                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                    Email
+                  </th>
+                )}
+                {!hideEmailAndDataColumns && (
+                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                    Số dữ liệu
+                  </th>
+                )}
                 <th className="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">
                   Thao tác
                 </th>
@@ -322,15 +330,19 @@ const SchoolsList: React.FC = () => {
                       </div>
                     </div>
                   </td>
-                  <td className="px-6 py-4 whitespace-nowrap">
-                    <div className="text-sm text-gray-900">{school.email}</div>
-                  </td>
-                  <td className="px-6 py-4 whitespace-nowrap">
-                    <div className="flex items-center">
-                      <Users className="w-4 h-4 text-gray-400 mr-2" />
-                      <span className="text-sm text-gray-900">{school.usersCount || 0}</span>
-                    </div>
-                  </td>
+                  {!hideEmailAndDataColumns && (
+                    <td className="px-6 py-4 whitespace-nowrap">
+                      <div className="text-sm text-gray-900">{school.email}</div>
+                    </td>
+                  )}
+                  {!hideEmailAndDataColumns && (
+                    <td className="px-6 py-4 whitespace-nowrap">
+                      <div className="flex items-center">
+                        <Users className="w-4 h-4 text-gray-400 mr-2" />
+                        <span className="text-sm text-gray-900">{school.usersCount || 0}</span>
+                      </div>
+                    </td>
+                  )}
                   <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
                     <div className="flex items-center justify-end gap-2">
                       <button
