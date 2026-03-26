@@ -2,6 +2,9 @@ import React, { useState, useRef, useEffect, useCallback } from 'react';
 import { useQueryClient } from '@tanstack/react-query';
 import { useChatSessions, useChatSession, useSendMessage, useCreateChatSession, useRenameChatSession, useDeleteChatSession, useDocumentsForRAG } from '../../hooks/useChat';
 import { Send, Plus, MessageCircle, Bot, User, Edit2, Check, X, Sparkles, BarChart3, FileText, CheckCircle, Trash2, PanelLeftClose, PanelLeftOpen, Menu } from 'lucide-react';
+import ReactMarkdown from 'react-markdown';
+import remarkGfm from 'remark-gfm';
+import remarkBreaks from 'remark-breaks';
 import { formatTime, sortByDate } from '../../utils/dateUtils';
 import { AIProgressVisualization } from './AIProgressVisualization';
 
@@ -379,6 +382,63 @@ export const ChatInterface: React.FC = () => {
         alert('Không thể xóa cuộc trò chuyện. Vui lòng thử lại.');
       }
     }
+  };
+
+  const renderMessageContent = (msg: any) => {
+    const isUserMessage = msg.sender === 'user';
+
+    if (isUserMessage) {
+      return <div className="text-sm leading-relaxed whitespace-pre-wrap">{msg.content}</div>;
+    }
+
+    return (
+      <ReactMarkdown
+        remarkPlugins={[remarkGfm, remarkBreaks]}
+        components={{
+          p: ({ children }) => <p className="mb-2 last:mb-0">{children}</p>,
+          ul: ({ children }) => <ul className="mb-2 list-disc pl-5 space-y-1">{children}</ul>,
+          ol: ({ children }) => <ol className="mb-2 list-decimal pl-5 space-y-1">{children}</ol>,
+          li: ({ children }) => <li>{children}</li>,
+          h1: ({ children }) => <h1 className="text-base font-semibold mb-2">{children}</h1>,
+          h2: ({ children }) => <h2 className="text-[15px] font-semibold mb-2">{children}</h2>,
+          h3: ({ children }) => <h3 className="text-sm font-semibold mb-2">{children}</h3>,
+          strong: ({ children }) => <strong className="font-semibold text-gray-900">{children}</strong>,
+          em: ({ children }) => <em className="italic">{children}</em>,
+          blockquote: ({ children }) => (
+            <blockquote className="border-l-4 border-blue-300 bg-blue-50 text-blue-900 rounded-r-md px-3 py-2 my-2">
+              {children}
+            </blockquote>
+          ),
+          code: ({ className, children }) =>
+            className ? (
+              <code className="block bg-gray-900 text-gray-100 rounded-md p-3 text-xs overflow-x-auto">{children}</code>
+            ) : (
+              <code className="bg-gray-100 text-gray-800 rounded px-1 py-0.5 text-xs">{children}</code>
+            ),
+          a: ({ href, children }) => (
+            <a
+              href={href}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-blue-600 hover:text-blue-700 underline break-all"
+            >
+              {children}
+            </a>
+          ),
+          table: ({ children }) => (
+            <div className="my-2 overflow-x-auto">
+              <table className="w-full min-w-[320px] border border-gray-200 rounded-md text-xs">{children}</table>
+            </div>
+          ),
+          thead: ({ children }) => <thead className="bg-gray-50">{children}</thead>,
+          th: ({ children }) => <th className="border border-gray-200 px-2 py-1 text-left font-medium">{children}</th>,
+          td: ({ children }) => <td className="border border-gray-200 px-2 py-1 align-top">{children}</td>,
+          hr: () => <hr className="my-3 border-gray-200" />,
+        }}
+      >
+        {msg.content || ''}
+      </ReactMarkdown>
+    );
   };
 
 
@@ -790,7 +850,9 @@ export const ChatInterface: React.FC = () => {
                           ? 'bg-gradient-to-r from-blue-500 to-indigo-500 text-white rounded-br-md'
                           : 'bg-white text-gray-900 border border-gray-200 rounded-bl-md'
                       }`}>
-                        <div className="text-sm leading-relaxed">{msg.content}</div>
+                        <div className="text-sm leading-relaxed break-words">
+                          {renderMessageContent(msg)}
+                        </div>
                         <div className={`flex items-center justify-between mt-1 ${
                           msg.sender === 'user' ? 'text-blue-100' : 'text-gray-500'
                         }`}>
