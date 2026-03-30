@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
-import { LogIn, BookOpen, AlertCircle, Shield, Lock, Sparkles, Star } from 'lucide-react';
+import { LogIn, AlertCircle, Shield, Lock, Sparkles, Star } from 'lucide-react';
 import { useAuth } from '../../context/AuthContext';
 import { useLanguage } from '../../context/LanguageContext';
 
@@ -244,20 +244,13 @@ const Login: React.FC = () => {
               className="relative bg-white rounded-2xl shadow-xl p-6 md:p-8 border border-gray-200"
             >
           <div className="text-center mb-8">
-                <motion.div
-                  animate={{ 
-                    rotate: [0, 5, -5, 0],
-                    scale: [1, 1.05, 1]
-                  }}
-                  transition={{ 
-                    duration: 3,
-                    repeat: Infinity,
-                    ease: "easeInOut"
-                  }}
-                  className="inline-flex items-center justify-center w-16 h-16 bg-gradient-to-r from-blue-500 to-indigo-500 rounded-full mb-4 shadow-lg"
-                >
-                  <BookOpen className="w-8 h-8 text-white" />
-                </motion.div>
+                <div className="inline-flex items-center justify-center mb-4">
+                  <img
+                    src="/images/logo.png"
+                    alt="Logo"
+                    className="w-24 h-24 object-contain"
+                  />
+                </div>
                 <h1 className="text-2xl md:text-3xl font-bold text-gray-900">Thống kê giáo dục</h1>
             <p className="text-gray-600 mt-2 text-sm md:text-base">{t('auth.signIn')}</p>
           </div>

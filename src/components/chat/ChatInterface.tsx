@@ -1,7 +1,7 @@
 import React, { useState, useRef, useEffect, useCallback } from 'react';
 import { useQueryClient } from '@tanstack/react-query';
 import { useChatSessions, useChatSession, useSendMessage, useCreateChatSession, useRenameChatSession, useDeleteChatSession, useDocumentsForRAG } from '../../hooks/useChat';
-import { Send, Plus, MessageCircle, Bot, User, Edit2, Check, X, Sparkles, BarChart3, FileText, CheckCircle, Trash2, PanelLeftClose, PanelLeftOpen, Menu } from 'lucide-react';
+import { Send, Plus, MessageCircle, Bot, User, Edit2, Check, X, Sparkles, BarChart3, FileText, CheckCircle, Trash2, Menu } from 'lucide-react';
 import ReactMarkdown from 'react-markdown';
 import remarkGfm from 'remark-gfm';
 import remarkBreaks from 'remark-breaks';
@@ -22,7 +22,6 @@ export const ChatInterface: React.FC = () => {
   const [showProgressVisualization, setShowProgressVisualization] = useState(false);
   const [responseStartTime, setResponseStartTime] = useState<number | null>(null);
   const [actualResponseTime, setActualResponseTime] = useState<number | null>(null);
-  const [sidebarVisible, setSidebarVisible] = useState(false); // Start with sidebar hidden for better mobile experience
   const [showMobileSessionsModal, setShowMobileSessionsModal] = useState(false);
   const [pendingMessages, setPendingMessages] = useState<any[]>([]);
   const messagesEndRef = useRef<HTMLDivElement>(null);
@@ -182,19 +181,6 @@ export const ChatInterface: React.FC = () => {
       editInputRef.current.select();
     }
   }, [editingSessionId]);
-
-  // Keyboard shortcut for toggling sidebar (Ctrl/Cmd + B)
-  useEffect(() => {
-    const handleKeyDown = (event: KeyboardEvent) => {
-      if ((event.ctrlKey || event.metaKey) && event.key === 'b') {
-        event.preventDefault();
-        setSidebarVisible(!sidebarVisible);
-      }
-    };
-
-    document.addEventListener('keydown', handleKeyDown);
-    return () => document.removeEventListener('keydown', handleKeyDown);
-  }, [sidebarVisible]);
 
   const handleSendMessage = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -445,10 +431,7 @@ export const ChatInterface: React.FC = () => {
   return (
     <div className="flex h-full min-h-0 bg-gradient-to-br from-blue-50 to-indigo-100">
       {/* Sidebar */}
-      <div className={`${sidebarVisible ? 'w-80 lg:w-80 md:w-64 sm:w-64' : 'w-0'} bg-white shadow-xl border-r border-gray-200 flex flex-col hidden md:flex transition-all duration-300 ease-in-out overflow-hidden`}>
-        {/* Sidebar Content - Only render when visible */}
-        {sidebarVisible && (
-          <>
+      <div className="w-80 lg:w-80 md:w-64 sm:w-64 bg-white shadow-xl border-r border-gray-200 flex-col hidden md:flex overflow-hidden">
         {/* Header */}
         <div className="p-6 border-b border-gray-100 bg-gradient-to-r from-blue-600 to-indigo-600">
           <div className="flex items-center justify-between">
@@ -461,18 +444,7 @@ export const ChatInterface: React.FC = () => {
                 <p className="text-blue-100 text-sm">Trợ lý AI</p>
               </div>
             </div>
-            <div className="flex items-center space-x-2">
-              <button
-                onClick={() => setSidebarVisible(!sidebarVisible)}
-                className="w-10 h-10 bg-white/20 hover:bg-white/30 rounded-full flex items-center justify-center transition-all duration-200"
-                title={sidebarVisible ? "Hide sidebar (Ctrl+B)" : "Show sidebar (Ctrl+B)"}
-              >
-                {sidebarVisible ? (
-                  <PanelLeftClose className="w-5 h-5 text-white" />
-                ) : (
-                  <PanelLeftOpen className="w-5 h-5 text-white" />
-                )}
-              </button>
+            <div className="flex items-center">
               <button
                 onClick={handleCreateSession}
                 disabled={isCreatingSession}
@@ -598,8 +570,6 @@ export const ChatInterface: React.FC = () => {
             </div>
           )}
         </div>
-          </>
-        )}
       </div>
 
       {/* Mobile Floating Action Button */}
@@ -625,19 +595,6 @@ export const ChatInterface: React.FC = () => {
           </button>
         </div>
       </div>
-
-      {/* Desktop Floating Toggle Button - Only visible when sidebar is hidden */}
-      {!sidebarVisible && (
-        <div className="fixed top-4 left-4 z-50 md:block hidden">
-          <button
-            onClick={() => setSidebarVisible(true)}
-            className="w-12 h-12 bg-blue-600 hover:bg-blue-700 text-white rounded-full flex items-center justify-center shadow-lg transition-all duration-200 hover:scale-105"
-            title="Show sidebar (Ctrl+B)"
-          >
-            <PanelLeftOpen className="w-6 h-6" />
-          </button>
-        </div>
-      )}
 
       {/* Mobile Sessions Modal */}
       {showMobileSessionsModal && (

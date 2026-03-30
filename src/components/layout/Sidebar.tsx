@@ -6,7 +6,6 @@ import {
   FileText,
   Users,
   Building2,
-  BookOpen,
   X,
   BarChart3,
 } from 'lucide-react';
@@ -91,8 +90,8 @@ const Sidebar: React.FC<SidebarProps> = ({ isOpen = true, onClose }) => {
 
         <div className="p-6 border-b border-gray-200">
           <div className="flex items-center gap-3">
-            <div className="w-10 h-10 bg-blue-100 rounded-lg flex items-center justify-center">
-              <BookOpen className="w-6 h-6 text-blue-600" />
+            <div className="w-14 h-14 bg-blue-50 rounded-lg flex items-center justify-center overflow-hidden">
+              <img src="/images/logo.png" alt="Logo" className="w-12 h-12 object-contain" />
             </div>
             <div>
               <h1 className="text-xl font-semibold text-gray-900">TKGD</h1>
